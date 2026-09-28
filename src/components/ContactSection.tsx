@@ -44,25 +44,25 @@ export const ContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-16 sm:py-24 bg-[#ffffff] border-t border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="py-16 sm:py-24 2xl:py-28 bg-[#ffffff] border-t border-gray-200">
+      <div className="journal-container">
         
         {/* Section Header */}
-        <div className="max-w-3xl mb-12">
+        <div className="max-w-3xl 2xl:max-w-4xl mb-12">
           <span className="text-xs font-bold uppercase tracking-widest text-[#781f1d] bg-gray-100 px-3 py-1 rounded-full border border-gray-200">
             Contact Secretariat
           </span>
-          <h2 className="font-serif font-bold text-3xl sm:text-4xl text-[#1f0707] mt-3 mb-4">
+          <h2 className="font-serif font-bold text-3xl sm:text-4xl 2xl:text-5xl text-[#1f0707] mt-3 mb-4">
             Editorial Secretariat & Official Contacts
           </h2>
-          <p className="text-[#581e1d] text-base sm:text-lg leading-relaxed">
+          <p className="text-[#581e1d] text-base sm:text-lg 2xl:text-xl leading-relaxed">
             Connect directly with the editorial office and administrative secretariat of the 
             <strong> SRCAA Global Review of Contemporary Research (SGRCR)</strong>.
           </p>
         </div>
 
         {/* Primary Contact Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 2xl:gap-10 mb-12">
           {CONTACT_EMAILS.map((item) => (
             <div 
               key={item.id}

@@ -332,8 +332,8 @@ ${data.message || 'No additional comments provided.'}
   };
 
   return (
-    <section id="author-guidelines" className="py-12 sm:py-16 md:py-20 lg:py-24 bg-[#ffffff] border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="author-guidelines" className="py-12 sm:py-16 md:py-20 lg:py-24 2xl:py-28 bg-[#ffffff] border-b border-gray-200">
+      <div className="journal-container">
         
         {/* Section Header */}
         <div className="mb-8 sm:mb-12">
@@ -341,16 +341,16 @@ ${data.message || 'No additional comments provided.'}
             <PenTool className="w-3.5 h-3.5" />
             Submissions & Standards
           </span>
-          <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-[#1f0707] mt-3">
+          <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl 2xl:text-5xl text-[#1f0707] mt-3">
             Author & Submission Guidelines
           </h2>
-          <p className="mt-2 text-sm sm:text-base text-[#581e1d] max-w-2xl">
+          <p className="mt-2 text-sm sm:text-base 2xl:text-lg text-[#581e1d] max-w-2xl 2xl:max-w-4xl">
             Detailed criteria for manuscript preparation, formatting, referencing, ethical declarations, and editorial processing for aspiring authors.
           </p>
         </div>
 
         {/* Guidelines Specifications Panel */}
-        <div className="bg-gray-50/70 border border-gray-200 rounded-2xl p-6 sm:p-8 md:p-10 shadow-xs mb-10">
+        <div className="bg-gray-50/70 border border-gray-200 rounded-2xl p-6 sm:p-8 md:p-10 2xl:p-12 shadow-xs mb-10">
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-8 border-b border-gray-200">
             <div>

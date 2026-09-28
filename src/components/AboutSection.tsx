@@ -3,8 +3,8 @@ import { Info, CheckCircle, Award, ShieldAlert, FileBadge } from 'lucide-react';
 
 export const AboutSection: React.FC = () => {
   return (
-    <section id="about" className="py-12 sm:py-16 md:py-20 lg:py-24 bg-[#ffffff] border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="about" className="py-12 sm:py-16 md:py-20 lg:py-24 2xl:py-28 bg-[#ffffff] border-b border-gray-200">
+      <div className="journal-container">
         
         {/* Section Header */}
         <div className="mb-8 sm:mb-12">
@@ -12,16 +12,16 @@ export const AboutSection: React.FC = () => {
             <Info className="w-3.5 h-3.5" />
             Institutional Context
           </span>
-          <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-[#1f0707] mt-3">
+          <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl 2xl:text-5xl text-[#1f0707] mt-3">
             SGRCR — A New Era of Research & Discovery
           </h2>
-          <p className="mt-2 text-sm sm:text-base text-[#581e1d] max-w-3xl">
+          <p className="mt-2 text-sm sm:text-base 2xl:text-lg text-[#581e1d] max-w-3xl 2xl:max-w-4xl">
             Advancing rigorous, ethical, and multidisciplinary academic enquiry under the institutional auspices of Shakti Research Centre and Academia (SRCAA).
           </p>
         </div>
 
         {/* Main Panel with Consistent White Theme Styling */}
-        <div className="bg-gray-50/70 border border-gray-200 rounded-2xl p-6 sm:p-8 md:p-10 shadow-xs space-y-6 text-[#421413] text-sm sm:text-base leading-relaxed">
+        <div className="bg-gray-50/70 border border-gray-200 rounded-2xl p-6 sm:p-8 md:p-10 2xl:p-12 shadow-xs space-y-6 text-[#421413] text-sm sm:text-base 2xl:text-lg leading-relaxed">
           <p>
             The <strong>SRCAA Global Review of Contemporary Research (SGRCR)</strong> is a peer-reviewed, multidisciplinary academic journal published under the aegis of <strong>Shakti Research Centre and Academia (SRCAA)</strong>, a digital academic and research institution established in 2024 and accredited under the <em>International Trade Council (ITC) Conformity Assessment and Recognition Framework</em>. The journal is committed to disseminating high-quality, original research across Commerce, Management, Economics, Social Sciences, Technology, and allied interdisciplinary fields.
           </p>

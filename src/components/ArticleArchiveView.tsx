@@ -75,7 +75,7 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
       
       {/* Dedicated Archive Header */}
       <header className="sticky top-0 z-40 bg-[#ffffff]/95 backdrop-blur-md border-b border-[#cfb6b3] py-3.5 shadow-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="journal-container flex flex-col sm:flex-row items-center justify-between gap-3">
           
           <div className="flex items-center gap-3">
             {onBackToMain ? (
@@ -126,11 +126,11 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <main className="flex-1 journal-container py-8 sm:py-12 2xl:py-16">
         
         {/* Banner Area */}
-        <div className="bg-gradient-to-r from-[#1f0707] to-[#421413] text-[#ffffff] rounded-2xl p-6 sm:p-10 shadow-md mb-8">
-          <div className="max-w-3xl">
+        <div className="bg-gradient-to-r from-[#1f0707] to-[#421413] text-[#ffffff] rounded-2xl p-6 sm:p-10 2xl:p-12 shadow-md mb-8">
+          <div className="max-w-3xl 2xl:max-w-4xl">
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#a13533]/30 border border-[#a13533]/50 text-[#c97775] text-xs font-bold uppercase tracking-widest">
                 <Archive className="w-3.5 h-3.5" />

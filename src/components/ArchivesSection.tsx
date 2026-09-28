@@ -46,8 +46,8 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({ onOpenArchives
   };
 
   return (
-    <section id="archives" className="py-12 sm:py-16 md:py-20 lg:py-24 bg-[#ffffff] border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="archives" className="py-12 sm:py-16 md:py-20 lg:py-24 2xl:py-28 bg-[#ffffff] border-b border-gray-200">
+      <div className="journal-container">
         
         {/* Section Heading & Separate Tab Notice */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 sm:mb-12">
@@ -58,10 +58,10 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({ onOpenArchives
                 Permanent Digital Repository
               </span>
             </div>
-            <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-[#1f0707] mt-1">
+            <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl 2xl:text-5xl text-[#1f0707] mt-1">
               Archives & Publications
             </h2>
-            <p className="mt-2 text-sm sm:text-base text-[#581e1d] max-w-2xl">
+            <p className="mt-2 text-sm sm:text-base 2xl:text-lg text-[#581e1d] max-w-2xl 2xl:max-w-4xl">
               Every published issue and peer-reviewed manuscript is indexed with persistent URIs, article-level DOI assignments, and open-access PDF viewing in compliance with statutory digital archiving standards.
             </p>
           </div>

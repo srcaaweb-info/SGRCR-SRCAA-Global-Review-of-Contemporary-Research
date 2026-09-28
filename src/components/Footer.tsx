@@ -26,8 +26,8 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSubmissionsLog, onOpenArti
   return (
     <footer className="bg-[#260d0d] text-[#ede0de] border-t border-[#451a19]">
       {/* Upper Footer Directory */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 sm:gap-10">
+      <div className="journal-container py-12 sm:py-16 2xl:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 sm:gap-10 2xl:gap-12">
           
           {/* Col 1: Emblem & Publisher */}
           <div className="md:col-span-1 space-y-4">
@@ -196,7 +196,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSubmissionsLog, onOpenArti
 
       {/* Bottom Bar */}
       <div className="border-t border-[#451a19] bg-[#1a0707] py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#cfb6b3]">
+        <div className="journal-container flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#cfb6b3]">
           <p className="text-center sm:text-left">
             © 2026 SRCAA — Shakti Research Centre and Academia. All rights reserved.
           </p>

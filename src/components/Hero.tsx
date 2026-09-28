@@ -32,45 +32,45 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
       </div>
 
       {/* Content */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-28 lg:py-32">
-        <div className="max-w-4xl mx-auto text-center">
+      <div className="relative journal-container py-16 sm:py-20 md:py-24 lg:py-28 2xl:py-32">
+        <div className="max-w-4xl 2xl:max-w-5xl mx-auto text-center">
 
           {/* ESTD Badge */}
           <div className="inline-flex flex-col items-center mb-6">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-1.5 bg-[#ffffff] ring-4 ring-[#a13533]/80 shadow-2xl transition-transform hover:scale-105 duration-300">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 2xl:w-24 2xl:h-24 rounded-full p-1.5 bg-[#ffffff] ring-4 ring-[#a13533]/80 shadow-2xl transition-transform hover:scale-105 duration-300">
               <img
                 src="/logo.svg"
                 alt="SRCAA bird and open book emblem"
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="mt-3 text-[#c97775] text-xs sm:text-sm font-bold tracking-widest uppercase">
+            <span className="mt-3 text-[#c97775] text-xs sm:text-sm 2xl:text-base font-bold tracking-widest uppercase">
               ESTD Year: 2024
             </span>
           </div>
 
           {/* Title */}
-          <h1 className="font-serif font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-[#ffffff] leading-tight tracking-tight drop-shadow-lg">
+          <h1 className="font-serif font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl 2xl:text-7xl text-[#ffffff] leading-tight tracking-tight drop-shadow-lg">
             SRCAA Global Review of Contemporary Research
           </h1>
-          <p className="mt-3 text-sm sm:text-base md:text-lg font-semibold tracking-widest uppercase text-[#c97775]">
+          <p className="mt-3 text-sm sm:text-base md:text-lg 2xl:text-xl font-semibold tracking-widest uppercase text-[#c97775]">
             (SGRCR) — A Peer-Reviewed International Research Journal
           </p>
 
           {/* Description */}
-          <p className="mt-5 text-base sm:text-lg md:text-xl text-[#ede0de] max-w-3xl mx-auto font-normal leading-relaxed">
+          <p className="mt-5 text-base sm:text-lg md:text-xl 2xl:text-2xl text-[#ede0de] max-w-3xl 2xl:max-w-4xl mx-auto font-normal leading-relaxed">
             An International Open Access Journal, Peer Reviewed, published by Shakti Research Centre and Academia (SRCAA). Publishing original research across Commerce, Management, Economics, Social Sciences, Technology, and Interdisciplinary Fields with Crossref DOI assignment.
           </p>
 
           {/* Action Buttons */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-2xl mx-auto">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-2xl 2xl:max-w-3xl mx-auto">
             <a
               href="#author-guidelines"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#a13533] hover:bg-[#781f1d] text-[#ffffff] font-bold text-sm sm:text-base rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 border border-[#c97775]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 2xl:px-8 2xl:py-4 bg-[#a13533] hover:bg-[#781f1d] text-[#ffffff] font-bold text-sm sm:text-base 2xl:text-lg rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 border border-[#c97775]"
             >
-              <PenTool className="w-4 h-4 text-[#ffffff]" />
+              <PenTool className="w-4 h-4 2xl:w-5 2xl:h-5 text-[#ffffff]" />
               <span>Submit Paper</span>
-              <ExternalLink className="w-3.5 h-3.5" />
+              <ExternalLink className="w-3.5 h-3.5 2xl:w-4 2xl:h-4" />
             </a>
 
             <a
@@ -78,42 +78,42 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
               target="_blank"
               rel="noopener noreferrer"
               onClick={handleOpenSeparateArchive}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#ffffff] hover:bg-gray-100 text-[#1f0707] font-bold text-sm sm:text-base rounded-full shadow-lg transition-all transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 2xl:px-8 2xl:py-4 bg-[#ffffff] hover:bg-gray-100 text-[#1f0707] font-bold text-sm sm:text-base 2xl:text-lg rounded-full shadow-lg transition-all transform hover:-translate-y-0.5"
             >
-              <Archive className="w-4 h-4 text-[#781f1d]" />
+              <Archive className="w-4 h-4 2xl:w-5 2xl:h-5 text-[#781f1d]" />
               <span>Track Paper / Archives</span>
-              <ExternalLink className="w-3.5 h-3.5 text-[#781f1d]" />
+              <ExternalLink className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 text-[#781f1d]" />
             </a>
           </div>
 
           {/* Feature Badges */}
-          <div className="mt-12 pt-8 border-t border-[#cfb6b3]/20 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 text-left max-w-4xl mx-auto">
-            <div className="flex items-start gap-2.5 bg-white/5 p-3 rounded-lg border border-white/10 backdrop-blur-sm">
-              <Award className="w-5 h-5 text-[#a13533] shrink-0 mt-0.5" />
+          <div className="mt-12 pt-8 border-t border-[#cfb6b3]/20 grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 2xl:gap-8 text-left max-w-4xl 2xl:max-w-5xl mx-auto">
+            <div className="flex items-start gap-2.5 bg-white/5 p-3 2xl:p-4 rounded-lg border border-white/10 backdrop-blur-sm">
+              <Award className="w-5 h-5 2xl:w-6 2xl:h-6 text-[#a13533] shrink-0 mt-0.5" />
               <div>
-                <p className="text-xs sm:text-sm font-bold text-[#ffffff]">Open Access</p>
-                <p className="text-[11px] text-[#cfb6b3]">CC BY 4.0 International</p>
+                <p className="text-xs sm:text-sm 2xl:text-base font-bold text-[#ffffff]">Open Access</p>
+                <p className="text-[11px] 2xl:text-xs text-[#cfb6b3]">CC BY 4.0 International</p>
               </div>
             </div>
-            <div className="flex items-start gap-2.5 bg-white/5 p-3 rounded-lg border border-white/10 backdrop-blur-sm">
-              <Search className="w-5 h-5 text-[#a13533] shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2.5 bg-white/5 p-3 2xl:p-4 rounded-lg border border-white/10 backdrop-blur-sm">
+              <Search className="w-5 h-5 2xl:w-6 2xl:h-6 text-[#a13533] shrink-0 mt-0.5" />
               <div>
-                <p className="text-xs sm:text-sm font-bold text-[#ffffff]">Double-Blind</p>
-                <p className="text-[11px] text-[#cfb6b3]">2+ Independent Referees</p>
+                <p className="text-xs sm:text-sm 2xl:text-base font-bold text-[#ffffff]">Double-Blind</p>
+                <p className="text-[11px] 2xl:text-xs text-[#cfb6b3]">2+ Independent Referees</p>
               </div>
             </div>
-            <div className="flex items-start gap-2.5 bg-white/5 p-3 rounded-lg border border-white/10 backdrop-blur-sm">
-              <FileText className="w-5 h-5 text-[#a13533] shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2.5 bg-white/5 p-3 2xl:p-4 rounded-lg border border-white/10 backdrop-blur-sm">
+              <FileText className="w-5 h-5 2xl:w-6 2xl:h-6 text-[#a13533] shrink-0 mt-0.5" />
               <div>
-                <p className="text-xs sm:text-sm font-bold text-[#ffffff]">Bi-Annual</p>
-                <p className="text-[11px] text-[#cfb6b3]">ISSN India Compliance</p>
+                <p className="text-xs sm:text-sm 2xl:text-base font-bold text-[#ffffff]">Bi-Annual</p>
+                <p className="text-[11px] 2xl:text-xs text-[#cfb6b3]">ISSN India Compliance</p>
               </div>
             </div>
-            <div className="flex items-start gap-2.5 bg-white/5 p-3 rounded-lg border border-white/10 backdrop-blur-sm">
-              <Award className="w-5 h-5 text-[#a13533] shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2.5 bg-white/5 p-3 2xl:p-4 rounded-lg border border-white/10 backdrop-blur-sm">
+              <Award className="w-5 h-5 2xl:w-6 2xl:h-6 text-[#a13533] shrink-0 mt-0.5" />
               <div>
-                <p className="text-xs sm:text-sm font-bold text-[#ffffff]">COPE & DORA</p>
-                <p className="text-[11px] text-[#cfb6b3]">Scopus CSAB Criteria</p>
+                <p className="text-xs sm:text-sm 2xl:text-base font-bold text-[#ffffff]">COPE & DORA</p>
+                <p className="text-[11px] 2xl:text-xs text-[#cfb6b3]">Scopus CSAB Criteria</p>
               </div>
             </div>
           </div>

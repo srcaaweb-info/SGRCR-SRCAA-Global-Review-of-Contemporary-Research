@@ -133,8 +133,8 @@ export const EditorialBoardSection: React.FC = () => {
   ];
 
   return (
-    <section id="editorial-board" className="py-12 sm:py-16 md:py-20 lg:py-24 bg-[#ffffff] border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="editorial-board" className="py-12 sm:py-16 md:py-20 lg:py-24 2xl:py-28 bg-[#ffffff] border-b border-gray-200">
+      <div className="journal-container">
         
         {/* Section Header with Refined Icons */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 sm:mb-12">
@@ -143,17 +143,17 @@ export const EditorialBoardSection: React.FC = () => {
               <ShieldCheck className="w-3.5 h-3.5 text-[#781f1d]" />
               Scholarly Governance & Editorial Council
             </span>
-            <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-[#1f0707] mt-3 flex items-center gap-2.5">
-              <Users className="w-7 h-7 sm:w-8 sm:h-8 text-[#781f1d] shrink-0" />
+            <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl 2xl:text-5xl text-[#1f0707] mt-3 flex items-center gap-2.5">
+              <Users className="w-7 h-7 sm:w-8 sm:h-8 2xl:w-10 2xl:h-10 text-[#781f1d] shrink-0" />
               <span>Editorial Board & Review Leadership</span>
             </h2>
-            <p className="mt-2 text-sm sm:text-base text-[#581e1d] max-w-2xl leading-relaxed">
+            <p className="mt-2 text-sm sm:text-base 2xl:text-lg text-[#581e1d] max-w-2xl 2xl:max-w-4xl leading-relaxed">
               Distinguished researchers, academic administrators, university chairs, and institutional leaders directing the peer review integrity, publication ethics, and scholarly standards of SGRCR.
             </p>
           </div>
 
           {/* Quick Search */}
-          <div className="relative w-full sm:w-80">
+          <div className="relative w-full sm:w-80 2xl:w-96">
             <Search className="w-4 h-4 text-[#781f1d] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
@@ -189,7 +189,7 @@ export const EditorialBoardSection: React.FC = () => {
         </div>
 
         {/* Member Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-5 sm:gap-6 2xl:gap-6">
           {filteredMembers.map((member) => {
             const badge = getRoleCategoryBadge(member);
             const allEmails = member.emails || (member.email ? [member.email] : []);

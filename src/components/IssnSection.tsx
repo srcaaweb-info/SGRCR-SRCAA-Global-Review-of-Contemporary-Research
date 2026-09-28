@@ -4,8 +4,8 @@ import { JOURNAL_PARTICULARS } from '../data/journalData';
 
 export const IssnSection: React.FC = () => {
   return (
-    <section id="issn-compliance" className="py-12 sm:py-16 md:py-20 lg:py-24 bg-[#ffffff] border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="issn-compliance" className="py-12 sm:py-16 md:py-20 lg:py-24 2xl:py-28 bg-[#ffffff] border-b border-gray-200">
+      <div className="journal-container">
         
         {/* Section Header */}
         <div className="mb-8 sm:mb-12">
@@ -13,15 +13,15 @@ export const IssnSection: React.FC = () => {
             <BadgeCheck className="w-3.5 h-3.5" />
             National & International Registry
           </span>
-          <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-[#1f0707] mt-3">
+          <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl 2xl:text-5xl text-[#1f0707] mt-3">
             ISSN India Compliance & Journal Particulars
           </h2>
-          <p className="mt-2 text-sm sm:text-base text-[#581e1d] max-w-2xl">
+          <p className="mt-2 text-sm sm:text-base 2xl:text-lg text-[#581e1d] max-w-2xl 2xl:max-w-4xl">
             Official registration credentials, statutory particulars, and fixed publication schedule aligned with the ISSN National Centre of India and ISO 3297 international standards.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 2xl:gap-10">
           
           {/* Particulars Table (2 Cols on Large) */}
           <div className="lg:col-span-2 bg-[#ffffff] border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-xs">

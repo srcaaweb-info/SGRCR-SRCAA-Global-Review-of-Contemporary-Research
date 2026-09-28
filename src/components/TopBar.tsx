@@ -8,7 +8,7 @@ interface TopBarProps {
 export const TopBar: React.FC<TopBarProps> = ({ onOpenSubmissionsLog }) => {
   return (
     <div className="bg-[#1f0707] text-[#ede0de] text-xs border-b border-[#451514]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="journal-container">
         <div className="flex items-center justify-between h-9">
           {/* Left: ISSN & Compliance Badges */}
           <div className="flex items-center gap-3 sm:gap-5">

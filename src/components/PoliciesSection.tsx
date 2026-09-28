@@ -16,8 +16,8 @@ export const PoliciesSection: React.FC = () => {
   const [activePolicy, setActivePolicy] = useState<string>('editorial-guidelines');
 
   return (
-    <section id="policies" className="py-12 sm:py-16 md:py-20 lg:py-24 bg-[#ffffff] border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="policies" className="py-12 sm:py-16 md:py-20 lg:py-24 2xl:py-28 bg-[#ffffff] border-b border-gray-200">
+      <div className="journal-container">
         
         {/* Section Header */}
         <div className="mb-8 sm:mb-12">
@@ -25,16 +25,16 @@ export const PoliciesSection: React.FC = () => {
             <ShieldCheck className="w-3.5 h-3.5" />
             Governance & Standards
           </span>
-          <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl text-[#1f0707] mt-3">
+          <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl 2xl:text-5xl text-[#1f0707] mt-3">
             Editorial Integrity & Publication Policies
           </h2>
-          <p className="mt-2 text-sm sm:text-base text-[#581e1d] max-w-2xl">
+          <p className="mt-2 text-sm sm:text-base 2xl:text-lg text-[#581e1d] max-w-2xl 2xl:max-w-4xl">
             SGRCR operates under eight codified governance standards benchmarked against COPE, DORA, ICMJE, and Scopus CSAB criteria.
           </p>
         </div>
 
         {/* Policy Quick Nav Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 2xl:gap-4 mb-8">
           {POLICIES.map((p) => {
             const isActive = activePolicy === p.slug;
             return (
