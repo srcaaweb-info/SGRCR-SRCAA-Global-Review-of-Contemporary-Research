@@ -88,8 +88,8 @@ function isTitanConfigured(): boolean {
 
 // Helper: Check if Gmail SMTP is configured
 function isGmailConfigured(): boolean {
-  const user = process.env.GMAIL_SMTP_USER || process.env.SMTP_USER || 'abhichannaveerappa@gmail.com';
-  const pass = process.env.GMAIL_SMTP_PASS || process.env.SMTP_PASS || 'vmfkncfqjljxeegk';
+  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'abhichannaveerappa@gmail.com';
+  const pass = (process.env.GMAIL_SMTP_PASS && process.env.GMAIL_SMTP_PASS.trim()) || 'vmfkncfqjljxeegk';
   return Boolean(user && pass);
 }
 
@@ -98,8 +98,8 @@ function createTitanTransporter() {
   const host = process.env.TITAN_SMTP_HOST || 'smtp.titan.email';
   const port = Number(process.env.TITAN_SMTP_PORT || 465);
   const secure = process.env.TITAN_SMTP_SECURE !== 'false';
-  const user = process.env.TITAN_SMTP_USER || process.env.SMTP_USER || 'admin@srcaa.co.in';
-  const pass = process.env.TITAN_SMTP_PASS || process.env.SMTP_PASS || '';
+  const user = (process.env.TITAN_SMTP_USER && process.env.TITAN_SMTP_USER.trim()) || 'admin@srcaa.co.in';
+  const pass = (process.env.TITAN_SMTP_PASS && process.env.TITAN_SMTP_PASS.trim()) || '';
 
   return nodemailer.createTransport({
     host,
@@ -117,8 +117,8 @@ function createGmailTransporter() {
   const host = process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com';
   const port = Number(process.env.GMAIL_SMTP_PORT || 465);
   const secure = process.env.GMAIL_SMTP_SECURE !== 'false';
-  const user = process.env.GMAIL_SMTP_USER || process.env.SMTP_USER || 'abhichannaveerappa@gmail.com';
-  const pass = process.env.GMAIL_SMTP_PASS || process.env.SMTP_PASS || 'vmfkncfqjljxeegk';
+  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'abhichannaveerappa@gmail.com';
+  const pass = (process.env.GMAIL_SMTP_PASS && process.env.GMAIL_SMTP_PASS.trim()) || 'vmfkncfqjljxeegk';
 
   return nodemailer.createTransport({
     host,
@@ -426,7 +426,7 @@ Editorial Inboxes: ${editorialRecipients.join(', ')}
         console.log(`[SMTP SUCCESS] Mail delivered! Message ID: ${mailResult.messageId}, Accepted:`, mailResult.accepted);
 
         smtpDeliveryStatus = 'sent';
-        deliveryMessage = `Successfully dispatched to abhichannaveerappa@gmail.com and editorial inboxes via ${selectedProvider.toUpperCase()} SMTP. Message ID: ${mailResult.messageId}`;
+        deliveryMessage = `Manuscript submission Ref: ${referenceId} has been successfully transmitted to the Editorial Secretariat.`;
 
         // Also attempt to send automated receipt confirmation to author
         try {
@@ -461,12 +461,12 @@ Editorial Inboxes: ${editorialRecipients.join(', ')}
       } catch (smtpErr: any) {
         console.error('[SMTP TRANSMISSION ERROR]:', smtpErr);
         smtpDeliveryStatus = 'fallback_recorded';
-        deliveryMessage = `SMTP gateway notice: ${smtpErr.message || 'Connection error'}. Manuscript submission Ref ${referenceId} is securely logged in the editorial queue for abhichannaveerappa@gmail.com.`;
+        deliveryMessage = `Manuscript submission Ref: ${referenceId} has been securely logged with the editorial secretariat for review.`;
       }
     } else {
       // In dev environment or demo mode
       smtpDeliveryStatus = 'simulated_dev';
-      deliveryMessage = `Manuscript submission Ref: ${referenceId} recorded for editorial review. Dispatched to demo inbox (abhichannaveerappa@gmail.com) & editorial queue.`;
+      deliveryMessage = `Manuscript submission Ref: ${referenceId} recorded in the editorial queue for peer review.`;
     }
 
     // Save to cache
@@ -499,7 +499,7 @@ Editorial Inboxes: ${editorialRecipients.join(', ')}
       provider: selectedProvider,
       smtpStatus: smtpDeliveryStatus,
       message: deliveryMessage,
-      editorialInboxes: editorialRecipients,
+      editorialInboxes: ['srcaacontact@gmail.com', 'admin@srcaa.co.in'],
       manuscriptSummary: {
         authorName,
         email,

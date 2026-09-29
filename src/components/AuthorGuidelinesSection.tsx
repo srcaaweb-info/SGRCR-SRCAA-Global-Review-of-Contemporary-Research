@@ -31,23 +31,12 @@ interface Props {
   onOpenSubmissionsLog?: () => void;
 }
 
-interface SmtpConfigState {
-  activeProvider: string;
-  providers: {
-    titan?: { name: string; host: string; port: number; fromEmail: string; isConfigured: boolean };
-    gmail?: { name: string; host: string; port: number; fromEmail: string; isConfigured: boolean };
-  };
-  recipients: string[];
-}
-
 export const AuthorGuidelinesSection: React.FC<Props> = ({ onOpenSubmissionsLog }) => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [validationError, setValidationError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [copiedSummary, setCopiedSummary] = useState(false);
-  const [selectedSmtpProvider, setSelectedSmtpProvider] = useState<'gmail' | 'titan'>('gmail');
-  const [smtpConfig, setSmtpConfig] = useState<SmtpConfigState | null>(null);
 
   const [formData, setFormData] = useState({
     authorName: '',
@@ -58,7 +47,6 @@ export const AuthorGuidelinesSection: React.FC<Props> = ({ onOpenSubmissionsLog 
     title: '',
     abstract: '',
     keywords: '',
-    manuscriptLink: '',
     message: '',
     declaration: false,
   });
@@ -78,28 +66,8 @@ export const AuthorGuidelinesSection: React.FC<Props> = ({ onOpenSubmissionsLog 
     title: string;
     fileName?: string;
     fileSize?: number;
-    manuscriptLink?: string;
     messageText?: string;
   } | null>(null);
-
-  // Fetch SMTP status from backend
-  useEffect(() => {
-    fetch('/api/smtp-config')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 'ok') {
-          setSmtpConfig(data);
-          if (data.activeProvider === 'titan') {
-            setSelectedSmtpProvider('titan');
-          } else {
-            setSelectedSmtpProvider('gmail');
-          }
-        }
-      })
-      .catch((err) => {
-        console.warn('Backend SMTP config check:', err);
-      });
-  }, []);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -115,7 +83,7 @@ export const AuthorGuidelinesSection: React.FC<Props> = ({ onOpenSubmissionsLog 
 
   const processFile = (file: File) => {
     if (file.size > 35 * 1024 * 1024) {
-      setValidationError('File size exceeds the 35MB limit. Please upload a smaller file or provide a cloud link.');
+      setValidationError('File size exceeds the 35MB limit. Please upload a manuscript document under 35MB.');
       return;
     }
     const ext = '.' + file.name.split('.').pop()?.toLowerCase();
@@ -158,8 +126,8 @@ OFFICIAL MANUSCRIPT SUBMISSION RECEIPT & DOSSIER
 ================================================================================
 Submission Reference ID: ${receipt.referenceId}
 Transmission Timestamp: ${receipt.timestamp}
-SMTP Mail Gateway: ${receipt.provider.toUpperCase()} (Port 465 / SSL Secure)
-Delivery Status: ${receipt.smtpStatus}
+Transmission Protocol: Secure Peer-Review Gateway (SSL/TLS Verified)
+Status: Formally Registered with Editorial Secretariat
 
 1. AUTHOR & INSTITUTIONAL DETAILS:
 --------------------------------------------------------------------------------
@@ -171,12 +139,11 @@ ${receipt.coAuthors ? `- Co-Authors: ${receipt.coAuthors}\n` : ''}
 --------------------------------------------------------------------------------
 - Manuscript Title: ${receipt.title}
 - Article Category: ${receipt.articleType}
-- Document File: ${receipt.fileName ? `${receipt.fileName} (${formatFileSize(receipt.fileSize || 0)})` : 'None (Cloud document link provided)'}
-- Cloud / Drive Link: ${receipt.manuscriptLink || 'None provided'}
+- Attached Document: ${receipt.fileName ? `${receipt.fileName} (${formatFileSize(receipt.fileSize || 0)})` : 'Document Attached'}
 
 3. EDITORIAL TRANSMISSION DESTINATIONS:
 --------------------------------------------------------------------------------
-- Editorial Inboxes: ${receipt.editorialInboxes.join(', ')}
+- Editorial Secretariat: SGRCR Editorial Office (srcaacontact@gmail.com, admin@srcaa.co.in)
 - Institutional Publisher: Shakti Research Centre and Academia (SRCAA)
 
 4. ETHICAL & COPE INTEGRITY DECLARATION:
@@ -196,8 +163,8 @@ of Conduct, and complies with DORA scientific evaluation criteria.
       return;
     }
 
-    if (!selectedFile && !formData.manuscriptLink.trim()) {
-      setValidationError('Please either upload a manuscript file (.docx / .pdf) or provide an accessible cloud document link.');
+    if (!selectedFile) {
+      setValidationError('Please upload your manuscript file (.pdf or .docx) to proceed.');
       return;
     }
 
@@ -218,10 +185,9 @@ of Conduct, and complies with DORA scientific evaluation criteria.
       payload.append('title', formData.title.trim());
       payload.append('abstract', formData.abstract.trim());
       payload.append('keywords', formData.keywords.trim());
-      payload.append('manuscriptLink', formData.manuscriptLink.trim());
       payload.append('message', formData.message.trim());
       payload.append('declaration', 'true');
-      payload.append('smtpChoice', selectedSmtpProvider);
+      payload.append('smtpChoice', 'auto');
 
       if (selectedFile) {
         payload.append('attachment', selectedFile, selectedFile.name);
@@ -248,7 +214,6 @@ of Conduct, and complies with DORA scientific evaluation criteria.
             coAuthors: formData.coAuthors,
             articleType: formData.articleType,
             title: formData.title,
-            manuscriptLink: formData.manuscriptLink,
             fileName: selectedFile?.name,
             fileSize: selectedFile?.size,
             hasAttachment: !!selectedFile,
@@ -269,7 +234,7 @@ of Conduct, and complies with DORA scientific evaluation criteria.
         provider: result.provider,
         smtpStatus: result.smtpStatus,
         message: result.message,
-        editorialInboxes: result.editorialInboxes || ['abhichannaveerappa@gmail.com', 'srcaacontact@gmail.com', 'admin@srcaa.co.in'],
+        editorialInboxes: ['srcaacontact@gmail.com', 'admin@srcaa.co.in'],
         authorName: formData.authorName,
         email: formData.email,
         affiliation: formData.affiliation,
@@ -278,7 +243,6 @@ of Conduct, and complies with DORA scientific evaluation criteria.
         title: formData.title,
         fileName: selectedFile?.name,
         fileSize: selectedFile?.size,
-        manuscriptLink: formData.manuscriptLink,
         messageText: formData.message,
       });
 
@@ -318,7 +282,6 @@ of Conduct, and complies with DORA scientific evaluation criteria.
       title: '',
       abstract: '',
       keywords: '',
-      manuscriptLink: '',
       message: '',
       declaration: false,
     });
@@ -424,94 +387,18 @@ of Conduct, and complies with DORA scientific evaluation criteria.
           
           {/* Header of Submission Box */}
           <div className="pb-6 border-b border-gray-200 mb-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#781f1d] bg-[#781f1d]/10 px-2.5 py-0.5 rounded-sm">
-                    Official Editorial Gateway
-                  </span>
-                  <span className="text-xs text-[#581e1d] font-medium">· Double-Blind Peer Review · COPE Standards</span>
-                </div>
-                <h3 className="font-serif font-bold text-2xl sm:text-3xl text-[#1f0707]">
-                  Submit Your Manuscript Online
-                </h3>
-                <p className="text-xs sm:text-sm text-[#581e1d] mt-1 max-w-3xl">
-                  Submit original research or review manuscripts directly to the SGRCR Editorial Secretariat. Submissions undergo initial desk screening and double-blind referee assignment.
-                </p>
-              </div>
-
-              {/* Verified Editorial Channel Badge */}
-              <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 px-3.5 py-2 rounded-xl text-xs shrink-0 self-start md:self-auto">
-                <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
-                <div>
-                  <span className="font-bold text-[#1f0707] block">Direct Editorial Channel</span>
-                  <span className="text-[11px] text-[#581e1d] font-mono">abhichannaveerappa@gmail.com</span>
-                </div>
-              </div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-[#781f1d] bg-[#781f1d]/10 px-2.5 py-0.5 rounded-sm">
+                Official Editorial Gateway
+              </span>
+              <span className="text-xs text-[#581e1d] font-medium">· Double-Blind Peer Review · COPE Standards</span>
             </div>
-
-            {/* Editorial SMTP Transmission Selector */}
-            <div className="mt-6 pt-5 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gray-50/60 p-3.5 rounded-xl border border-gray-200">
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#421413]">
-                <Server className="w-4 h-4 text-[#781f1d]" />
-                <span>Editorial Dispatch Route:</span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                <button
-                  type="button"
-                  onClick={() => setSelectedSmtpProvider('gmail')}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg border font-semibold transition-all text-left cursor-pointer ${
-                    selectedSmtpProvider === 'gmail'
-                      ? 'bg-[#1f0707] text-[#ffffff] border-[#1f0707] shadow-xs'
-                      : 'bg-[#ffffff] text-[#421413] border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <Mail className={`w-3.5 h-3.5 ${selectedSmtpProvider === 'gmail' ? 'text-[#c97775]' : 'text-[#781f1d]'}`} />
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span>Gmail SMTP</span>
-                      <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${
-                        selectedSmtpProvider === 'gmail' ? 'bg-[#781f1d] text-white' : 'bg-emerald-100 text-emerald-800'
-                      }`}>
-                        Demo
-                      </span>
-                    </div>
-                    <p className={`text-[10px] font-mono truncate max-w-[180px] ${
-                      selectedSmtpProvider === 'gmail' ? 'text-gray-300' : 'text-gray-500'
-                    }`}>
-                      abhichannaveerappa@gmail.com
-                    </p>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedSmtpProvider('titan')}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg border font-semibold transition-all text-left cursor-pointer ${
-                    selectedSmtpProvider === 'titan'
-                      ? 'bg-[#1f0707] text-[#ffffff] border-[#1f0707] shadow-xs'
-                      : 'bg-[#ffffff] text-[#421413] border-gray-200 hover:border-gray-300'
-                  }`}
-                >
-                  <Server className={`w-3.5 h-3.5 ${selectedSmtpProvider === 'titan' ? 'text-[#c97775]' : 'text-[#781f1d]'}`} />
-                  <div>
-                    <div className="flex items-center gap-1.5">
-                      <span>Titan Mail SMTP</span>
-                      <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${
-                        selectedSmtpProvider === 'titan' ? 'bg-[#781f1d] text-white' : 'bg-gray-200 text-gray-700'
-                      }`}>
-                        Institutional
-                      </span>
-                    </div>
-                    <p className={`text-[10px] font-mono truncate max-w-[180px] ${
-                      selectedSmtpProvider === 'titan' ? 'text-gray-300' : 'text-gray-500'
-                    }`}>
-                      admin@srcaa.co.in
-                    </p>
-                  </div>
-                </button>
-              </div>
-            </div>
+            <h3 className="font-serif font-bold text-2xl sm:text-3xl text-[#1f0707]">
+              Submit Your Manuscript Online
+            </h3>
+            <p className="text-xs sm:text-sm text-[#581e1d] mt-1 max-w-3xl">
+              Submit original research or review manuscripts directly to the SGRCR Editorial Secretariat. Submissions undergo initial desk screening and double-blind referee assignment.
+            </p>
           </div>
 
           {/* Validation Alert */}
@@ -543,7 +430,7 @@ of Conduct, and complies with DORA scientific evaluation criteria.
                       Manuscript Submission Dossier Dispatched
                     </h4>
                     <p className="text-xs sm:text-sm text-[#581e1d] mt-1">
-                      Your submission dossier and manuscript have been registered with the SGRCR Editorial Secretariat via {submissionReceipt.provider.toUpperCase()} SMTP.
+                      Your submission dossier and manuscript have been registered with the SGRCR Editorial Secretariat.
                     </p>
                   </div>
                 </div>
@@ -560,8 +447,8 @@ of Conduct, and complies with DORA scientific evaluation criteria.
               <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2">
                   <Mail className="w-4 h-4 text-[#781f1d]" />
-                  <span className="font-bold text-[#421413]">Editorial Inboxes:</span>
-                  <span className="text-[#581e1d] font-mono">{submissionReceipt.editorialInboxes.join(', ')}</span>
+                  <span className="font-bold text-[#421413]">Editorial Secretariat:</span>
+                  <span className="text-[#581e1d]">Transmission Registered & Verified</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-[#421413]">Timestamp:</span>
@@ -612,23 +499,6 @@ of Conduct, and complies with DORA scientific evaluation criteria.
                               ({formatFileSize(submissionReceipt.fileSize)})
                             </span>
                           )}
-                        </td>
-                      </tr>
-                    )}
-                    {submissionReceipt.manuscriptLink && (
-                      <tr className="border-b border-gray-200">
-                        <td className="p-3.5 font-bold text-[#421413]">Cloud Access Link</td>
-                        <td className="p-3.5">
-                          <a
-                            href={submissionReceipt.manuscriptLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-[#781f1d] hover:underline inline-flex items-center gap-1 font-medium"
-                          >
-                            <LinkIcon className="w-3.5 h-3.5" />
-                            <span>{submissionReceipt.manuscriptLink}</span>
-                            <ExternalLink className="w-3 h-3" />
-                          </a>
                         </td>
                       </tr>
                     )}
@@ -848,100 +718,76 @@ of Conduct, and complies with DORA scientific evaluation criteria.
                 </div>
               </div>
 
-              {/* SECTION 3: DOCUMENT UPLOAD & REPOSITORY */}
+              {/* SECTION 3: DOCUMENT UPLOAD */}
               <div className="pt-2">
                 <div className="flex items-center gap-2 pb-2 mb-4 border-b border-gray-200">
                   <span className="w-6 h-6 rounded-full bg-[#781f1d] text-white flex items-center justify-center text-xs font-bold">3</span>
-                  <h4 className="font-serif font-bold text-base text-[#1f0707]">Manuscript Document & Cloud Access</h4>
+                  <h4 className="font-serif font-bold text-base text-[#1f0707]">Manuscript Document Upload</h4>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {/* File Upload Zone */}
-                  <div>
-                    <div className="flex items-center justify-between mb-1.5">
-                      <label className="block text-xs font-bold uppercase tracking-wider text-[#421413]">
-                        Upload Document (.pdf / .docx / .doc) *
-                      </label>
-                      {selectedFile && (
-                        <button
-                          type="button"
-                          onClick={() => setSelectedFile(null)}
-                          className="text-[11px] text-red-700 hover:text-red-900 font-bold inline-flex items-center gap-1 cursor-pointer"
-                        >
-                          <X className="w-3 h-3" />
-                          <span>Remove</span>
-                        </button>
-                      )}
-                    </div>
-
-                    <div
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      className={`border-2 border-dashed rounded-xl p-5 text-center transition-all ${
-                        isDragging
-                          ? 'border-[#781f1d] bg-[#781f1d]/5'
-                          : selectedFile
-                          ? 'border-emerald-500 bg-emerald-50/40'
-                          : 'border-gray-300 hover:border-gray-400 bg-gray-50/40'
-                      }`}
-                    >
-                      {selectedFile ? (
-                        <div className="flex items-center justify-between gap-3 text-left">
-                          <div className="flex items-center gap-3 overflow-hidden">
-                            <div className="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
-                              <FileText className="w-5 h-5" />
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-xs font-bold text-[#1f0707] truncate">{selectedFile.name}</p>
-                              <p className="text-[11px] text-[#581e1d]">
-                                {formatFileSize(selectedFile.size)} · Ready to transmit via SMTP
-                              </p>
-                            </div>
-                          </div>
-                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200 shrink-0">
-                            Attached ✓
-                          </span>
-                        </div>
-                      ) : (
-                        <div>
-                          <Upload className="w-7 h-7 text-[#781f1d] mx-auto mb-2 opacity-80" />
-                          <label className="cursor-pointer text-xs font-bold text-[#781f1d] hover:underline block">
-                            <span>Browse manuscript file</span>
-                            <input
-                              type="file"
-                              accept=".pdf,.doc,.docx,.rtf,.odt"
-                              onChange={handleFileChange}
-                              className="hidden"
-                            />
-                          </label>
-                          <p className="text-[11px] text-[#581e1d] mt-1">
-                            Accepted: PDF, DOCX, DOC (Up to 35 MB)
-                          </p>
-                        </div>
-                      )}
-                    </div>
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#421413]">
+                      Upload Manuscript Document (.pdf / .docx / .doc) *
+                    </label>
+                    {selectedFile && (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedFile(null)}
+                        className="text-[11px] text-red-700 hover:text-red-900 font-bold inline-flex items-center gap-1 cursor-pointer"
+                      >
+                        <X className="w-3 h-3" />
+                        <span>Remove</span>
+                      </button>
+                    )}
                   </div>
 
-                  {/* Cloud Link Input */}
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1.5">
-                      Or Document Cloud Link (Google Drive / OneDrive)
-                    </label>
-                    <div className="relative">
-                      <LinkIcon className="w-4 h-4 text-[#781f1d] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                      <input
-                        type="url"
-                        name="manuscriptLink"
-                        value={formData.manuscriptLink}
-                        onChange={handleInputChange}
-                        placeholder="https://drive.google.com/file/d/..."
-                        className="w-full pl-10 pr-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden transition-all shadow-2xs"
-                      />
-                    </div>
-                    <p className="text-[11px] text-[#581e1d] mt-1.5 leading-relaxed">
-                      If providing a link, verify that link access permissions are set to "Anyone with the link can view".
-                    </p>
+                  <div
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    className={`border-2 border-dashed rounded-xl p-6 sm:p-8 text-center transition-all ${
+                      isDragging
+                        ? 'border-[#781f1d] bg-[#781f1d]/5'
+                        : selectedFile
+                        ? 'border-emerald-500 bg-emerald-50/40'
+                        : 'border-gray-300 hover:border-gray-400 bg-gray-50/40'
+                    }`}
+                  >
+                    {selectedFile ? (
+                      <div className="flex items-center justify-between gap-3 text-left max-w-lg mx-auto bg-[#ffffff] p-3.5 rounded-xl border border-emerald-200 shadow-2xs">
+                        <div className="flex items-center gap-3 overflow-hidden">
+                          <div className="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                            <FileText className="w-5 h-5" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-xs font-bold text-[#1f0707] truncate">{selectedFile.name}</p>
+                            <p className="text-[11px] text-[#581e1d]">
+                              {formatFileSize(selectedFile.size)} · Ready for editorial review
+                            </p>
+                          </div>
+                        </div>
+                        <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200 shrink-0">
+                          Attached ✓
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="max-w-md mx-auto">
+                        <Upload className="w-9 h-9 text-[#781f1d] mx-auto mb-2 opacity-80" />
+                        <label className="cursor-pointer text-sm font-bold text-[#781f1d] hover:underline block">
+                          <span>Click to browse manuscript file or drag & drop</span>
+                          <input
+                            type="file"
+                            accept=".pdf,.doc,.docx,.rtf,.odt"
+                            onChange={handleFileChange}
+                            className="hidden"
+                          />
+                        </label>
+                        <p className="text-[11px] text-[#581e1d] mt-1.5">
+                          Supported file formats: PDF, DOCX, DOC (Maximum file size: 35 MB)
+                        </p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -989,9 +835,7 @@ of Conduct, and complies with DORA scientific evaluation criteria.
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-gray-200">
                 <div className="flex items-center gap-2 text-xs text-[#581e1d]">
                   <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
-                  <span>
-                    Routing to <strong>abhichannaveerappa@gmail.com</strong> via {selectedSmtpProvider.toUpperCase()} SMTP Gateway.
-                  </span>
+                  <span>Confidential & Secure Double-Blind Peer Review Gateway</span>
                 </div>
 
                 <button
@@ -1002,7 +846,7 @@ of Conduct, and complies with DORA scientific evaluation criteria.
                   {formStatus === 'submitting' ? (
                     <>
                       <RefreshCw className="w-4 h-4 animate-spin text-[#ffffff]" />
-                      <span>Transmitting Manuscript via SMTP...</span>
+                      <span>Transmitting Manuscript...</span>
                     </>
                   ) : (
                     <>

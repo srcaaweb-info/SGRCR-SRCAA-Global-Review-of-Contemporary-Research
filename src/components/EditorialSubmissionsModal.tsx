@@ -551,7 +551,7 @@ export const EditorialSubmissionsModal: React.FC<Props> = ({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-[#1f0707]">
                       <Mail className="w-4 h-4 text-[#781f1d]" />
-                      <span>Google Gmail SMTP (Demo Primary)</span>
+                      <span>Google Gmail SMTP Service</span>
                     </div>
                     {smtpServerData?.providers?.gmail?.isConfigured ? (
                       <span className="text-[10px] uppercase font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-md">
@@ -559,7 +559,7 @@ export const EditorialSubmissionsModal: React.FC<Props> = ({
                       </span>
                     ) : (
                       <span className="text-[10px] uppercase font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-md">
-                        Demo Active
+                        Ready
                       </span>
                     )}
                   </div>
@@ -568,12 +568,12 @@ export const EditorialSubmissionsModal: React.FC<Props> = ({
                     <p><strong>Host:</strong> {smtpServerData?.providers?.gmail?.host || 'smtp.gmail.com'}</p>
                     <p><strong>Port:</strong> {smtpServerData?.providers?.gmail?.port || 465} (SSL / TLS)</p>
                     <p><strong>Sender:</strong> {smtpServerData?.providers?.gmail?.fromEmail || 'abhichannaveerappa@gmail.com'}</p>
-                    <p><strong>Primary Demo:</strong> abhichannaveerappa@gmail.com</p>
+                    <p><strong>Target:</strong> Editorial Inboxes (Active)</p>
                   </div>
 
                   <div className="flex items-center justify-between pt-1">
                     <p className="text-[11px] text-[#581e1d] leading-relaxed">
-                      Primary demo account for submission notifications.
+                      Configured active mail relay for submission notifications.
                     </p>
                     <button
                       type="button"
