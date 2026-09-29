@@ -86,7 +86,7 @@ export const EditorialSubmissionsModal: React.FC<Props> = ({
       const res = await fetch('/api/test-smtp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ provider, recipient: smtpServerData?.providers?.gmail?.fromEmail || 'srcaacontact@gmail.com' }),
+        body: JSON.stringify({ provider, recipient: 'abhichannaveerappa@gmail.com' }),
       });
       const data = await res.json();
       setTestResult({
@@ -567,7 +567,7 @@ export const EditorialSubmissionsModal: React.FC<Props> = ({
                   <div className="space-y-1.5 text-xs text-[#581e1d] bg-[#ffffff] p-3 rounded-lg border border-gray-200 font-mono">
                     <p><strong>Host:</strong> {smtpServerData?.providers?.gmail?.host || 'smtp.gmail.com'}</p>
                     <p><strong>Port:</strong> {smtpServerData?.providers?.gmail?.port || 465} (SSL / TLS)</p>
-                    <p><strong>Sender:</strong> {smtpServerData?.providers?.gmail?.fromEmail || 'srcaacontact@gmail.com'}</p>
+                    <p><strong>Sender:</strong> {smtpServerData?.providers?.gmail?.fromEmail || 'abhichannaveerappa@gmail.com'}</p>
                     <p><strong>Target:</strong> Editorial Inboxes (Active)</p>
                   </div>
 
