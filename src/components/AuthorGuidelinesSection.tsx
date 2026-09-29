@@ -143,7 +143,7 @@ ${receipt.coAuthors ? `- Co-Authors: ${receipt.coAuthors}\n` : ''}
 
 3. EDITORIAL TRANSMISSION DESTINATIONS:
 --------------------------------------------------------------------------------
-- Editorial Secretariat: SGRCR Editorial Office (srcaacontact@gmail.com, admin@srcaa.co.in)
+- Editorial Secretariat: SGRCR Editorial Office (srcaaweb@gmail.com, srcaacontact@gmail.com, admin@srcaa.co.in)
 - Institutional Publisher: Shakti Research Centre and Academia (SRCAA)
 
 4. ETHICAL & COPE INTEGRITY DECLARATION:
@@ -234,7 +234,7 @@ of Conduct, and complies with DORA scientific evaluation criteria.
         provider: result.provider,
         smtpStatus: result.smtpStatus,
         message: result.message,
-        editorialInboxes: ['srcaacontact@gmail.com', 'admin@srcaa.co.in'],
+        editorialInboxes: ['srcaaweb@gmail.com', 'srcaacontact@gmail.com', 'admin@srcaa.co.in'],
         authorName: formData.authorName,
         email: formData.email,
         affiliation: formData.affiliation,
