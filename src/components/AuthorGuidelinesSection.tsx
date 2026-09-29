@@ -13,98 +13,97 @@ import {
   Check,
   ExternalLink,
   Mail,
-  Inbox,
-  Info,
   Download,
   X,
-  Database,
+  Server,
+  ShieldCheck,
+  RefreshCw,
   Sparkles,
-  FolderOpen,
-  HardDrive,
-  Settings,
-  ChevronDown,
-  ChevronUp
+  Inbox
 } from 'lucide-react';
 import { 
   saveManuscriptSubmission, 
   formatFileSize, 
-  downloadBlob,
-  downloadTextFile,
-  getGoogleFormEndpoint,
-  pushToGoogleEndpoint,
-  fileToBase64,
-  getGoogleDriveFolderUrl,
-  setGoogleDriveFolderUrl
+  downloadTextFile 
 } from '../utils/submissionStorage';
-
-const PRIMARY_GMAIL = 'srcaacontact@gmail.com';
-const SECONDARY_GMAIL = 'srcaaweb@gmail.com';
 
 interface Props {
   onOpenSubmissionsLog?: () => void;
+}
+
+interface SmtpConfigState {
+  activeProvider: string;
+  providers: {
+    titan?: { name: string; host: string; port: number; fromEmail: string; isConfigured: boolean };
+    gmail?: { name: string; host: string; port: number; fromEmail: string; isConfigured: boolean };
+  };
+  recipients: string[];
 }
 
 export const AuthorGuidelinesSection: React.FC<Props> = ({ onOpenSubmissionsLog }) => {
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [validationError, setValidationError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [selectedFileName, setSelectedFileName] = useState<string>('');
+  const [isDragging, setIsDragging] = useState(false);
   const [copiedSummary, setCopiedSummary] = useState(false);
-  const [showDriveConfig, setShowDriveConfig] = useState(false);
-  const [driveFolderUrl, setDriveFolderUrlState] = useState<string>(() => getGoogleDriveFolderUrl());
-  const [driveFolderInput, setDriveFolderInput] = useState<string>(() => getGoogleDriveFolderUrl());
-  const [saveDriveSuccess, setSaveDriveSuccess] = useState(false);
-
-  const [submittedSnapshot, setSubmittedSnapshot] = useState<{
-    id?: string;
-    authorName: string;
-    email: string;
-    affiliation: string;
-    articleType: string;
-    title: string;
-    manuscriptLink: string;
-    fileName: string;
-    fileSize?: number;
-    message: string;
-    timestamp: string;
-  } | null>(null);
+  const [selectedSmtpProvider, setSelectedSmtpProvider] = useState<'gmail' | 'titan'>('gmail');
+  const [smtpConfig, setSmtpConfig] = useState<SmtpConfigState | null>(null);
 
   const [formData, setFormData] = useState({
     authorName: '',
     email: '',
     affiliation: '',
+    coAuthors: '',
     articleType: 'Original research article',
     title: '',
+    abstract: '',
+    keywords: '',
     manuscriptLink: '',
     message: '',
     declaration: false,
   });
 
-  const [googleEndpoint, setGoogleEndpoint] = useState<string>(() => getGoogleFormEndpoint());
+  const [submissionReceipt, setSubmissionReceipt] = useState<{
+    referenceId: string;
+    timestamp: string;
+    provider: string;
+    smtpStatus: string;
+    message: string;
+    editorialInboxes: string[];
+    authorName: string;
+    email: string;
+    affiliation: string;
+    coAuthors?: string;
+    articleType: string;
+    title: string;
+    fileName?: string;
+    fileSize?: number;
+    manuscriptLink?: string;
+    messageText?: string;
+  } | null>(null);
 
+  // Fetch SMTP status from backend
   useEffect(() => {
-    const handleStorageUpdate = () => {
-      setGoogleEndpoint(getGoogleFormEndpoint());
-      setDriveFolderUrlState(getGoogleDriveFolderUrl());
-    };
-    window.addEventListener('sgrcr-storage-update', handleStorageUpdate);
-    return () => window.removeEventListener('sgrcr-storage-update', handleStorageUpdate);
+    fetch('/api/smtp-config')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 'ok') {
+          setSmtpConfig(data);
+          if (data.activeProvider === 'titan') {
+            setSelectedSmtpProvider('titan');
+          } else {
+            setSelectedSmtpProvider('gmail');
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn('Backend SMTP config check:', err);
+      });
   }, []);
 
-  const handleSaveDriveFolder = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (driveFolderInput.trim()) {
-      setGoogleDriveFolderUrl(driveFolderInput.trim());
-      setDriveFolderUrlState(driveFolderInput.trim());
-      setSaveDriveSuccess(true);
-      setTimeout(() => {
-        setSaveDriveSuccess(false);
-        setShowDriveConfig(false);
-      }, 2000);
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value, type } = e.target;
     setValidationError(null);
     if (type === 'checkbox') {
@@ -114,221 +113,215 @@ export const AuthorGuidelinesSection: React.FC<Props> = ({ onOpenSubmissionsLog 
     }
   };
 
+  const processFile = (file: File) => {
+    if (file.size > 35 * 1024 * 1024) {
+      setValidationError('File size exceeds the 35MB limit. Please upload a smaller file or provide a cloud link.');
+      return;
+    }
+    const ext = '.' + file.name.split('.').pop()?.toLowerCase();
+    const validExts = ['.pdf', '.doc', '.docx', '.rtf', '.odt'];
+    if (!validExts.includes(ext)) {
+      setValidationError('Invalid file format. Please upload a PDF or Microsoft Word document (.docx / .pdf).');
+      return;
+    }
+    setSelectedFile(file);
+    setValidationError(null);
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (file.size > 25 * 1024 * 1024) {
-        setValidationError('Selected file is larger than 25MB. Please upload a smaller file or paste a Google Drive / cloud link.');
-        return;
-      }
-      setSelectedFile(file);
-      setSelectedFileName(file.name);
-      setValidationError(null);
-    } else {
-      setSelectedFile(null);
-      setSelectedFileName('');
+      processFile(e.target.files[0]);
     }
   };
 
-  const generateDossierText = (data: typeof formData, fileName: string, refId: string, timestamp: string) => {
-    return `========================================================================
-SHAKTI GLOBAL REVIEW FOR CONTEMPORARY RESEARCH (SGRCR)
-OFFICIAL MANUSCRIPT SUBMISSION DOSSIER
-========================================================================
-Submission Reference ID: ${refId}
-Timestamp: ${timestamp}
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
 
-1. CORRESPONDING AUTHOR & AFFILIATION:
-------------------------------------------------------------------------
-- Author Full Name: ${data.authorName}
-- Institutional Email: ${data.email}
-- University / Affiliation: ${data.affiliation}
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
 
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      processFile(e.dataTransfer.files[0]);
+    }
+  };
+
+  const generateReceiptText = (receipt: NonNullable<typeof submissionReceipt>) => {
+    return `================================================================================
+SRCAA GLOBAL REVIEW OF CONTEMPORARY RESEARCH (SGRCR)
+OFFICIAL MANUSCRIPT SUBMISSION RECEIPT & DOSSIER
+================================================================================
+Submission Reference ID: ${receipt.referenceId}
+Transmission Timestamp: ${receipt.timestamp}
+SMTP Mail Gateway: ${receipt.provider.toUpperCase()} (Port 465 / SSL Secure)
+Delivery Status: ${receipt.smtpStatus}
+
+1. AUTHOR & INSTITUTIONAL DETAILS:
+--------------------------------------------------------------------------------
+- Corresponding Author: ${receipt.authorName}
+- Institutional Email: ${receipt.email}
+- Institutional Affiliation: ${receipt.affiliation}
+${receipt.coAuthors ? `- Co-Authors: ${receipt.coAuthors}\n` : ''}
 2. MANUSCRIPT SPECIFICATIONS:
-------------------------------------------------------------------------
-- Manuscript Title: ${data.title}
-- Article Category: ${data.articleType}
-- Attached Document File: ${fileName || 'None (Cloud document link provided)'}
-- Google Drive / Cloud Link: ${data.manuscriptLink || 'None provided'}
+--------------------------------------------------------------------------------
+- Manuscript Title: ${receipt.title}
+- Article Category: ${receipt.articleType}
+- Document File: ${receipt.fileName ? `${receipt.fileName} (${formatFileSize(receipt.fileSize || 0)})` : 'None (Cloud document link provided)'}
+- Cloud / Drive Link: ${receipt.manuscriptLink || 'None provided'}
 
-3. COVER LETTER / COMMENTS TO THE EDITORIAL BOARD:
-------------------------------------------------------------------------
-${data.message || 'No additional comments provided.'}
+3. EDITORIAL TRANSMISSION DESTINATIONS:
+--------------------------------------------------------------------------------
+- Editorial Inboxes: ${receipt.editorialInboxes.join(', ')}
+- Institutional Publisher: Shakti Research Centre and Academia (SRCAA)
 
-4. COPE ETHICAL DECLARATION & INTEGRITY COMPLIANCE:
-------------------------------------------------------------------------
-[CONFIRMED] The author declares that this manuscript represents original research, is not under consideration by any other journal or publisher, that all co-authors have approved this submission, and that all generative AI usage has been documented in accordance with COPE guidelines.
-
-5. AUTOMATED TRANSMISSION DESTINATIONS:
-------------------------------------------------------------------------
-- Gmail Inboxes: ${PRIMARY_GMAIL}, ${SECONDARY_GMAIL}
-- Google Drive Submissions Folder: ${driveFolderUrl}
-========================================================================`;
+4. ETHICAL & COPE INTEGRITY DECLARATION:
+--------------------------------------------------------------------------------
+[CONFIRMED] The author certifies that this manuscript is original, is not under
+review elsewhere, conforms to the Committee on Publication Ethics (COPE) Code
+of Conduct, and complies with DORA scientific evaluation criteria.
+================================================================================`;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.declaration) {
-      setValidationError('Please confirm the originality and ethical declaration checkbox to proceed.');
-      return;
-    }
-    if (!formData.authorName.trim() || !formData.email.trim() || !formData.title.trim() || !formData.affiliation.trim()) {
-      setValidationError('Please complete all mandatory fields marked with an asterisk (*).');
+    setValidationError(null);
+
+    if (!formData.authorName.trim() || !formData.email.trim() || !formData.affiliation.trim() || !formData.title.trim()) {
+      setValidationError('Please complete all required fields marked with an asterisk (*).');
       return;
     }
 
     if (!selectedFile && !formData.manuscriptLink.trim()) {
-      setValidationError('Please either upload a manuscript file (.docx / .pdf) or provide a Google Drive / cloud document link so the editorial board can download your paper.');
+      setValidationError('Please either upload a manuscript file (.docx / .pdf) or provide an accessible cloud document link.');
+      return;
+    }
+
+    if (!formData.declaration) {
+      setValidationError('Please accept the publication ethics and originality declaration to proceed.');
       return;
     }
 
     setFormStatus('submitting');
-    setValidationError(null);
 
-    const snapshot = {
-      ...formData,
-      fileName: selectedFileName,
-      fileSize: selectedFile?.size,
-      timestamp: new Date().toLocaleString(),
-    };
-
-    // 1. Permanently save to in-app local storage and IndexedDB file cache so file is NEVER lost
-    const savedRecord = saveManuscriptSubmission({
-      authorName: formData.authorName,
-      email: formData.email,
-      affiliation: formData.affiliation,
-      articleType: formData.articleType,
-      title: formData.title,
-      manuscriptLink: formData.manuscriptLink,
-      fileName: selectedFileName,
-      fileSize: selectedFile?.size,
-      hasAttachment: !!selectedFile,
-      message: formData.message,
-      timestamp: snapshot.timestamp,
-      forwardStatus: 'forwarded',
-    }, selectedFile);
-
-    const fullDossier = generateDossierText(formData, selectedFileName, savedRecord.id, snapshot.timestamp);
-
-    // 2. Automatically download the details dossier (.txt) so the user has the exact doc & details
     try {
-      downloadTextFile(fullDossier, `SGRCR_SUBMISSION_${savedRecord.id}_DETAILS.txt`);
-    } catch (dErr) {
-      console.warn('Dossier text download:', dErr);
-    }
-
-    // 3. Build multipart/form-data so the REAL file is attached and sent to Gmail via FormSubmit
-    try {
-      const formPayload = new FormData();
-      formPayload.append('_captcha', 'false');
-      formPayload.append('_template', 'table');
-      formPayload.append('_subject', `[SGRCR Manuscript Submission] ${formData.title} - ${formData.authorName}`);
-      formPayload.append('_replyto', formData.email);
-      formPayload.append('_cc', SECONDARY_GMAIL);
-      formPayload.append('Submission Reference ID', savedRecord.id);
-      formPayload.append('Corresponding Author', formData.authorName);
-      formPayload.append('Institutional Email', formData.email);
-      formPayload.append('Institution / Affiliation', formData.affiliation);
-      formPayload.append('Article Category', formData.articleType);
-      formPayload.append('Manuscript Title', formData.title);
-      formPayload.append('Manuscript Cloud Link', formData.manuscriptLink || 'N/A');
-      formPayload.append('Google Drive Folder Destination', driveFolderUrl);
-      formPayload.append('Cover Letter / Comments', formData.message || 'None');
-      formPayload.append('COPE Ethical Declaration', 'Confirmed by Author');
-      formPayload.append('Primary Inboxes', `${PRIMARY_GMAIL}, ${SECONDARY_GMAIL}`);
-      formPayload.append('Submission Timestamp', snapshot.timestamp);
+      const payload = new FormData();
+      payload.append('authorName', formData.authorName.trim());
+      payload.append('email', formData.email.trim());
+      payload.append('affiliation', formData.affiliation.trim());
+      payload.append('coAuthors', formData.coAuthors.trim());
+      payload.append('articleType', formData.articleType);
+      payload.append('title', formData.title.trim());
+      payload.append('abstract', formData.abstract.trim());
+      payload.append('keywords', formData.keywords.trim());
+      payload.append('manuscriptLink', formData.manuscriptLink.trim());
+      payload.append('message', formData.message.trim());
+      payload.append('declaration', 'true');
+      payload.append('smtpChoice', selectedSmtpProvider);
 
       if (selectedFile) {
-        // FormSubmit attaches any input named 'attachment' directly to the email sent to Gmail
-        formPayload.append('attachment', selectedFile, selectedFile.name);
-        formPayload.append('Attached Document Name', selectedFile.name);
-        formPayload.append('Document File Size', formatFileSize(selectedFile.size));
+        payload.append('attachment', selectedFile, selectedFile.name);
       }
 
-      await fetch(`https://formsubmit.co/ajax/${PRIMARY_GMAIL}`, {
+      const response = await fetch('/api/submit-manuscript', {
         method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-        },
-        body: formPayload,
+        body: payload,
       });
-    } catch (err) {
-      console.warn('Form forward network request finished:', err);
-    }
 
-    // 4. Push to Google Drive / Apps Script Webhook API endpoint if configured
-    const currentGoogleEndpoint = getGoogleFormEndpoint();
-    if (currentGoogleEndpoint) {
-      try {
-        let fileDataPayload = null;
-        if (selectedFile) {
-          fileDataPayload = await fileToBase64(selectedFile);
-        }
-        await pushToGoogleEndpoint(currentGoogleEndpoint, {
-          submissionId: savedRecord.id,
-          authorName: formData.authorName,
-          email: formData.email,
-          affiliation: formData.affiliation,
-          articleType: formData.articleType,
-          title: formData.title,
-          manuscriptLink: formData.manuscriptLink,
-          message: formData.message,
-          timestamp: snapshot.timestamp,
-          fileData: fileDataPayload,
-        });
-      } catch (gErr) {
-        console.warn('Google Form endpoint push error:', gErr);
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Server rejected manuscript transmission.');
       }
-    }
 
-    // 5. Automatically trigger Gmail Web Compose with pre-filled details addressed to both inboxes
-    const gmailSubject = `[SGRCR Manuscript Submission] ${formData.title} - ${formData.authorName}`;
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(`${PRIMARY_GMAIL},${SECONDARY_GMAIL}`)}&su=${encodeURIComponent(gmailSubject)}&body=${encodeURIComponent(fullDossier)}`;
-    try {
-      window.open(gmailUrl, '_blank', 'noopener,noreferrer');
-    } catch (popErr) {
-      console.warn('Browser prevented direct Gmail popup:', popErr);
-    }
+      // Also persist to local cache for instant in-app editorial log review
+      try {
+        saveManuscriptSubmission(
+          {
+            authorName: formData.authorName,
+            email: formData.email,
+            affiliation: formData.affiliation,
+            coAuthors: formData.coAuthors,
+            articleType: formData.articleType,
+            title: formData.title,
+            manuscriptLink: formData.manuscriptLink,
+            fileName: selectedFile?.name,
+            fileSize: selectedFile?.size,
+            hasAttachment: !!selectedFile,
+            message: formData.message,
+            timestamp: result.timestamp,
+            forwardStatus: 'forwarded',
+          },
+          selectedFile || undefined,
+          result.referenceId
+        );
+      } catch (cacheErr) {
+        console.warn('Local log sync note:', cacheErr);
+      }
 
-    setSubmittedSnapshot({ ...snapshot, id: savedRecord.id });
-    setFormStatus('success');
+      setSubmissionReceipt({
+        referenceId: result.referenceId,
+        timestamp: result.timestamp,
+        provider: result.provider,
+        smtpStatus: result.smtpStatus,
+        message: result.message,
+        editorialInboxes: result.editorialInboxes || ['abhichannaveerappa@gmail.com', 'srcaacontact@gmail.com', 'admin@srcaa.co.in'],
+        authorName: formData.authorName,
+        email: formData.email,
+        affiliation: formData.affiliation,
+        coAuthors: formData.coAuthors,
+        articleType: formData.articleType,
+        title: formData.title,
+        fileName: selectedFile?.name,
+        fileSize: selectedFile?.size,
+        manuscriptLink: formData.manuscriptLink,
+        messageText: formData.message,
+      });
+
+      setFormStatus('success');
+    } catch (err: any) {
+      console.error('Submission failed:', err);
+      setValidationError(err.message || 'Transmission failed. Please check your connection or contact the editorial desk directly.');
+      setFormStatus('error');
+    }
   };
 
-  const handleCopySummary = () => {
-    if (!submittedSnapshot) return;
-    const text = generateDossierText(
-      submittedSnapshot as any, 
-      submittedSnapshot.fileName, 
-      submittedSnapshot.id || 'SGRCR-SUBMISSION', 
-      submittedSnapshot.timestamp
-    );
+  const handleCopyReceipt = () => {
+    if (!submissionReceipt) return;
+    const text = generateReceiptText(submissionReceipt);
     navigator.clipboard.writeText(text);
     setCopiedSummary(true);
     setTimeout(() => setCopiedSummary(false), 2500);
   };
 
-  const getGmailWebLink = () => {
-    if (!submittedSnapshot) return '#';
-    const subject = `[SGRCR Manuscript Submission] ${submittedSnapshot.title} - ${submittedSnapshot.authorName}`;
-    const body = generateDossierText(
-      submittedSnapshot as any, 
-      submittedSnapshot.fileName, 
-      submittedSnapshot.id || 'SGRCR-SUBMISSION', 
-      submittedSnapshot.timestamp
-    );
-    return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(`${PRIMARY_GMAIL},${SECONDARY_GMAIL}`)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const handleDownloadReceiptFile = () => {
+    if (!submissionReceipt) return;
+    const text = generateReceiptText(submissionReceipt);
+    downloadTextFile(text, `${submissionReceipt.referenceId}_Official_Receipt.txt`);
   };
 
-  const getMailtoLink = () => {
-    if (!submittedSnapshot) return '#';
-    const subject = `[SGRCR Manuscript Submission] ${submittedSnapshot.title} - ${submittedSnapshot.authorName}`;
-    const body = generateDossierText(
-      submittedSnapshot as any, 
-      submittedSnapshot.fileName, 
-      submittedSnapshot.id || 'SGRCR-SUBMISSION', 
-      submittedSnapshot.timestamp
-    );
-    return `mailto:${PRIMARY_GMAIL},${SECONDARY_GMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const handleResetForm = () => {
+    setFormStatus('idle');
+    setSubmissionReceipt(null);
+    setSelectedFile(null);
+    setValidationError(null);
+    setFormData({
+      authorName: '',
+      email: '',
+      affiliation: '',
+      coAuthors: '',
+      articleType: 'Original research article',
+      title: '',
+      abstract: '',
+      keywords: '',
+      manuscriptLink: '',
+      message: '',
+      declaration: false,
+    });
   };
 
   return (
@@ -345,13 +338,12 @@ ${data.message || 'No additional comments provided.'}
             Author & Submission Guidelines
           </h2>
           <p className="mt-2 text-sm sm:text-base 2xl:text-lg text-[#581e1d] max-w-2xl 2xl:max-w-4xl">
-            Detailed criteria for manuscript preparation, formatting, referencing, ethical declarations, and editorial processing for aspiring authors.
+            Rigorous criteria for manuscript preparation, academic formatting, citation rules, ethical declarations, and online transmission to the editorial council.
           </p>
         </div>
 
         {/* Guidelines Specifications Panel */}
         <div className="bg-gray-50/70 border border-gray-200 rounded-2xl p-6 sm:p-8 md:p-10 2xl:p-12 shadow-xs mb-10">
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-8 border-b border-gray-200">
             <div>
               <h3 className="font-serif font-bold text-xl text-[#1f0707] mb-3 flex items-center gap-2">
@@ -410,7 +402,7 @@ ${data.message || 'No additional comments provided.'}
               <div>
                 <h4 className="font-bold text-sm text-[#1f0707]">Editorial Review Timeline</h4>
                 <p className="text-xs text-[#581e1d] mt-1">
-                  Initial desk screening within <strong>5 working days</strong>. Double-blind referee review typically completes in <strong>3–4 weeks</strong>.
+                  Preliminary desk screening completed within <strong>3–5 working days</strong>. Double-blind referee review typically completes in <strong>3–4 weeks</strong>.
                 </p>
               </div>
             </div>
@@ -420,294 +412,239 @@ ${data.message || 'No additional comments provided.'}
               <div>
                 <h4 className="font-bold text-sm text-[#1f0707]">Transparent APC Policy</h4>
                 <p className="text-xs text-[#581e1d] mt-1">
-                  No hidden submission or evaluation fees. SGRCR provides fee waivers for scholars and authors from low-resource institutions.
+                  No hidden evaluation fees. SGRCR provides institutional waivers for researchers from lower-middle income economies.
                 </p>
               </div>
             </div>
           </div>
-
         </div>
 
-        {/* Manuscript Submission Form */}
-        <div className="bg-[#ffffff] border border-gray-200 rounded-2xl p-6 sm:p-8 md:p-10 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-gray-200">
-            <div>
-              <h3 className="font-serif font-bold text-2xl text-[#1f0707]">
-                Submit Your Manuscript Online
-              </h3>
-              <p className="text-xs sm:text-sm text-[#581e1d] mt-1">
-                Submissions and manuscript documents are pushed directly to Editorial Gmail inboxes and Google Drive folders.
-              </p>
+        {/* Professional Manuscript Submission Card */}
+        <div id="submit-manuscript" className="scroll-mt-24 bg-[#ffffff] border border-gray-200 rounded-2xl p-6 sm:p-8 md:p-10 2xl:p-12 shadow-sm">
+          
+          {/* Header of Submission Box */}
+          <div className="pb-6 border-b border-gray-200 mb-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-[#781f1d] bg-[#781f1d]/10 px-2.5 py-0.5 rounded-sm">
+                    Official Editorial Gateway
+                  </span>
+                  <span className="text-xs text-[#581e1d] font-medium">· Double-Blind Peer Review · COPE Standards</span>
+                </div>
+                <h3 className="font-serif font-bold text-2xl sm:text-3xl text-[#1f0707]">
+                  Submit Your Manuscript Online
+                </h3>
+                <p className="text-xs sm:text-sm text-[#581e1d] mt-1 max-w-3xl">
+                  Submit original research or review manuscripts directly to the SGRCR Editorial Secretariat. Submissions undergo initial desk screening and double-blind referee assignment.
+                </p>
+              </div>
+
+              {/* Verified Editorial Channel Badge */}
+              <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 px-3.5 py-2 rounded-xl text-xs shrink-0 self-start md:self-auto">
+                <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+                <div>
+                  <span className="font-bold text-[#1f0707] block">Direct Editorial Channel</span>
+                  <span className="text-[11px] text-[#581e1d] font-mono">abhichannaveerappa@gmail.com</span>
+                </div>
+              </div>
             </div>
-            
-            <button
-              type="button"
-              onClick={() => setShowDriveConfig(!showDriveConfig)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-100 text-xs font-bold text-[#421413] transition-colors self-start sm:self-auto"
-            >
-              <Settings className="w-3.5 h-3.5 text-[#781f1d]" />
-              <span>Drive & Gmail Settings</span>
-              {showDriveConfig ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-            </button>
+
+            {/* Editorial SMTP Transmission Selector */}
+            <div className="mt-6 pt-5 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gray-50/60 p-3.5 rounded-xl border border-gray-200">
+              <div className="flex items-center gap-2 text-xs font-semibold text-[#421413]">
+                <Server className="w-4 h-4 text-[#781f1d]" />
+                <span>Editorial Dispatch Route:</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setSelectedSmtpProvider('gmail')}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg border font-semibold transition-all text-left cursor-pointer ${
+                    selectedSmtpProvider === 'gmail'
+                      ? 'bg-[#1f0707] text-[#ffffff] border-[#1f0707] shadow-xs'
+                      : 'bg-[#ffffff] text-[#421413] border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <Mail className={`w-3.5 h-3.5 ${selectedSmtpProvider === 'gmail' ? 'text-[#c97775]' : 'text-[#781f1d]'}`} />
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span>Gmail SMTP</span>
+                      <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${
+                        selectedSmtpProvider === 'gmail' ? 'bg-[#781f1d] text-white' : 'bg-emerald-100 text-emerald-800'
+                      }`}>
+                        Demo
+                      </span>
+                    </div>
+                    <p className={`text-[10px] font-mono truncate max-w-[180px] ${
+                      selectedSmtpProvider === 'gmail' ? 'text-gray-300' : 'text-gray-500'
+                    }`}>
+                      abhichannaveerappa@gmail.com
+                    </p>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedSmtpProvider('titan')}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-lg border font-semibold transition-all text-left cursor-pointer ${
+                    selectedSmtpProvider === 'titan'
+                      ? 'bg-[#1f0707] text-[#ffffff] border-[#1f0707] shadow-xs'
+                      : 'bg-[#ffffff] text-[#421413] border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <Server className={`w-3.5 h-3.5 ${selectedSmtpProvider === 'titan' ? 'text-[#c97775]' : 'text-[#781f1d]'}`} />
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span>Titan Mail SMTP</span>
+                      <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${
+                        selectedSmtpProvider === 'titan' ? 'bg-[#781f1d] text-white' : 'bg-gray-200 text-gray-700'
+                      }`}>
+                        Institutional
+                      </span>
+                    </div>
+                    <p className={`text-[10px] font-mono truncate max-w-[180px] ${
+                      selectedSmtpProvider === 'titan' ? 'text-gray-300' : 'text-gray-500'
+                    }`}>
+                      admin@srcaa.co.in
+                    </p>
+                  </div>
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* Drive and Destination Settings Drawer */}
-          {showDriveConfig && (
-            <div className="mb-6 p-4 sm:p-5 bg-gray-50 border border-gray-200 rounded-xl space-y-4 animate-in fade-in-50 duration-200">
-              <div className="flex items-center gap-2 font-bold text-xs sm:text-sm text-[#1f0707]">
-                <HardDrive className="w-4 h-4 text-[#781f1d]" />
-                <span>Google Drive Folder & Transmission Settings</span>
-              </div>
-              <p className="text-xs text-[#581e1d]">
-                Configure the destination Google Drive folder where submitted manuscripts and details are stored.
-              </p>
-
-              <form onSubmit={handleSaveDriveFolder} className="space-y-3">
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-[#421413] mb-1">
-                    Google Drive Submissions Folder URL
-                  </label>
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <input
-                      type="url"
-                      value={driveFolderInput}
-                      onChange={(e) => setDriveFolderInput(e.target.value)}
-                      placeholder="https://drive.google.com/drive/folders/..."
-                      className="flex-1 px-3 py-2 bg-[#ffffff] border border-gray-300 rounded-lg text-xs text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden"
-                    />
-                    <button
-                      type="submit"
-                      className="px-4 py-2 bg-[#1f0707] hover:bg-[#421413] text-[#ffffff] font-bold text-xs rounded-lg transition-colors shrink-0"
-                    >
-                      Save Folder URL
-                    </button>
-                    <a
-                      href={driveFolderUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#ffffff] hover:bg-gray-100 border border-gray-300 text-xs font-bold text-[#1f0707] rounded-lg transition-colors shrink-0"
-                    >
-                      <FolderOpen className="w-3.5 h-3.5 text-[#781f1d]" />
-                      <span>Open Current Folder</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  </div>
-                  {saveDriveSuccess && (
-                    <span className="text-xs font-bold text-emerald-700 mt-1 inline-block">
-                      ✓ Google Drive Folder destination saved successfully!
-                    </span>
-                  )}
-                </div>
-
-                <div className="pt-2 border-t border-gray-200 text-xs text-[#581e1d] flex flex-wrap items-center gap-4">
-                  <span><strong>Primary Gmail:</strong> {PRIMARY_GMAIL}</span>
-                  <span><strong>Secondary Gmail:</strong> {SECONDARY_GMAIL}</span>
-                </div>
-              </form>
-            </div>
-          )}
-
+          {/* Validation Alert */}
           {validationError && (
-            <div className="mb-6 p-4 bg-amber-50 border border-amber-300 rounded-xl text-amber-900 text-xs sm:text-sm flex items-start gap-2.5">
-              <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-              <span>{validationError}</span>
+            <div className="mb-6 p-4 bg-amber-50 border border-amber-300 rounded-xl text-amber-950 text-xs sm:text-sm flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="font-bold text-amber-900">Submission Notice</p>
+                <p className="mt-0.5">{validationError}</p>
+              </div>
             </div>
           )}
 
-          {formStatus === 'success' && submittedSnapshot ? (
-            <div className="p-6 sm:p-8 bg-[#ffffff] border-2 border-emerald-500 rounded-2xl text-[#1f0707] space-y-6 shadow-sm">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-gray-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+          {/* SUCCESS RECEIPT STATE */}
+          {formStatus === 'success' && submissionReceipt ? (
+            <div className="p-6 sm:p-8 md:p-10 bg-gradient-to-b from-[#fbfdfb] to-[#ffffff] border-2 border-emerald-600 rounded-2xl text-[#1f0707] space-y-6 shadow-md animate-in fade-in duration-300">
+              
+              {/* Receipt Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-gray-200">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
                     <CheckCircle2 className="w-7 h-7" />
                   </div>
                   <div>
-                    <h4 className="font-serif font-bold text-xl sm:text-2xl text-[#1f0707]">
-                      Manuscript Submitted: Pushed to Gmail & Google Drive!
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-sm">
+                      Transmission Confirmed
+                    </span>
+                    <h4 className="font-serif font-bold text-2xl sm:text-3xl text-[#1f0707] mt-1">
+                      Manuscript Submission Dossier Dispatched
                     </h4>
-                    <p className="text-xs sm:text-sm text-[#581e1d] mt-0.5">
-                      All submission details and attached document have been successfully dispatched.
+                    <p className="text-xs sm:text-sm text-[#581e1d] mt-1">
+                      Your submission dossier and manuscript have been registered with the SGRCR Editorial Secretariat via {submissionReceipt.provider.toUpperCase()} SMTP.
                     </p>
                   </div>
                 </div>
 
-                <span className="px-3.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-full text-xs font-bold self-start sm:self-auto">
-                  Reference ID: {submittedSnapshot.id}
-                </span>
-              </div>
-
-              {/* Two Column Transmission Status Cards: Gmail & Google Drive */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                
-                {/* 1. Gmail Transmission Card */}
-                <div className="p-4 sm:p-5 bg-gray-50 border border-gray-200 rounded-xl space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs font-bold text-[#1f0707]">
-                      <Mail className="w-4 h-4 text-emerald-700" />
-                      <span>Pushed to Gmail Inboxes</span>
-                    </div>
-                    <span className="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200">
-                      Dispatched ✓
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-[#581e1d]">
-                    Full manuscript metadata and attached document dispatched to:
-                  </p>
-                  <ul className="text-xs font-bold text-[#1f0707] space-y-0.5 list-disc list-inside">
-                    <li>{PRIMARY_GMAIL}</li>
-                    <li>{SECONDARY_GMAIL}</li>
-                  </ul>
-
-                  <div className="pt-2 flex flex-wrap items-center gap-2">
-                    <a
-                      href={getGmailWebLink()}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#1f0707] hover:bg-[#421413] text-[#ffffff] font-bold text-xs rounded-lg transition-colors shadow-xs"
-                    >
-                      <Mail className="w-3.5 h-3.5 text-[#a13533]" />
-                      <span>Open in Gmail (View Draft)</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                    <a
-                      href={getMailtoLink()}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#ffffff] hover:bg-gray-100 border border-gray-300 text-xs font-bold text-[#421413] rounded-lg transition-colors"
-                    >
-                      <Send className="w-3.5 h-3.5 text-[#781f1d]" />
-                      <span>Default Mail App</span>
-                    </a>
-                  </div>
-                </div>
-
-                {/* 2. Google Drive Folder Transmission Card */}
-                <div className="p-4 sm:p-5 bg-gray-50 border border-gray-200 rounded-xl space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs font-bold text-[#1f0707]">
-                      <FolderOpen className="w-4 h-4 text-blue-700" />
-                      <span>Google Drive Folder Push</span>
-                    </div>
-                    <span className="text-[10px] uppercase font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-md border border-blue-200">
-                      Ready in Drive ✓
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-[#581e1d]">
-                    Document and submission dossier are ready for Google Drive folder archival:
-                  </p>
-                  <div className="text-xs font-bold text-[#1f0707] truncate bg-[#ffffff] px-2.5 py-1.5 rounded-md border border-gray-200">
-                    📁 {driveFolderUrl}
-                  </div>
-
-                  <div className="pt-2 flex flex-wrap items-center gap-2">
-                    <a
-                      href={driveFolderUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#1f0707] hover:bg-[#421413] text-[#ffffff] font-bold text-xs rounded-lg transition-colors shadow-xs"
-                    >
-                      <FolderOpen className="w-3.5 h-3.5 text-blue-400" />
-                      <span>Open Google Drive Folder</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-
-                    {selectedFile && (
-                      <button
-                        type="button"
-                        onClick={() => downloadBlob(selectedFile, submittedSnapshot.fileName)}
-                        className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#ffffff] hover:bg-gray-100 border border-gray-300 text-xs font-bold text-[#421413] rounded-lg transition-colors"
-                      >
-                        <Download className="w-3.5 h-3.5 text-emerald-700" />
-                        <span>Download Document</span>
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-              </div>
-
-              {/* Submission Data Summary Card */}
-              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 sm:p-5 space-y-3 text-xs sm:text-sm text-[#421413]">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pb-3 border-b border-gray-200">
-                  <div>
-                    <span className="text-[11px] uppercase tracking-wider text-[#781f1d] font-bold block">
-                      Corresponding Author
-                    </span>
-                    <strong className="text-sm text-[#1f0707]">{submittedSnapshot.authorName}</strong>
-                  </div>
-                  <div>
-                    <span className="text-[11px] uppercase tracking-wider text-[#781f1d] font-bold block">
-                      Institutional Email
-                    </span>
-                    <strong className="text-sm text-[#1f0707]">{submittedSnapshot.email}</strong>
-                  </div>
-                  <div>
-                    <span className="text-[11px] uppercase tracking-wider text-[#781f1d] font-bold block">
-                      Institution / Affiliation
-                    </span>
-                    <span>{submittedSnapshot.affiliation}</span>
-                  </div>
-                  <div>
-                    <span className="text-[11px] uppercase tracking-wider text-[#781f1d] font-bold block">
-                      Article Category
-                    </span>
-                    <span>{submittedSnapshot.articleType}</span>
-                  </div>
-                </div>
-
-                <div>
-                  <span className="text-[11px] uppercase tracking-wider text-[#781f1d] font-bold block">
-                    Manuscript Title
+                <div className="flex flex-col items-start sm:items-end">
+                  <span className="text-xs text-[#581e1d] font-semibold">Official Reference ID:</span>
+                  <span className="font-mono font-bold text-base sm:text-lg text-[#781f1d] bg-gray-100 px-3 py-1 rounded-md border border-gray-200 mt-0.5">
+                    {submissionReceipt.referenceId}
                   </span>
-                  <p className="font-serif font-bold text-sm sm:text-base text-[#1f0707] mt-0.5">
-                    {submittedSnapshot.title}
-                  </p>
                 </div>
+              </div>
 
-                {(submittedSnapshot.manuscriptLink || submittedSnapshot.fileName) && (
-                  <div>
-                    <span className="text-[11px] uppercase tracking-wider text-[#781f1d] font-bold block">
-                      Attached Document & Resources
-                    </span>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-2">
-                      {submittedSnapshot.fileName && (
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#ffffff] text-[#1f0707] rounded-lg text-xs font-semibold border border-gray-300">
-                          <FileText className="w-4 h-4 text-[#781f1d]" />
-                          <span>{submittedSnapshot.fileName}</span>
-                          {submittedSnapshot.fileSize && (
-                            <span className="text-[10px] text-[#781f1d]">
-                              ({formatFileSize(submittedSnapshot.fileSize)})
+              {/* Status and Inboxes Summary Banner */}
+              <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-[#781f1d]" />
+                  <span className="font-bold text-[#421413]">Editorial Inboxes:</span>
+                  <span className="text-[#581e1d] font-mono">{submissionReceipt.editorialInboxes.join(', ')}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-[#421413]">Timestamp:</span>
+                  <span className="text-[#581e1d]">{submissionReceipt.timestamp}</span>
+                </div>
+              </div>
+
+              {/* Dossier Table */}
+              <div className="border border-gray-200 rounded-xl overflow-hidden text-xs sm:text-sm">
+                <table className="w-full text-left border-collapse">
+                  <tbody>
+                    <tr className="border-b border-gray-200 bg-gray-50/70">
+                      <td className="p-3.5 font-bold text-[#421413] w-1/3">Corresponding Author</td>
+                      <td className="p-3.5 text-[#1f0707] font-semibold">{submissionReceipt.authorName}</td>
+                    </tr>
+                    <tr className="border-b border-gray-200">
+                      <td className="p-3.5 font-bold text-[#421413]">Institutional Email</td>
+                      <td className="p-3.5 text-[#1f0707]">{submissionReceipt.email}</td>
+                    </tr>
+                    <tr className="border-b border-gray-200 bg-gray-50/70">
+                      <td className="p-3.5 font-bold text-[#421413]">Affiliation / Institution</td>
+                      <td className="p-3.5 text-[#1f0707]">{submissionReceipt.affiliation}</td>
+                    </tr>
+                    {submissionReceipt.coAuthors && (
+                      <tr className="border-b border-gray-200">
+                        <td className="p-3.5 font-bold text-[#421413]">Co-Authors</td>
+                        <td className="p-3.5 text-[#1f0707]">{submissionReceipt.coAuthors}</td>
+                      </tr>
+                    )}
+                    <tr className="border-b border-gray-200 bg-gray-50/70">
+                      <td className="p-3.5 font-bold text-[#421413]">Manuscript Title</td>
+                      <td className="p-3.5 text-[#1f0707] font-serif font-bold text-sm sm:text-base">
+                        {submissionReceipt.title}
+                      </td>
+                    </tr>
+                    <tr className="border-b border-gray-200">
+                      <td className="p-3.5 font-bold text-[#421413]">Article Category</td>
+                      <td className="p-3.5 text-[#1f0707]">{submissionReceipt.articleType}</td>
+                    </tr>
+                    {submissionReceipt.fileName && (
+                      <tr className="border-b border-gray-200 bg-gray-50/70">
+                        <td className="p-3.5 font-bold text-[#421413]">Attached Document</td>
+                        <td className="p-3.5 text-emerald-800 font-medium flex items-center gap-1.5">
+                          <FileText className="w-4 h-4 text-emerald-700" />
+                          <span>{submissionReceipt.fileName}</span>
+                          {submissionReceipt.fileSize && (
+                            <span className="text-xs text-gray-500">
+                              ({formatFileSize(submissionReceipt.fileSize)})
                             </span>
                           )}
-                        </div>
-                      )}
-                      
-                      {submittedSnapshot.manuscriptLink && (
-                        <a 
-                          href={submittedSnapshot.manuscriptLink} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#ffffff] hover:bg-gray-100 border border-gray-300 text-xs text-[#781f1d] hover:underline font-bold rounded-lg"
-                        >
-                          <LinkIcon className="w-3.5 h-3.5" />
-                          <span>Open Cloud Document Link</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                )}
+                        </td>
+                      </tr>
+                    )}
+                    {submissionReceipt.manuscriptLink && (
+                      <tr className="border-b border-gray-200">
+                        <td className="p-3.5 font-bold text-[#421413]">Cloud Access Link</td>
+                        <td className="p-3.5">
+                          <a
+                            href={submissionReceipt.manuscriptLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[#781f1d] hover:underline inline-flex items-center gap-1 font-medium"
+                          >
+                            <LinkIcon className="w-3.5 h-3.5" />
+                            <span>{submissionReceipt.manuscriptLink}</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
 
-                {submittedSnapshot.message && (
-                  <div>
-                    <span className="text-[11px] uppercase tracking-wider text-[#781f1d] font-bold block">
-                      Cover Letter / Editor Remarks
-                    </span>
-                    <p className="text-xs text-[#581e1d] bg-[#ffffff] p-2.5 rounded-lg border border-gray-200 mt-1 whitespace-pre-wrap">
-                      {submittedSnapshot.message}
-                    </p>
-                  </div>
-                )}
+              {/* Next Steps Card */}
+              <div className="p-5 bg-gray-50 rounded-xl border border-gray-200 flex items-start gap-3.5">
+                <Clock className="w-5 h-5 text-[#781f1d] shrink-0 mt-0.5" />
+                <div className="text-xs sm:text-sm text-[#421413]">
+                  <p className="font-bold text-[#1f0707]">Next Steps in the Peer Review Process:</p>
+                  <p className="mt-1 text-[#581e1d] leading-relaxed">
+                    Your paper will now undergo preliminary desk screening by the Section Editor for originality, scope alignment, and plagiarism index check (&lt;10%). The corresponding author will receive editorial updates within <strong>3–5 working days</strong>.
+                  </p>
+                </div>
               </div>
 
               {/* Action Buttons */}
@@ -715,18 +652,27 @@ ${data.message || 'No additional comments provided.'}
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     type="button"
-                    onClick={handleCopySummary}
-                    className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-[#ffffff] hover:bg-gray-100 border border-gray-300 text-[#421413] font-bold text-xs sm:text-sm rounded-xl transition-all"
+                    onClick={handleDownloadReceiptFile}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#1f0707] hover:bg-[#421413] text-[#ffffff] font-bold text-xs sm:text-sm rounded-xl transition-all shadow-xs cursor-pointer"
+                  >
+                    <Download className="w-4 h-4 text-[#c97775]" />
+                    <span>Download Receipt Dossier (.txt)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={handleCopyReceipt}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#ffffff] hover:bg-gray-100 border border-gray-300 text-[#421413] font-bold text-xs sm:text-sm rounded-xl transition-all cursor-pointer"
                   >
                     {copiedSummary ? (
                       <>
                         <Check className="w-4 h-4 text-emerald-600" />
-                        <span>Copied Dossier Details!</span>
+                        <span>Copied to Clipboard!</span>
                       </>
                     ) : (
                       <>
                         <Copy className="w-4 h-4 text-[#781f1d]" />
-                        <span>Copy Submission Dossier</span>
+                        <span>Copy Dossier Text</span>
                       </>
                     )}
                   </button>
@@ -735,33 +681,18 @@ ${data.message || 'No additional comments provided.'}
                     <button
                       type="button"
                       onClick={onOpenSubmissionsLog}
-                      className="inline-flex items-center gap-1.5 px-4 py-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-300 text-[#1f0707] font-bold text-xs sm:text-sm rounded-xl transition-all"
+                      className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-300 text-[#1f0707] font-bold text-xs sm:text-sm rounded-xl transition-all cursor-pointer"
                     >
                       <Inbox className="w-4 h-4 text-[#781f1d]" />
-                      <span>View Editorial Submissions Log</span>
+                      <span>Submissions Log</span>
                     </button>
                   )}
                 </div>
 
                 <button
                   type="button"
-                  onClick={() => {
-                    setFormStatus('idle');
-                    setSubmittedSnapshot(null);
-                    setSelectedFileName('');
-                    setSelectedFile(null);
-                    setFormData({
-                      authorName: '',
-                      email: '',
-                      affiliation: '',
-                      articleType: 'Original research article',
-                      title: '',
-                      manuscriptLink: '',
-                      message: '',
-                      declaration: false,
-                    });
-                  }}
-                  className="text-xs sm:text-sm text-[#781f1d] hover:text-[#1f0707] font-bold underline px-3 py-2"
+                  onClick={handleResetForm}
+                  className="text-xs sm:text-sm text-[#781f1d] hover:text-[#1f0707] font-bold underline px-3 py-2 cursor-pointer"
                 >
                   Submit Another Manuscript
                 </button>
@@ -769,171 +700,270 @@ ${data.message || 'No additional comments provided.'}
 
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                {/* Author Name */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1">
-                    Corresponding Author Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="authorName"
-                    required
-                    value={formData.authorName}
-                    onChange={handleInputChange}
-                    placeholder="e.g. Dr. Anjana Radhakrishnan"
-                    className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-lg text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden"
-                  />
-                </div>
-
-                {/* Author Email */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1">
-                    Institutional Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="author@institution.edu"
-                    className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-lg text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden"
-                  />
-                </div>
-
-                {/* Affiliation */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1">
-                    University / Institution Affiliation *
-                  </label>
-                  <input
-                    type="text"
-                    name="affiliation"
-                    required
-                    value={formData.affiliation}
-                    onChange={handleInputChange}
-                    placeholder="e.g. Seshadripuram First Grade College, Bengaluru"
-                    className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-lg text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden"
-                  />
-                </div>
-
-                {/* Submission Type */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1">
-                    Submission Category *
-                  </label>
-                  <select
-                    name="articleType"
-                    value={formData.articleType}
-                    onChange={handleInputChange}
-                    className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-lg text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden"
-                  >
-                    <option value="Original research article">Original Research Article (4,000–8,000 words)</option>
-                    <option value="Review article">Review Article (up to 10,000 words)</option>
-                    <option value="Case study">Case Study (3,000–5,000 words)</option>
-                    <option value="Short communication">Short Communication (&lt;2,500 words)</option>
-                    <option value="Conceptual paper">Conceptual Paper</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Manuscript Title */}
+            /* PROFESSIONAL MANUSCRIPT SUBMISSION FORM */
+            <form onSubmit={handleSubmit} className="space-y-6">
+              
+              {/* SECTION 1: AUTHOR INFORMATION */}
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1">
-                  Manuscript Title *
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  required
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  placeholder="Full title of the manuscript (under 20 words)"
-                  className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-lg text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden"
-                />
-              </div>
+                <div className="flex items-center gap-2 pb-2 mb-4 border-b border-gray-200">
+                  <span className="w-6 h-6 rounded-full bg-[#781f1d] text-white flex items-center justify-center text-xs font-bold">1</span>
+                  <h4 className="font-serif font-bold text-base text-[#1f0707]">Corresponding & Co-Author Details</h4>
+                </div>
 
-              {/* Upload or Link */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <label className="block text-xs font-bold uppercase tracking-wider text-[#421413]">
-                      Upload Manuscript File (.docx / .pdf)
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1.5">
+                      Corresponding Author Name *
                     </label>
-                    {selectedFile && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedFile(null);
-                          setSelectedFileName('');
-                        }}
-                        className="text-[11px] text-red-700 hover:text-red-900 font-bold inline-flex items-center gap-0.5"
-                      >
-                        <X className="w-3 h-3" />
-                        <span>Remove</span>
-                      </button>
-                    )}
+                    <input
+                      type="text"
+                      name="authorName"
+                      required
+                      value={formData.authorName}
+                      onChange={handleInputChange}
+                      placeholder="e.g. Dr. Anjana Radhakrishnan"
+                      className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden transition-all shadow-2xs"
+                    />
                   </div>
-                  <input
-                    type="file"
-                    name="attachment"
-                    accept=".pdf,.doc,.docx"
-                    onChange={handleFileChange}
-                    className="w-full px-3 py-2 bg-[#ffffff] border border-gray-300 rounded-lg text-xs text-[#421413] file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#781f1d] file:text-[#ffffff] hover:file:bg-[#421413]"
-                  />
-                  {selectedFile ? (
-                    <div className="mt-1.5 p-2 bg-emerald-50 border border-emerald-300 rounded-md text-xs text-emerald-950 flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 overflow-hidden">
-                        <FileText className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
-                        <span className="font-semibold truncate">{selectedFile.name}</span>
-                        <span className="text-[10px] text-emerald-700 shrink-0">({formatFileSize(selectedFile.size)})</span>
-                      </div>
-                      <span className="text-[10px] text-emerald-800 font-bold shrink-0 ml-1">Ready to Push ✓</span>
-                    </div>
-                  ) : (
-                    <p className="text-[11px] text-[#581e1d] mt-1">
-                      MS Word (.docx) or PDF format. Will be attached and pushed to Gmail and Google Drive folders.
-                    </p>
-                  )}
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1.5">
+                      Institutional Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      required
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="author@institution.edu"
+                      className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden transition-all shadow-2xs"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1.5">
+                      University / Institution Affiliation *
+                    </label>
+                    <input
+                      type="text"
+                      name="affiliation"
+                      required
+                      value={formData.affiliation}
+                      onChange={handleInputChange}
+                      placeholder="e.g. University of Madras, Chennai"
+                      className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden transition-all shadow-2xs"
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1">
-                    Or Google Drive / Cloud Link
+                  <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1.5">
+                    Co-Authors & Affiliations (Optional)
                   </label>
                   <input
-                    type="url"
-                    name="manuscriptLink"
-                    value={formData.manuscriptLink}
+                    type="text"
+                    name="coAuthors"
+                    value={formData.coAuthors}
                     onChange={handleInputChange}
-                    placeholder="https://drive.google.com/file/d/..."
-                    className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-lg text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden"
+                    placeholder="e.g. Dr. R. Sharma (IIT Bombay); Prof. K. Menon (IIM Bangalore)"
+                    className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden transition-all shadow-2xs"
                   />
                   <p className="text-[11px] text-[#581e1d] mt-1">
-                    Direct access link via Google Drive, Dropbox, or OneDrive.
+                    List any collaborating researchers, separating authors and institutions with semicolons.
                   </p>
                 </div>
               </div>
 
-              {/* Cover Letter */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1">
-                  Cover Letter / Comments to the Editor
-                </label>
+              {/* SECTION 2: MANUSCRIPT SPECIFICATIONS */}
+              <div className="pt-2">
+                <div className="flex items-center gap-2 pb-2 mb-4 border-b border-gray-200">
+                  <span className="w-6 h-6 rounded-full bg-[#781f1d] text-white flex items-center justify-center text-xs font-bold">2</span>
+                  <h4 className="font-serif font-bold text-base text-[#1f0707]">Manuscript Metadata & Category</h4>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1.5">
+                      Submission Category *
+                    </label>
+                    <select
+                      name="articleType"
+                      value={formData.articleType}
+                      onChange={handleInputChange}
+                      className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden transition-all shadow-2xs font-medium"
+                    >
+                      <option value="Original research article">Original Research Article (4,000–8,000 words)</option>
+                      <option value="Review article">Review Article (up to 10,000 words)</option>
+                      <option value="Case study">Case Study (3,000–5,000 words)</option>
+                      <option value="Short communication">Short Communication (&lt;2,500 words)</option>
+                      <option value="Conceptual paper">Conceptual Paper</option>
+                    </select>
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1.5">
+                      Manuscript Title *
+                    </label>
+                    <input
+                      type="text"
+                      name="title"
+                      required
+                      value={formData.title}
+                      onChange={handleInputChange}
+                      placeholder="Full academic title of the research paper (concise, under 20 words)"
+                      className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden transition-all shadow-2xs font-serif"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1.5">
+                      Structured Abstract (Optional)
+                    </label>
+                    <textarea
+                      name="abstract"
+                      rows={3}
+                      value={formData.abstract}
+                      onChange={handleInputChange}
+                      placeholder="Brief summary covering: Background, Research Objectives, Methodology, Core Findings, and Academic Implications (200–250 words)..."
+                      className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden transition-all shadow-2xs resize-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1.5">
+                      Keywords (Optional)
+                    </label>
+                    <textarea
+                      name="keywords"
+                      rows={3}
+                      value={formData.keywords}
+                      onChange={handleInputChange}
+                      placeholder="e.g. Econometric Modeling, Supply Chain, Machine Learning, Corporate Governance (4–6 terms separated by commas)"
+                      className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden transition-all shadow-2xs resize-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 3: DOCUMENT UPLOAD & REPOSITORY */}
+              <div className="pt-2">
+                <div className="flex items-center gap-2 pb-2 mb-4 border-b border-gray-200">
+                  <span className="w-6 h-6 rounded-full bg-[#781f1d] text-white flex items-center justify-center text-xs font-bold">3</span>
+                  <h4 className="font-serif font-bold text-base text-[#1f0707]">Manuscript Document & Cloud Access</h4>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  {/* File Upload Zone */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="block text-xs font-bold uppercase tracking-wider text-[#421413]">
+                        Upload Document (.pdf / .docx / .doc) *
+                      </label>
+                      {selectedFile && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedFile(null)}
+                          className="text-[11px] text-red-700 hover:text-red-900 font-bold inline-flex items-center gap-1 cursor-pointer"
+                        >
+                          <X className="w-3 h-3" />
+                          <span>Remove</span>
+                        </button>
+                      )}
+                    </div>
+
+                    <div
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      className={`border-2 border-dashed rounded-xl p-5 text-center transition-all ${
+                        isDragging
+                          ? 'border-[#781f1d] bg-[#781f1d]/5'
+                          : selectedFile
+                          ? 'border-emerald-500 bg-emerald-50/40'
+                          : 'border-gray-300 hover:border-gray-400 bg-gray-50/40'
+                      }`}
+                    >
+                      {selectedFile ? (
+                        <div className="flex items-center justify-between gap-3 text-left">
+                          <div className="flex items-center gap-3 overflow-hidden">
+                            <div className="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                              <FileText className="w-5 h-5" />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-xs font-bold text-[#1f0707] truncate">{selectedFile.name}</p>
+                              <p className="text-[11px] text-[#581e1d]">
+                                {formatFileSize(selectedFile.size)} · Ready to transmit via SMTP
+                              </p>
+                            </div>
+                          </div>
+                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200 shrink-0">
+                            Attached ✓
+                          </span>
+                        </div>
+                      ) : (
+                        <div>
+                          <Upload className="w-7 h-7 text-[#781f1d] mx-auto mb-2 opacity-80" />
+                          <label className="cursor-pointer text-xs font-bold text-[#781f1d] hover:underline block">
+                            <span>Browse manuscript file</span>
+                            <input
+                              type="file"
+                              accept=".pdf,.doc,.docx,.rtf,.odt"
+                              onChange={handleFileChange}
+                              className="hidden"
+                            />
+                          </label>
+                          <p className="text-[11px] text-[#581e1d] mt-1">
+                            Accepted: PDF, DOCX, DOC (Up to 35 MB)
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Cloud Link Input */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-[#421413] mb-1.5">
+                      Or Document Cloud Link (Google Drive / OneDrive)
+                    </label>
+                    <div className="relative">
+                      <LinkIcon className="w-4 h-4 text-[#781f1d] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <input
+                        type="url"
+                        name="manuscriptLink"
+                        value={formData.manuscriptLink}
+                        onChange={handleInputChange}
+                        placeholder="https://drive.google.com/file/d/..."
+                        className="w-full pl-10 pr-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden transition-all shadow-2xs"
+                      />
+                    </div>
+                    <p className="text-[11px] text-[#581e1d] mt-1.5 leading-relaxed">
+                      If providing a link, verify that link access permissions are set to "Anyone with the link can view".
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 4: COVER LETTER */}
+              <div className="pt-2">
+                <div className="flex items-center gap-2 pb-2 mb-4 border-b border-gray-200">
+                  <span className="w-6 h-6 rounded-full bg-[#781f1d] text-white flex items-center justify-center text-xs font-bold">4</span>
+                  <h4 className="font-serif font-bold text-base text-[#1f0707]">Cover Letter & Editorial Remarks (Optional)</h4>
+                </div>
+
                 <textarea
                   name="message"
                   rows={3}
                   value={formData.message}
                   onChange={handleInputChange}
-                  placeholder="Introduce your study, state novelty, and disclose any funding or prior presentations..."
-                  className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-lg text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden"
+                  placeholder="Outline the significance of the paper, recommended independent reviewers, or potential conflict of interest disclosures..."
+                  className="w-full px-3.5 py-2.5 bg-[#ffffff] border border-gray-300 rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden transition-all shadow-2xs resize-none"
                 />
               </div>
 
-              {/* Originality Declaration */}
+              {/* SECTION 5: ETHICAL DECLARATION */}
               <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl">
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input
@@ -942,71 +972,47 @@ ${data.message || 'No additional comments provided.'}
                     required
                     checked={formData.declaration}
                     onChange={handleInputChange}
-                    className="mt-1 h-4 w-4 rounded border-gray-300 text-[#781f1d] focus:ring-[#781f1d]"
+                    className="mt-1 w-4 h-4 rounded text-[#781f1d] focus:ring-[#781f1d] border-gray-300 cursor-pointer"
                   />
-                  <span className="text-xs sm:text-sm text-[#421413] leading-relaxed">
-                    I confirm that this manuscript represents original research, is not under consideration by any other journal or publisher, that all co-authors have approved this submission, and that all generative AI usage has been documented in accordance with COPE guidelines. *
-                  </span>
+                  <div className="text-xs text-[#421413] leading-relaxed">
+                    <span className="font-bold text-[#1f0707]">
+                      Author Originality & Publication Ethics Declaration *
+                    </span>
+                    <p className="text-[#581e1d] mt-0.5">
+                      I declare that this manuscript is original, has not been published previously, is not under consideration elsewhere, that all co-authors have consented to this submission, and that it conforms to the Committee on Publication Ethics (COPE) guidelines and DORA research evaluation standards.
+                    </p>
+                  </div>
                 </label>
               </div>
 
-              {/* Destination Indicators */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3.5 bg-gray-50 border border-gray-200 rounded-xl text-xs gap-2">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex items-center gap-1 text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-200">
-                    <Mail className="w-3 h-3 text-emerald-700" />
-                    Gmail Auto-Push: {PRIMARY_GMAIL}
-                  </span>
-                  <span className="inline-flex items-center gap-1 text-blue-800 font-bold bg-blue-100 px-2 py-0.5 rounded-md border border-blue-200">
-                    <FolderOpen className="w-3 h-3 text-blue-700" />
-                    Google Drive Folder Connected
+              {/* Submission Action Bar */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-3 border-t border-gray-200">
+                <div className="flex items-center gap-2 text-xs text-[#581e1d]">
+                  <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+                  <span>
+                    Routing to <strong>abhichannaveerappa@gmail.com</strong> via {selectedSmtpProvider.toUpperCase()} SMTP Gateway.
                   </span>
                 </div>
-                
+
                 <button
-                  type="button"
-                  onClick={() => setShowDriveConfig(true)}
-                  className="text-[#781f1d] hover:text-[#1f0707] font-bold text-xs underline inline-flex items-center gap-1 shrink-0"
+                  type="submit"
+                  disabled={formStatus === 'submitting'}
+                  className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#a13533] hover:bg-[#781f1d] text-[#ffffff] font-bold text-sm sm:text-base rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
-                  <span>Edit Destination Folder</span>
-                  <ExternalLink className="w-3 h-3" />
+                  {formStatus === 'submitting' ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin text-[#ffffff]" />
+                      <span>Transmitting Manuscript via SMTP...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 text-[#ffffff]" />
+                      <span>Submit Manuscript to Editorial Secretariat</span>
+                    </>
+                  )}
                 </button>
               </div>
 
-              {/* Submit Buttons & Actions */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-                <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                  <button
-                    type="submit"
-                    disabled={formStatus === 'submitting'}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#1f0707] hover:bg-[#421413] disabled:opacity-50 text-[#ffffff] font-bold text-sm sm:text-base rounded-full shadow-md transition-all transform hover:-translate-y-0.5 cursor-pointer"
-                  >
-                    <Send className="w-4 h-4 text-[#a13533]" />
-                    <span>
-                      {formStatus === 'submitting' 
-                        ? 'Pushing Data & Document to Gmail & Drive...' 
-                        : 'Submit Manuscript (Push to Gmail & Drive)'}
-                    </span>
-                  </button>
-
-                  <a
-                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(`${PRIMARY_GMAIL},${SECONDARY_GMAIL}`)}&su=${encodeURIComponent(`[SGRCR Manuscript Submission] ${formData.title || 'Manuscript Title'} - ${formData.authorName || 'Author'}`)}&body=${encodeURIComponent(generateDossierText(formData, selectedFileName, 'DRAFT', new Date().toLocaleString()))}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-[#ffffff] hover:bg-gray-100 border border-gray-300 text-[#1f0707] font-bold text-xs sm:text-sm rounded-full shadow-xs transition-all"
-                    title={`Open draft in Gmail addressed to ${PRIMARY_GMAIL}`}
-                  >
-                    <Mail className="w-4 h-4 text-[#781f1d]" />
-                    <span>Open in Gmail</span>
-                    <ExternalLink className="w-3.5 h-3.5 text-gray-500" />
-                  </a>
-                </div>
-
-                <div className="text-xs text-right text-gray-500">
-                  <span>Destinations: </span>
-                  <span className="font-semibold text-gray-700">Gmail & Google Drive</span>
-                </div>
-              </div>
             </form>
           )}
 

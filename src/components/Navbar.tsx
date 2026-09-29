@@ -78,7 +78,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <BookOpen className="w-3.5 h-3.5 text-[#781f1d]" />
               Scope
             </a>
-            <a href="#author-guidelines" className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
+            <a href="#submit-manuscript" className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
               <PenTool className="w-3.5 h-3.5 text-[#781f1d]" />
               Submit
             </a>
@@ -170,7 +170,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <BookOpen className="w-4 h-4 text-[#781f1d]" />
               Scope & Domains
             </a>
-            <a href="#author-guidelines" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
+            <a href="#submit-manuscript" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
               <PenTool className="w-4 h-4 text-[#781f1d]" />
               Submit Manuscript
             </a>

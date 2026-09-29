@@ -3,6 +3,7 @@ export interface StoredManuscript {
   authorName: string;
   email: string;
   affiliation: string;
+  coAuthors?: string;
   articleType: string;
   title: string;
   manuscriptLink?: string;
@@ -120,10 +121,14 @@ export function formatFileSize(bytes?: number): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
 }
 
-export function saveManuscriptSubmission(data: Omit<StoredManuscript, 'id'>, file?: File | null): StoredManuscript {
+export function saveManuscriptSubmission(
+  data: Omit<StoredManuscript, 'id'>, 
+  file?: File | null, 
+  customId?: string
+): StoredManuscript {
   const item: StoredManuscript = {
     ...data,
-    id: 'MS-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase(),
+    id: customId || ('MS-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase()),
     fileSize: file ? file.size : data.fileSize,
     hasAttachment: !!file || data.hasAttachment,
   };

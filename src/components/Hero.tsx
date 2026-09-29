@@ -65,7 +65,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
           {/* Action Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-2xl 2xl:max-w-3xl mx-auto">
             <a
-              href="#author-guidelines"
+              href="#submit-manuscript"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 2xl:px-8 2xl:py-4 bg-[#a13533] hover:bg-[#781f1d] text-[#ffffff] font-bold text-sm sm:text-base 2xl:text-lg rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 border border-[#c97775]"
             >
               <PenTool className="w-4 h-4 2xl:w-5 2xl:h-5 text-[#ffffff]" />
