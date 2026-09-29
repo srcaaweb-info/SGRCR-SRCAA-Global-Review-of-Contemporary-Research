@@ -41,7 +41,6 @@ const upload = multer({
 
 // Editorial destination inboxes
 const DEFAULT_EDITORIAL_EMAILS = [
-  'abhichannaveerappa@gmail.com',
   'srcaacontact@gmail.com',
   'srcaaweb@gmail.com',
   'admin@srcaa.co.in'
@@ -88,8 +87,8 @@ function isTitanConfigured(): boolean {
 
 // Helper: Check if Gmail SMTP is configured
 function isGmailConfigured(): boolean {
-  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'abhichannaveerappa@gmail.com';
-  const pass = (process.env.GMAIL_SMTP_PASS && process.env.GMAIL_SMTP_PASS.trim()) || 'vmfkncfqjljxeegk';
+  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'srcaacontact@gmail.com';
+  const pass = (process.env.GMAIL_SMTP_PASS && process.env.GMAIL_SMTP_PASS.trim()) || '';
   return Boolean(user && pass);
 }
 
@@ -117,8 +116,8 @@ function createGmailTransporter() {
   const host = process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com';
   const port = Number(process.env.GMAIL_SMTP_PORT || 465);
   const secure = process.env.GMAIL_SMTP_SECURE !== 'false';
-  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'abhichannaveerappa@gmail.com';
-  const pass = (process.env.GMAIL_SMTP_PASS && process.env.GMAIL_SMTP_PASS.trim()) || 'vmfkncfqjljxeegk';
+  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'srcaacontact@gmail.com';
+  const pass = (process.env.GMAIL_SMTP_PASS && process.env.GMAIL_SMTP_PASS.trim()) || '';
 
   return nodemailer.createTransport({
     host,
@@ -156,7 +155,7 @@ app.get('/api/smtp-config', (_req, res) => {
         name: 'Google Gmail SMTP',
         host: process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com',
         port: Number(process.env.GMAIL_SMTP_PORT || 465),
-        fromEmail: process.env.GMAIL_FROM_EMAIL || 'abhichannaveerappa@gmail.com',
+        fromEmail: process.env.GMAIL_FROM_EMAIL || 'srcaacontact@gmail.com',
         isConfigured: gmailReady,
       },
     },
@@ -219,7 +218,7 @@ app.post('/api/submit-manuscript', upload.single('attachment'), async (req, res)
 
     const editorialRecipients = getEditorialRecipients();
 
-    // Determine SMTP Provider to use (default to gmail demo: abhichannaveerappa@gmail.com)
+    // Determine SMTP Provider to use (default: gmail)
     let selectedProvider = smtpChoice;
     if (selectedProvider === 'auto' || !selectedProvider) {
       if (isGmailConfigured()) {
@@ -400,7 +399,7 @@ Editorial Inboxes: ${editorialRecipients.join(', ')}
     const fromAddress =
       selectedProvider === 'titan'
         ? (process.env.TITAN_FROM_EMAIL || 'admin@srcaa.co.in')
-        : (process.env.GMAIL_FROM_EMAIL || 'abhichannaveerappa@gmail.com');
+        : (process.env.GMAIL_FROM_EMAIL || 'srcaacontact@gmail.com');
 
     // Attempt SMTP dispatch
     const isReady = selectedProvider === 'titan' ? isTitanConfigured() : isGmailConfigured();
@@ -524,7 +523,7 @@ Editorial Inboxes: ${editorialRecipients.join(', ')}
 // 3. SMTP Diagnostic Test Endpoint
 app.post('/api/test-smtp', async (req, res) => {
   try {
-    const { provider = 'gmail', recipient = 'abhichannaveerappa@gmail.com' } = req.body;
+    const { provider = 'gmail', recipient = 'srcaacontact@gmail.com' } = req.body;
     const isReady = provider === 'titan' ? isTitanConfigured() : isGmailConfigured();
 
     if (!isReady) {
@@ -534,14 +533,14 @@ app.post('/api/test-smtp', async (req, res) => {
         provider,
         recipient,
         configured: false,
-        message: `Provider '${provider}' password not yet set in environment. Demo routing to ${recipient} is active in simulation mode.`,
+        message: `Provider '${provider}' password not yet set in environment. Routing to ${recipient} is active in simulation mode.`,
       });
     }
 
     const transporter = provider === 'titan' ? createTitanTransporter() : createGmailTransporter();
     const fromAddress = provider === 'titan'
       ? (process.env.TITAN_FROM_EMAIL || 'admin@srcaa.co.in')
-      : (process.env.GMAIL_FROM_EMAIL || 'abhichannaveerappa@gmail.com');
+      : (process.env.GMAIL_FROM_EMAIL || 'srcaacontact@gmail.com');
 
     await transporter.verify();
 
