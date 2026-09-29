@@ -1,5 +1,5 @@
 import React from 'react';
-import { BadgeCheck, ExternalLink, Mail } from 'lucide-react';
+import { BadgeCheck, ExternalLink, Mail, Phone } from 'lucide-react';
 
 interface TopBarProps {
   onOpenSubmissionsLog?: () => void;
@@ -23,8 +23,16 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenSubmissionsLog }) => {
             </span>
           </div>
 
-          {/* Right: Portal & Login Links */}
+          {/* Right: Phone, Portal & Contact Links */}
           <div className="flex items-center gap-3 sm:gap-4">
+            <a
+              href="tel:9148484079"
+              className="inline-flex items-center gap-1 text-[#c97775] hover:text-[#ffffff] transition-colors font-semibold"
+              title="Editorial Secretariat Mobile"
+            >
+              <Phone className="w-3 h-3 text-[#a13533]" />
+              <span>M: 9148484079</span>
+            </a>
             <a
               href="#contact"
               className="inline-flex items-center gap-1 text-[#c97775] hover:text-[#ffffff] transition-colors font-semibold"

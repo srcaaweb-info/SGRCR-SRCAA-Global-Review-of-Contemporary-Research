@@ -99,48 +99,22 @@ export const Navbar: React.FC<NavbarProps> = ({
               Contact
             </a>
 
-            <div className="pl-2 border-l border-gray-200 flex items-center gap-2">
+            <div className="pl-2 border-l border-gray-200 flex items-center">
               <a
                 href="https://www.srcaa.co.in/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#ffffff] text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 border border-gray-200 text-sm font-bold rounded-full shadow-xs transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#ffffff] text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 border border-gray-300 text-sm font-bold rounded-full shadow-xs transition-all"
                 title="Visit SRCAA Official Website"
               >
                 <ExternalLink className="w-3.5 h-3.5 text-[#781f1d]" />
                 <span>SRCAA Portal</span>
-              </a>
-
-              <a
-                href="/archive.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={handleArchivesClick}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#1f0707] text-[#ffffff] hover:bg-[#421413] text-sm font-bold rounded-full shadow-xs transition-all transform hover:-translate-y-0.5 border border-[#781f1d]"
-                title="Open Archives & Publications"
-              >
-                <Archive className="w-3.5 h-3.5 text-[#a13533]" />
-                <span>Archives</span>
-                <ExternalLink className="w-3 h-3 text-[#a13533]" />
               </a>
             </div>
           </nav>
 
           {/* Mobile Actions */}
           <div className="flex items-center gap-2 lg:hidden">
-            <a
-              href="/archive.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleArchivesClick}
-              className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-[#1f0707] text-[#ffffff] text-xs font-bold rounded-full shadow-xs shrink-0"
-              title="Archives"
-            >
-              <Archive className="w-3 h-3 text-[#a13533]" />
-              <span className="hidden sm:inline">Archives</span>
-              <ExternalLink className="w-2.5 h-2.5 text-[#a13533]" />
-            </a>
-
             <button
               type="button"
               id="mobile-nav-toggle"
@@ -197,21 +171,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <div className="pt-3 border-t border-gray-200 flex flex-col gap-2">
-            <a
-              href="/archive.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                closeMobileMenu();
-                if (onOpenArticleArchive) onOpenArticleArchive();
-                window.open('/archive.html', '_blank', 'noopener,noreferrer');
-              }}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-[#1f0707] text-[#ffffff] font-bold text-sm rounded-md shadow-xs"
-            >
-              <Archive className="w-4 h-4 text-[#a13533]" />
-              Archives & Publications
-              <ExternalLink className="w-3 h-3 text-[#a13533]" />
-            </a>
             {onOpenSubmissionsLog && (
               <button
                 type="button"

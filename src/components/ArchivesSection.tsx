@@ -104,7 +104,7 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({ onOpenArchives
             <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-[#581e1d]">
               <span className="inline-flex items-center gap-1.5 bg-[#ffffff] px-2.5 py-1 rounded-md border border-gray-200">
                 <Calendar className="w-3.5 h-3.5 text-[#781f1d]" />
-                Published: Bi-annual (January – June 2026)
+                Published: BI-Quartly (January – March 2026)
               </span>
             </div>
           </div>
@@ -300,7 +300,7 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({ onOpenArchives
             <Layers className="w-5 h-5 text-[#781f1d] shrink-0 mt-0.5" />
             <div>
               <strong className="text-[#1f0707] block mb-1">Volume 1 · Issue 2 (Call for Papers Open)</strong>
-              <p>Manuscript submissions for the second bi-annual issue of 2026 are actively being accepted for peer review.</p>
+              <p>Manuscript submissions for the second BI-Quartly issue of 2026 are actively being accepted for peer review.</p>
               <a href="#author-guidelines" className="text-[#781f1d] font-bold hover:underline mt-2 inline-block">
                 View submission criteria →
               </a>

@@ -87,8 +87,9 @@ function isTitanConfigured(): boolean {
 
 // Helper: Check if Gmail SMTP is configured
 function isGmailConfigured(): boolean {
-  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'abhichannaveerappa@gmail.com';
-  const pass = (process.env.GMAIL_SMTP_PASS && process.env.GMAIL_SMTP_PASS.trim()) || 'vmfkncfqjljxeegk';
+  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'srcaacontact@gmail.com';
+  const rawPass = process.env.GMAIL_SMTP_PASS || 'qyjvwlsshqpwztqq';
+  const pass = rawPass.replace(/\s+/g, '').trim();
   return Boolean(user && pass);
 }
 
@@ -116,8 +117,9 @@ function createGmailTransporter() {
   const host = process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com';
   const port = Number(process.env.GMAIL_SMTP_PORT || 465);
   const secure = process.env.GMAIL_SMTP_SECURE !== 'false';
-  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'abhichannaveerappa@gmail.com';
-  const pass = (process.env.GMAIL_SMTP_PASS && process.env.GMAIL_SMTP_PASS.trim()) || 'vmfkncfqjljxeegk';
+  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'srcaacontact@gmail.com';
+  const rawPass = process.env.GMAIL_SMTP_PASS || 'qyjvwlsshqpwztqq';
+  const pass = rawPass.replace(/\s+/g, '').trim();
 
   return nodemailer.createTransport({
     host,

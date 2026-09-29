@@ -6,12 +6,7 @@ interface QuickNavProps {
 }
 
 export const QuickNav: React.FC<QuickNavProps> = ({ onOpenArticleArchive }) => {
-  const handleOpenSeparateArchive = (e: React.MouseEvent) => {
-    try {
-      window.open('/archive.html', '_blank', 'noopener,noreferrer');
-    } catch {
-      // Ignored if window.open is restricted in iframe
-    }
+  const handleOpenArchives = (e: React.MouseEvent) => {
     if (onOpenArticleArchive) {
       e.preventDefault();
       onOpenArticleArchive();
@@ -48,16 +43,13 @@ export const QuickNav: React.FC<QuickNavProps> = ({ onOpenArticleArchive }) => {
           </a>
 
           <a
-            href="/archive.html"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handleOpenSeparateArchive}
+            href="#archives"
+            onClick={handleOpenArchives}
             className="flex items-center justify-center gap-2 p-2.5 sm:p-3 bg-[#1f0707] hover:bg-[#421413] text-[#ffffff] border border-[#1f0707] rounded-xl text-xs sm:text-sm font-bold transition-colors shadow-2xs group text-center"
-            title="Open Archives & Publications in a separate tab"
+            title="View Archives & Publications"
           >
             <Archive className="w-4 h-4 text-[#a13533] shrink-0" />
             <span className="truncate">Archives & Publications</span>
-            <ExternalLink className="w-3 h-3 text-[#a13533] group-hover:translate-x-0.5 transition-transform shrink-0" />
           </a>
 
         </nav>

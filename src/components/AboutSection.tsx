@@ -62,7 +62,7 @@ export const AboutSection: React.FC = () => {
                 <span>Scopus CSAB Criteria</span>
               </div>
               <p className="text-xs text-[#581e1d]">
-                Regular bi-annual frequency, diverse international editorial board, and persistent Crossref DOI registration.
+                Regular BI-Quartly frequency, diverse international editorial board, and persistent Crossref DOI registration.
               </p>
             </div>
           </div>

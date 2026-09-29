@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, ShieldCheck, Mail, ArrowUp, ExternalLink, Archive } from 'lucide-react';
+import { BookOpen, ShieldCheck, Mail, ArrowUp, ExternalLink, Archive, Phone, MapPin } from 'lucide-react';
 
 interface FooterProps {
   onOpenSubmissionsLog?: () => void;
@@ -86,20 +86,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSubmissionsLog, onOpenArti
                 </a>
               </li>
               <li>
-                {/* Highlighted Link for Archives & Publications in Separate Tab */}
-                <a 
-                  href="/archive.html" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  onClick={handleOpenArticleArchive}
-                  className="text-[#c97775] font-bold hover:underline inline-flex items-center gap-1.5"
-                >
-                  <Archive className="w-3.5 h-3.5 text-[#a13533]" />
-                  <span>Archives & Publications (Separate Tab)</span>
-                  <ExternalLink className="w-3 h-3 text-[#a13533]" />
-                </a>
-              </li>
-              <li>
                 <a 
                   href="https://www.srcaa.co.in/" 
                   target="_blank" 
@@ -176,8 +162,18 @@ export const Footer: React.FC<FooterProps> = ({ onOpenSubmissionsLog, onOpenArti
                   srcaacontact@gmail.com
                 </a>
               </p>
+              <p>
+                <strong className="text-[#ffffff] block">Direct Phone / Mobile:</strong>
+                <a href="tel:9148484079" className="text-[#c97775] hover:text-[#ffffff] font-mono font-bold">
+                  M: 9148484079
+                </a>
+              </p>
+              <div className="pt-2 border-t border-[#451a19] text-[11px] leading-relaxed">
+                <strong className="text-[#ffffff] block">Secretariat Address:</strong>
+                <span>Address line 1: Bommanahalli Town, City: Bengaluru, Pin Code: 560076, State: Karnataka, India</span>
+              </div>
 
-              <div className="pt-3 border-t border-[#451a19]">
+              <div className="pt-2 border-t border-[#451a19]">
                 <a
                   href="https://www.srcaa.co.in/"
                   target="_blank"

@@ -60,7 +60,7 @@ export const IssnSection: React.FC = () => {
                 Publication Frequency
               </h3>
               <p className="text-xs text-[#581e1d] leading-relaxed mb-4">
-                SGRCR maintains a strict bi-annual schedule to meet ISSN India regularity covenants and global indexation timelines.
+                SGRCR maintains a strict BI-Quartly schedule (4 issues per year) to meet ISSN India regularity covenants and global indexation timelines.
               </p>
 
               <div className="space-y-3 text-xs">
@@ -69,7 +69,7 @@ export const IssnSection: React.FC = () => {
                     <span>Volume 1 · Issue 1</span>
                     <span className="text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-sm">Published</span>
                   </div>
-                  <p className="text-[#581e1d] mt-1">Inaugural Issue · Bi-annual 2026</p>
+                  <p className="text-[#581e1d] mt-1">Inaugural Issue · BI-Quartly (Jan – Mar 2026)</p>
                 </div>
 
                 <div className="p-3 bg-gray-50/80 rounded-lg border border-gray-200">
@@ -77,16 +77,41 @@ export const IssnSection: React.FC = () => {
                     <span>Volume 1 · Issue 2</span>
                     <span className="text-amber-700 bg-amber-100 px-2 py-0.5 rounded-sm">Call for Papers</span>
                   </div>
-                  <p className="text-[#581e1d] mt-1">Submission window open · July – Dec 2026</p>
+                  <p className="text-[#581e1d] mt-1">Submission window open · Apr – Jun 2026</p>
                 </div>
 
                 <div className="p-3 bg-gray-50/80 rounded-lg border border-gray-200">
                   <div className="flex justify-between items-center font-bold text-[#1f0707]">
-                    <span>Volume 2 · Issue 1</span>
+                    <span>Volume 1 · Issue 3</span>
                     <span className="text-[#581e1d] bg-gray-100 px-2 py-0.5 rounded-sm">Upcoming</span>
                   </div>
-                  <p className="text-[#581e1d] mt-1">Scheduled for January – June 2027</p>
+                  <p className="text-[#581e1d] mt-1">Scheduled for Jul – Sep 2026</p>
                 </div>
+
+                <div className="p-3 bg-gray-50/80 rounded-lg border border-gray-200">
+                  <div className="flex justify-between items-center font-bold text-[#1f0707]">
+                    <span>Volume 1 · Issue 4</span>
+                    <span className="text-[#581e1d] bg-gray-100 px-2 py-0.5 rounded-sm">Upcoming</span>
+                  </div>
+                  <p className="text-[#581e1d] mt-1">Scheduled for Oct – Dec 2026</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Registered Secretariat Address Card */}
+            <div className="bg-[#ffffff] border border-gray-200 rounded-2xl p-6 shadow-xs">
+              <h4 className="font-serif font-bold text-base text-[#1f0707] mb-2 flex items-center gap-2">
+                <Building2 className="w-4 h-4 text-[#781f1d]" />
+                Registered Secretariat Address
+              </h4>
+              <div className="space-y-1 text-xs text-[#581e1d]">
+                <p><strong>Address line 1:</strong> Bommanahalli Town</p>
+                <p><strong>City:</strong> Bengaluru</p>
+                <p><strong>Pin Code:</strong> 560076</p>
+                <p><strong>State:</strong> Karnataka, India</p>
+                <p className="pt-1.5 font-bold text-[#781f1d]">
+                  <strong>M:</strong> <a href="tel:9148484079" className="hover:underline">9148484079</a>
+                </p>
               </div>
             </div>
 

@@ -239,7 +239,7 @@ export const PoliciesSection: React.FC = () => {
               <h4 className="font-bold text-base text-[#1f0707] pt-2">Key Quality Benchmarks</h4>
               <ul className="space-y-1.5 text-xs sm:text-sm list-disc list-inside text-[#581e1d]">
                 <li>Mandatory assignment of persistent Digital Object Identifiers (Crossref DOI).</li>
-                <li>Fixed bi-annual publication periodicity strictly maintained without delay.</li>
+                <li>Fixed BI-Quartly publication periodicity strictly maintained without delay.</li>
                 <li>Complete article-level metadata with verified references formatted in APA 7th Edition.</li>
                 <li>Diversity across editorial board appointments and contributing author institutions.</li>
               </ul>
