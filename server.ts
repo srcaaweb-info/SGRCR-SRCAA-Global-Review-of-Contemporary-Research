@@ -22,11 +22,11 @@ const PORT = 3000;
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-// Multer memory storage for manuscript uploads (supports up to 35MB)
+// Multer memory storage for manuscript uploads (supports up to 50MB)
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
-    fileSize: 35 * 1024 * 1024, // 35 MB
+    fileSize: 50 * 1024 * 1024, // 50 MB
   },
   fileFilter: (_req, file, cb) => {
     const allowedExtensions = ['.pdf', '.doc', '.docx', '.rtf', '.odt'];
@@ -574,6 +574,35 @@ app.get('/api/submissions', (_req, res) => {
   res.json({
     total: recentSubmissions.length,
     submissions: recentSubmissions,
+  });
+});
+
+// Dedicated API Error Handler (Ensures all errors return JSON instead of HTML)
+app.use('/api', (err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error('[API Server Error]:', err);
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({
+        success: false,
+        error: 'File size exceeds the 50MB limit. Please upload a smaller document.',
+      });
+    }
+    return res.status(400).json({
+      success: false,
+      error: `Upload processing error: ${err.message}`,
+    });
+  }
+  return res.status(err.status || 500).json({
+    success: false,
+    error: err.message || 'An error occurred while processing manuscript transmission.',
+  });
+});
+
+// Explicit JSON 404 for unhandled API routes (prevents fallback to index.html)
+app.all('/api/*', (_req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'API endpoint not found',
   });
 });
 
