@@ -1,28 +1,39 @@
-import React, { useState } from 'react';
-import { 
-  Archive, 
-  Search, 
-  Filter, 
-  FileText, 
-  Copy, 
-  Check, 
-  ArrowLeft, 
-  Calendar, 
-  Sparkles,
-  BookOpen,
+import React, { useState, useEffect } from 'react';
+import {
+  Archive,
+  Search,
+  FileText,
+  Copy,
+  Check,
+  ArrowLeft,
   Eye,
   Maximize2,
-  X
+  X,
+  Download,
+  ArrowUpRight,
+  MapPin,
+  Phone,
+  Mail,
 } from 'lucide-react';
-import { ARTICLES } from '../data/journalData';
+import {
+  ARTICLES,
+  PUBLICATION_FREQUENCY,
+  CURRENT_ISSUE_LABEL,
+  OFFICIAL_CONTACT_ADDRESS,
+} from '../data/journalData';
 import { Article } from '../types';
 import { ArticlePdfViewerModal } from './ArticlePdfViewerModal';
+import { ArticleDetailView } from './ArticleDetailView';
 
 interface ArticleArchiveViewProps {
   onBackToMain?: () => void;
+  onOpenArticlePage?: (article: Article) => void;
 }
 
-export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackToMain }) => {
+export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({
+  onBackToMain,
+  onOpenArticlePage,
+}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedVolume, setSelectedVolume] = useState('all');
@@ -31,19 +42,69 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
   const [expandedAbstractId, setExpandedAbstractId] = useState<string | null>(null);
   const [activePdfArticleId, setActivePdfArticleId] = useState<string | null>(null);
   const [selectedArticleForPdf, setSelectedArticleForPdf] = useState<Article | null>(null);
+  const [standaloneArticle, setStandaloneArticle] = useState<Article | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const articleParam = params.get('article');
+    if (articleParam) {
+      const found = ARTICLES.find(
+        (a) => a.id === articleParam || String(a.articleNumber) === articleParam
+      );
+      if (found) {
+        setStandaloneArticle(found);
+      }
+    }
+  }, []);
+
+  const handleSelectArticlePage = (article: Article) => {
+    if (onOpenArticlePage) {
+      onOpenArticlePage(article);
+      return;
+    }
+    setStandaloneArticle(article);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('article', article.id);
+      window.history.pushState({}, '', url.toString());
+    } catch {
+      // Ignored
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  if (standaloneArticle) {
+    return (
+      <ArticleDetailView
+        article={standaloneArticle}
+        onBack={() => {
+          setStandaloneArticle(null);
+          try {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('article');
+            window.history.pushState({}, '', url.toString());
+          } catch {
+            // Ignored
+          }
+        }}
+        onSelectArticle={handleSelectArticlePage}
+      />
+    );
+  }
 
   const filteredArticles = ARTICLES.filter((article) => {
-    const matchesSearch = 
+    const matchesSearch =
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.authors.some(a => a.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      article.keywords.some(k => k.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      article.authors.some((a) => a.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      article.keywords.some((k) => k.toLowerCase().includes(searchQuery.toLowerCase())) ||
       article.abstract.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.doi.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesCategory = 
-      selectedCategory === 'all' || article.category.toLowerCase().includes(selectedCategory.toLowerCase());
+    const matchesCategory =
+      selectedCategory === 'all' ||
+      article.category.toLowerCase().includes(selectedCategory.toLowerCase());
 
-    const matchesVolume = 
+    const matchesVolume =
       selectedVolume === 'all' || `vol-${article.volume}-issue-${article.issue}` === selectedVolume;
 
     return matchesSearch && matchesCategory && matchesVolume;
@@ -52,14 +113,15 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
   const handleCopyCitation = (article: Article) => {
     let citation = '';
     if (citationFormat === 'apa') {
-      citation = `${article.authors.join(', ')} (${article.year}). ${article.title}. SRCAA Global Review of Contemporary Research (SGRCR), ${article.volume}(${article.issue}), ${article.pages}. https://doi.org/${article.doi}`;
+      citation = `${article.authors.join(', ')} (${article.year}). ${article.title}. SRCAA Global Review of Contemporary Research (SGRCR), Volume ${article.volume}, Issue ${article.issue} (${article.publishedDate}), pp. ${article.pages}. https://doi.org/${article.doi}`;
     } else {
       citation = `@article{sgrcr_${article.year}_${article.articleNumber},
   title={${article.title}},
   author={${article.authors.join(' and ')}},
-  journal={SRCAA Global Review of Contemporary Research},
+  journal={SRCAA Global Review of Contemporary Research (SGRCR)},
   volume={${article.volume}},
   number={${article.issue}},
+  month={September},
   pages={${article.pages}},
   year={${article.year}},
   doi={${article.doi}}
@@ -72,17 +134,15 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
 
   return (
     <div className="min-h-screen bg-[#ede4dc] text-[#1f0707] flex flex-col font-sans">
-      
       {/* Dedicated Archive Header */}
       <header className="sticky top-0 z-40 bg-[#ffffff]/95 backdrop-blur-md border-b border-[#cfb6b3] py-3.5 shadow-xs">
         <div className="journal-container flex flex-col sm:flex-row items-center justify-between gap-3">
-          
           <div className="flex items-center gap-3">
             {onBackToMain ? (
               <button
                 type="button"
                 onClick={onBackToMain}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#f2ebe7] hover:bg-[#e9ded8] border border-[#cfb6b3] text-xs font-bold rounded-lg text-[#421413] transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#f2ebe7] hover:bg-[#e9ded8] border border-[#cfb6b3] text-xs font-bold rounded-lg text-[#421413] transition-colors cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Main Website</span>
@@ -99,18 +159,14 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
 
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full overflow-hidden p-0.5 bg-[#ffffff] ring-1 ring-[#a13533]">
-                <img 
-                  src="/logo.svg" 
-                  alt="SRCAA Logo" 
-                  className="w-full h-full object-contain"
-                />
+                <img src="/logo.svg" alt="SRCAA Logo" className="w-full h-full object-contain" />
               </div>
               <div>
                 <h1 className="font-serif font-bold text-sm sm:text-base text-[#1f0707] leading-tight">
-                  Archives & Publications
+                  Archives & Publications ({CURRENT_ISSUE_LABEL})
                 </h1>
                 <p className="text-[10px] text-[#781f1d] uppercase tracking-wider font-semibold">
-                  SRCAA Global Review of Contemporary Research
+                  SRCAA Global Review of Contemporary Research · Frequency: {PUBLICATION_FREQUENCY}
                 </p>
               </div>
             </div>
@@ -118,30 +174,28 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
 
           <div className="flex items-center gap-2 text-xs font-semibold text-[#781f1d]">
             <span className="text-[#581e1d]">
-              ISSN India & Open Access Digital Repository (CC BY 4.0)
+              Direct Website PDF Repository · Open Access (CC BY 4.0)
             </span>
           </div>
-
         </div>
       </header>
 
       {/* Main Content Area */}
       <main className="flex-1 journal-container py-8 sm:py-12 2xl:py-16">
-        
         {/* Banner Area */}
         <div className="bg-gradient-to-r from-[#1f0707] to-[#421413] text-[#ffffff] rounded-2xl p-6 sm:p-10 2xl:p-12 shadow-md mb-8">
           <div className="max-w-3xl 2xl:max-w-4xl">
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#a13533]/30 border border-[#a13533]/50 text-[#c97775] text-xs font-bold uppercase tracking-widest">
                 <Archive className="w-3.5 h-3.5" />
-                Publications & Repository Index
+                {CURRENT_ISSUE_LABEL} · {PUBLICATION_FREQUENCY}
               </span>
             </div>
             <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl leading-tight">
               Archives & Publications Repository
             </h2>
             <p className="mt-3 text-xs sm:text-sm md:text-base text-[#cfb6b3] leading-relaxed">
-              Explore all published issues, volumes, and peer-reviewed articles published in SGRCR. All manuscripts are available with persistent URIs and digital archiving.
+              Every published issue and peer-reviewed manuscript is indexed with persistent URIs, article-level DOI assignments, and open-access PDF viewing in compliance with statutory digital archiving standards.
             </p>
           </div>
         </div>
@@ -149,7 +203,6 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
         {/* Filter & Search Bar */}
         <div className="bg-[#faf6f3] border border-[#cfb6b3] rounded-2xl p-4 sm:p-6 shadow-xs mb-8 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4">
-            
             {/* Search Input */}
             <div className="md:col-span-6 relative">
               <Search className="w-4 h-4 text-[#781f1d] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -184,16 +237,15 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
                 className="w-full px-3.5 py-2.5 bg-[#faf6f3] border border-[#cfb6b3] rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden font-medium"
               >
                 <option value="all">All Volumes & Issues</option>
-                <option value="vol-1-issue-1">Volume 1 · Issue 1 (2026)</option>
+                <option value="vol-1-issue-1">Volume 1, Issue 1, September 2026</option>
               </select>
             </div>
-
           </div>
 
           {/* Active stats & citation style switcher */}
           <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-[#cfb6b3] text-xs">
             <span className="text-[#581e1d] font-semibold">
-              Showing <strong className="text-[#1f0707]">{filteredArticles.length}</strong> published article{filteredArticles.length === 1 ? '' : 's'}
+              Showing <strong className="text-[#1f0707]">{filteredArticles.length}</strong> published article{filteredArticles.length === 1 ? '' : 's'} in <strong>{CURRENT_ISSUE_LABEL}</strong>
             </span>
 
             <div className="flex items-center gap-2">
@@ -201,9 +253,9 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
               <button
                 type="button"
                 onClick={() => setCitationFormat('apa')}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold ${
-                  citationFormat === 'apa' 
-                    ? 'bg-[#1f0707] text-[#ffffff]' 
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold cursor-pointer ${
+                  citationFormat === 'apa'
+                    ? 'bg-[#1f0707] text-[#ffffff]'
                     : 'bg-[#ffffff] text-[#421413] border border-[#cfb6b3]'
                 }`}
               >
@@ -212,9 +264,9 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
               <button
                 type="button"
                 onClick={() => setCitationFormat('bibtex')}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-bold ${
-                  citationFormat === 'bibtex' 
-                    ? 'bg-[#1f0707] text-[#ffffff]' 
+                className={`px-2.5 py-1 rounded-md text-[11px] font-bold cursor-pointer ${
+                  citationFormat === 'bibtex'
+                    ? 'bg-[#1f0707] text-[#ffffff]'
                     : 'bg-[#ffffff] text-[#421413] border border-[#cfb6b3]'
                 }`}
               >
@@ -235,8 +287,16 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
                 key={article.id}
                 className="bg-[#faf6f3] border border-[#cfb6b3] rounded-2xl p-6 sm:p-8 shadow-xs hover:shadow-md transition-all space-y-4"
               >
-                {/* Header Meta */}
-                <div className="flex flex-wrap items-center justify-between gap-2">
+                {/* Official Journal + Issue Citation Block */}
+                <div className="p-3.5 bg-[#ffffff] border border-[#cfb6b3] rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs">
+                  <div>
+                    <p className="font-bold text-[#781f1d]">
+                      SRCAA Global Review of Contemporary Research (SGRCR)
+                    </p>
+                    <p className="font-semibold text-[#1f0707]">
+                      Volume {article.volume}, Issue {article.issue}, {article.publishedDate} · Pages: {article.pages}
+                    </p>
+                  </div>
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="px-3 py-1 bg-[#1f0707] text-[#c97775] text-xs font-bold rounded-lg uppercase tracking-wider">
                       Article {article.articleNumber}
@@ -244,36 +304,26 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
                     <span className="px-2.5 py-1 bg-[#e9ded8] text-[#421413] text-xs font-bold rounded-lg">
                       {article.category}
                     </span>
-                    <span className="text-xs text-[#781f1d] font-semibold">
-                      Vol. {article.volume}, Issue {article.issue} ({article.year}) · pp. {article.pages}
-                    </span>
                   </div>
-
-                  <span className="text-xs text-[#581e1d]">
-                    Date: {article.publishedDate}
-                  </span>
                 </div>
 
                 {/* Article Title */}
                 <h3 className="font-serif font-bold text-xl sm:text-2xl text-[#1f0707] leading-snug hover:text-[#781f1d] transition-colors">
-                  <button
-                    type="button"
-                    onClick={() => setActivePdfArticleId(activePdfArticleId === article.id ? null : article.id)}
+                  <a
+                    href={article.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-left hover:underline inline-flex items-baseline gap-2 cursor-pointer"
                   >
                     <span>{article.title}</span>
-                    <Eye className="w-4 h-4 shrink-0 text-[#781f1d] inline" />
-                  </button>
+                    <ArrowUpRight className="w-4 h-4 shrink-0 text-[#781f1d] inline" />
+                  </a>
                 </h3>
 
                 {/* Authors */}
                 <div className="flex flex-wrap items-center gap-1.5 text-sm text-[#421413]">
-                  <strong className="text-[#781f1d]">Authors:</strong>
-                  {article.authors.map((author, idx) => (
-                    <span key={idx} className="font-medium">
-                      {author}{idx < article.authors.length - 1 ? ';' : ''}
-                    </span>
-                  ))}
+                  <strong className="text-[#781f1d]">Author Name(s):</strong>
+                  <span className="font-semibold">{article.authors.join(', ')}</span>
                 </div>
 
                 {/* Keywords */}
@@ -307,89 +357,28 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
                       </p>
                       <p className="whitespace-pre-line leading-relaxed">{article.abstract}</p>
                       <div className="pt-2 text-xs text-[#781f1d] flex flex-wrap gap-4 font-semibold">
-                        <span>DOI: {article.doi} (Crossref)</span>
-                        <span>License: Open Access CC BY 4.0</span>
-                        <span>Double-Blind Peer Reviewed</span>
+                        <span>Issue: Volume {article.volume}, Issue {article.issue}, {article.publishedDate}</span>
+                        <span>DOI: {article.doi}</span>
+                        <span>Direct PDF: {article.pdfUrl}</span>
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Action Buttons Bar */}
-                <div className="pt-4 border-t border-[#cfb6b3] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-                  
-                  {/* Single View PDF Action */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setActivePdfArticleId(activePdfArticleId === article.id ? null : article.id)}
-                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#1f0707] hover:bg-[#421413] text-[#ffffff] font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-transform hover:-translate-y-0.5 cursor-pointer"
-                    >
-                      <Eye className="w-4 h-4 text-[#c97775]" />
-                      <span>{activePdfArticleId === article.id ? 'Close PDF' : 'View PDF'}</span>
-                    </button>
-                  </div>
-
-                  {/* Right: Copy Citation */}
-                  <button
-                    type="button"
-                    onClick={() => handleCopyCitation(article)}
-                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#ffffff] hover:bg-[#e9ded8] border border-[#cfb6b3] text-[#421413] font-semibold text-xs sm:text-sm rounded-xl transition-colors cursor-pointer"
+                {/* Action Button Bar: Single View Article Option Opening PDF Directly */}
+                <div className="pt-4 border-t border-[#cfb6b3] flex items-center justify-end">
+                  <a
+                    href={article.pdfUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#781f1d] hover:bg-[#421413] text-[#ffffff] font-bold text-xs sm:text-sm rounded-xl shadow-xs transition-colors cursor-pointer"
+                    title={`View Article PDF: ${article.title}`}
                   >
-                    {isCopied ? (
-                      <>
-                        <Check className="w-4 h-4 text-emerald-600" />
-                        <span className="text-emerald-700 font-bold">Citation Copied ({citationFormat.toUpperCase()})!</span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-4 h-4 text-[#781f1d]" />
-                        <span>Copy Citation ({citationFormat.toUpperCase()})</span>
-                      </>
-                    )}
-                  </button>
-
+                    <FileText className="w-4 h-4 text-[#ffffff]" />
+                    <span>View Article</span>
+                    <ArrowUpRight className="w-4 h-4 text-[#c97775]" />
+                  </a>
                 </div>
-
-                {/* Embedded PDF Viewer within Article Detail View */}
-                {activePdfArticleId === article.id && (
-                  <div className="mt-4 rounded-xl border border-[#cfb6b3] bg-white overflow-hidden shadow-md animate-in fade-in-50 duration-200">
-                    <div className="bg-[#1f0707] text-white px-4 py-3 flex items-center justify-between gap-3 text-xs border-b border-[#421413]">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <FileText className="w-4 h-4 text-[#c97775] shrink-0" />
-                        <span className="font-serif font-bold truncate">{article.title}</span>
-                        <span className="text-[#cfb6b3] text-[11px] shrink-0">· pp. {article.pages}</span>
-                      </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedArticleForPdf(article)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#421413] hover:bg-[#781f1d] text-white rounded-md text-[11px] font-semibold transition-colors cursor-pointer"
-                          title="Open Fullscreen Reader"
-                        >
-                          <Maximize2 className="w-3.5 h-3.5" />
-                          <span className="hidden sm:inline">Fullscreen</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setActivePdfArticleId(null)}
-                          className="p-1 hover:bg-[#421413] rounded-md text-[#cfb6b3] hover:text-white transition-colors cursor-pointer"
-                          title="Close PDF Preview"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </div>
-                    <div className="w-full h-[650px] sm:h-[750px] bg-gray-100 relative">
-                      <iframe
-                        src={`${article.pdfUrl}#toolbar=1&navpanes=0&scrollbar=1`}
-                        title={`Embedded Research Paper PDF: ${article.title}`}
-                        className="w-full h-full border-0 bg-white"
-                      />
-                    </div>
-                  </div>
-                )}
-
               </article>
             );
           })}
@@ -408,13 +397,12 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
                 setSelectedCategory('all');
                 setSelectedVolume('all');
               }}
-              className="mt-4 px-4 py-2 bg-[#1f0707] text-[#ffffff] text-xs font-bold rounded-lg"
+              className="mt-4 px-4 py-2 bg-[#1f0707] text-[#ffffff] text-xs font-bold rounded-lg cursor-pointer"
             >
               Reset Filters
             </button>
           </div>
         )}
-
       </main>
 
       {/* In-App PDF Viewer Modal */}
@@ -424,17 +412,34 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({ onBackTo
         onClose={() => setSelectedArticleForPdf(null)}
       />
 
-      {/* Archive Footer */}
-      <footer className="bg-[#260d0d] text-[#cfb6b3] py-6 border-t border-[#451a19] text-xs text-center">
-        <div className="max-w-7xl mx-auto px-4">
-          <p>© 2026 SRCAA — Shakti Research Centre and Academia. Digital Academic Repository.</p>
-          <p className="mt-1 text-[#781f1d]">
-            All articles published under Creative Commons CC BY 4.0 license. SGRCR Official Repository.
-          </p>
+      {/* Archive Footer with Consistent Contact Address & Frequency */}
+      <footer className="bg-[#260d0d] text-[#cfb6b3] py-8 border-t border-[#451a19] text-xs">
+        <div className="journal-container flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <p className="font-bold text-[#ffffff]">
+              SRCAA Global Review of Contemporary Research (SGRCR) — {PUBLICATION_FREQUENCY}
+            </p>
+            <p>
+              Published by <strong>{OFFICIAL_CONTACT_ADDRESS.publisher}</strong> under Creative Commons CC BY 4.0 license.
+            </p>
+          </div>
+          <div className="space-y-1 md:text-right">
+            <p className="font-bold text-[#ffffff] flex md:justify-end items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-[#a13533]" />
+              <span>Contact Address:</span>
+            </p>
+            <p>{OFFICIAL_CONTACT_ADDRESS.fullFormatted}</p>
+            <p className="flex flex-wrap md:justify-end items-center gap-3 text-[#c97775]">
+              <span className="inline-flex items-center gap-1">
+                <Phone className="w-3 h-3" /> {OFFICIAL_CONTACT_ADDRESS.mobileDisplay}
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <Mail className="w-3 h-3" /> {OFFICIAL_CONTACT_ADDRESS.primaryEmail}
+              </span>
+            </p>
+          </div>
         </div>
       </footer>
-
     </div>
   );
 };
-

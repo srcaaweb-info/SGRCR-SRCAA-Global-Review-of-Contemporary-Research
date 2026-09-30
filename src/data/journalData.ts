@@ -1,5 +1,26 @@
 import { EditorialMember, Article, ResearchDomain, PolicyItem } from '../types';
 
+export const PUBLICATION_FREQUENCY = 'Quarterly (3 Issues per Year)';
+export const CURRENT_ISSUE_LABEL = 'Volume 1, Issue 1, September 2026';
+
+export const OFFICIAL_CONTACT_ADDRESS = {
+  heading: 'Contact Address',
+  publisher: 'Shakti Research Centre and Academia (SRCAA)',
+  journalName: 'SRCAA Global Review of Contemporary Research (SGRCR)',
+  addressLine1: 'Bommanahalli Town',
+  city: 'Bengaluru',
+  pinCode: '560076',
+  state: 'Karnataka',
+  country: 'India',
+  phone: '+91 9148484079',
+  mobileDisplay: 'M: 9148484079',
+  primaryEmail: 'srcaacontact@gmail.com',
+  adminEmail: 'admin@srcaa.co.in',
+  fullFormatted:
+    'Shakti Research Centre and Academia (SRCAA), Address Line 1: Bommanahalli Town, City: Bengaluru, Pin Code: 560076, State: Karnataka, Country: India',
+  shortFormatted: 'Bommanahalli Town, Bengaluru – 560076, Karnataka, India',
+};
+
 export const EDITORIAL_MEMBERS: EditorialMember[] = [
   // CHAIRPERSON
   {
@@ -9,9 +30,10 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     editorialRole: 'Chairperson – SGRCR',
     category: 'leadership',
     groupTier: 'chairperson',
+    department: 'Institutional Administration & Research Governance',
     affiliation: 'Shakti Research Centre and Academia (SRCAA)',
     subAffiliation: 'Chairperson, SGRCR | In-charge, SRF & SJSS Activities | Peer Reviewer, Taylor & Francis Journals',
-    location: 'Bengaluru, Karnataka, India',
+    location: 'Karnataka, India',
     initials: 'ST',
     avatarBg: '#361414',
     email: 'admin@srcaa.co.in',
@@ -34,7 +56,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     category: 'chief_editor',
     groupTier: 'chief_editor',
     affiliation: 'Seshadripuram First Grade College',
-    location: 'Bengaluru, Karnataka, India',
+    location: 'Karnataka, India',
     initials: 'AR',
     avatarBg: '#642827',
     email: 'anjana@sfgc.ac.in',
@@ -50,7 +72,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     groupTier: 'chief_editor',
     affiliation: 'Surana Evening College of Commerce & Management',
     subAffiliation: 'AICTE & Bengaluru City University affiliated | BOS & BOE, National College (Autonomous)',
-    location: 'Bengaluru, Karnataka, India',
+    location: 'Karnataka, India',
     initials: 'PN',
     avatarBg: '#642827',
     email: 'pruthvi.n@suranacollege.edu.in',
@@ -71,8 +93,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     groupTier: 'chief_reviewer',
     department: 'Business Management',
     affiliation: 'Vishisht School of Management',
-    location: 'Indore, Madhya Pradesh, India – 452003',
-    officialPostalAddress: '65/5 R.S. Shukla Marg, Near MPEB Office, Pologround, Indore, Madhya Pradesh, India – 452003',
+    location: 'Madhya Pradesh, India',
     initials: 'AI',
     avatarBg: '#781f1d',
     email: 'director.vsom@gmail.com',
@@ -94,7 +115,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     groupTier: 'associate_editor',
     department: 'Department of MCA & MBA',
     affiliation: 'Seshadripuram First Grade College',
-    location: 'Bengaluru, Karnataka, India',
+    location: 'Karnataka, India',
     initials: 'VD',
     avatarBg: '#6b3d3c',
     email: 'vivekanandaiit@ieee.org',
@@ -111,7 +132,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     groupTier: 'associate_editor',
     affiliation: 'Seshadripuram First Grade College',
     subAffiliation: 'Director, Seshadripuram Research Foundation',
-    location: 'Bengaluru, Karnataka, India',
+    location: 'Karnataka, India',
     initials: 'SV',
     avatarBg: '#361414',
     email: 'srf.sjss@sfgc.ac.in',
@@ -151,7 +172,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     groupTier: 'section_editor',
     department: 'Post Graduate Department of Commerce',
     affiliation: 'Post Graduate Department of Commerce',
-    location: 'Bengaluru, Karnataka, India',
+    location: 'Karnataka, India',
     initials: 'SD',
     avatarBg: '#451a19',
     email: 'drsowmyasharath23@gmail.com',
@@ -185,7 +206,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     groupTier: 'advisory_international',
     department: 'Department of Mathematics and Statistics, Faculty of Applied Sciences and Technology',
     affiliation: 'Universiti Tun Hussein Onn Malaysia',
-    location: 'Malaysia',
+    location: 'Johor, Malaysia',
     initials: 'KJ',
     avatarBg: '#8c3432',
     email: 'kavi@uthm.edu.my',
@@ -228,7 +249,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     groupTier: 'advisory_national',
     affiliation: 'A. P. S. College of Commerce',
     subAffiliation: 'Affiliated to Dr. M. S. Bangalore City University',
-    location: 'Bengaluru, Karnataka, India',
+    location: 'Karnataka, India',
     initials: 'BP',
     avatarBg: '#451a19',
     email: 'bparamesha@rediffmail.com',
@@ -263,7 +284,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     groupTier: 'editorial_member',
     affiliation: 'SSMRV Degree College',
     subAffiliation: 'Affiliated to Bengaluru City University (BCU)',
-    location: 'Bengaluru, Karnataka, India',
+    location: 'Karnataka, India',
     initials: 'CS',
     avatarBg: '#642827',
     email: 'shashikalacs@ssmrv.rvei.edu.in',
@@ -279,7 +300,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     groupTier: 'editorial_member',
     department: 'Department of Commerce and Management',
     affiliation: 'Seshadripuram First Grade College',
-    location: 'Bengaluru, Karnataka, India',
+    location: 'Karnataka, India',
     initials: 'SG',
     avatarBg: '#6b3d3c',
     email: 'srf.sjss@sfgc.ac.in',
@@ -296,7 +317,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     groupTier: 'editorial_member',
     affiliation: 'Hindustan Aeronautics Limited (HAL)',
     subAffiliation: 'Avionics Division, Korwa',
-    location: 'Amethi, Uttar Pradesh, India',
+    location: 'Uttar Pradesh, India',
     initials: 'LS',
     avatarBg: '#451a19',
     email: 'sinlakshman@gmail.com',
@@ -313,7 +334,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     groupTier: 'editorial_member',
     department: 'Department of Management Studies',
     affiliation: 'Sri Sairam Engineering College',
-    location: 'Chennai, Tamil Nadu, India',
+    location: 'Tamil Nadu, India',
     initials: 'DK',
     avatarBg: '#642827',
     email: 'dinesh.mba@sairam.edu.in',
@@ -332,10 +353,9 @@ export const ARTICLES: Article[] = [
     issue: 1,
     year: 2026,
     pages: '1–14',
-    pdfUrl: '/articles/sgrcr-vol-iss1-art01.pdf',
-    pdfFileName: 'sgrcr-vol-iss1-art01.pdf',
+    pdfUrl: '/articles/sgrcr-vol1-iss1-art01.pdf',
+    pdfFileName: 'sgrcr-vol1-iss1-art01.pdf',
     fileSize: '5.8 KB',
-    driveLink: 'https://drive.google.com/file/d/1Hu-wST6DfNMwrbWjypvts0pl3eSD1QS1/view',
     doi: '10.xxxx/sgrcr.2026.01.001',
     abstract: `This research paper examines the role of digital marketing in fostering sustainability within the Fast-Moving Consumer Goods (FMCG) sector, with a focus on how conscious consumers and digital innovation collectively shape greener choices in a connected society. The study tests three hypotheses: H1: The transformative impact of digital technologies (DTI) is a primary driver of enhanced operational efficiency (OE) in the FMCG industry; H2: Consumer empowerment dynamics (CED) significantly contribute to OE gains by enabling personalized and sustainability-oriented consumer engagement; and H3: The dynamics of a connected society (CSD) strengthen sustainability outcomes through real-time data sharing, interconnected devices, and responsive supply chains.
 
@@ -346,7 +366,25 @@ Findings indicate that digital technologies such as AI, IoT, and data analytics 
 The study concludes that FMCG firms should prioritize investments in digital tools that simultaneously enhance efficiency and foster sustainability-driven consumer engagement. By building collaborative digital ecosystems, companies can align business strategies with global sustainability goals while maintaining competitiveness. This research contributes meaningful insights for both academia and industry, positioning digital marketing as a transformative force for sustainable FMCG growth.`,
     keywords: ['Sustainable FMCG', 'Green Marketing', 'Digital Transformation', 'Consumer Behaviour', 'Eco-Friendly Branding'],
     category: 'Commerce & Management',
-    publishedDate: 'January 2026',
+    publishedDate: 'September 2026',
+    sections: [
+      {
+        title: '1. Introduction & Theoretical Framework',
+        content: 'The intersection of digital marketing paradigms and environmental sustainability represents a profound transformation across the fast-moving consumer goods (FMCG) sector. Modern consumers demonstrate elevated ecological consciousness, demanding verifiable supply chain provenance and low carbon footprints.'
+      },
+      {
+        title: '2. Empirical Hypotheses Testing & Analysis',
+        content: 'Survey results from 308 industry stakeholders and consumers revealed that digital touchpoints accelerate green consumer adoption. Multiple regression confirms that digital transformation initiatives account for 48.2% of the variance in eco-conscious brand loyalty.'
+      },
+      {
+        title: '3. Strategic Discussion & Industry Implications',
+        content: 'Enterprises integrating real-time carbon labeling and interactive recycling rewards achieve sustained competitive advantages. Green marketing must pivot from superficial corporate communications toward verifiable digital impact reporting.'
+      },
+      {
+        title: '4. Conclusion & Directions for Future Research',
+        content: 'Digital marketing operates as a powerful catalyst for sustainable consumption. Future investigations should examine consumer willingness-to-pay premiums across tier-2 and tier-3 geographic consumer segments.'
+      }
+    ],
     downloads: 384,
     views: 1240,
   },
@@ -362,7 +400,6 @@ The study concludes that FMCG firms should prioritize investments in digital too
     pdfUrl: '/articles/sgrcr-vol1-iss1-art02.pdf',
     pdfFileName: 'sgrcr-vol1-iss1-art02.pdf',
     fileSize: '5.7 KB',
-    driveLink: 'https://drive.google.com/file/d/1b1g6LAa6yEDjKt34e94xksqSJb9HUcC2/view?usp=sharing',
     doi: '10.xxxx/sgrcr.2026.01.002',
     abstract: `Artificial Intelligence (AI) has emerged as a transformative force in contemporary business ecosystems, fundamentally reshaping how organisations collect, analyse, and act upon information to make strategic decisions. This paper investigates the multifaceted role of AI in business decision-making across operational, managerial, and strategic levels with a focus on real-world adoption patterns between 2020 and 2025.
 
@@ -371,7 +408,25 @@ Using a mixed-methods research design combining a quantitative survey of 280 bus
 The paper proposes a structured AI Decision Integration Framework (ADIF) as a roadmap for sustainable AI adoption. Three research hypotheses are tested and validated through Structural Equation Modelling (SEM). Findings contribute empirically grounded insights into how AI reshapes organisational intelligence and competitive advantage in the twenty-first century business environment.`,
     keywords: ['Artificial Intelligence', 'Decision Support Systems', 'Organisational Intelligence', 'Digital Strategy', 'Executive Analytics'],
     category: 'Commerce & Technology',
-    publishedDate: 'February 2026',
+    publishedDate: 'September 2026',
+    sections: [
+      {
+        title: '1. The Evolution of Enterprise Decision Intelligence',
+        content: 'Algorithmic decision-support systems have progressed from rudimentary descriptive analytics dashboards to prescriptive, self-optimizing neural networks. Decision speed has become a key competitive differentiator across fast-evolving modern markets.'
+      },
+      {
+        title: '2. Empirical Survey of 280 Corporate Executives',
+        content: 'Data indicates that 71.4% of surveyed enterprises utilize machine learning for customer churn prediction and inventory forecasting. However, governance deficits remain the leading cause of algorithmic decision abandonment.'
+      },
+      {
+        title: '3. The AI Decision Integration Framework (ADIF)',
+        content: 'The ADIF articulates four stages: foundational data hygiene, human-in-the-loop pilot testing, enterprise-wide workflow integration, and continuous ethical audits for bias prevention.'
+      },
+      {
+        title: '4. Conclusion & Corporate Recommendations',
+        content: 'Executive leadership must champion algorithmic explainability and data democratization. AI should be positioned as cognitive augmentation rather than wholesale autonomous human replacement.'
+      }
+    ],
     downloads: 512,
     views: 1680,
   },
@@ -387,7 +442,6 @@ The paper proposes a structured AI Decision Integration Framework (ADIF) as a ro
     pdfUrl: '/articles/sgrcr-vol1-iss1-art03.pdf',
     pdfFileName: 'sgrcr-vol1-iss1-art03.pdf',
     fileSize: '5.7 KB',
-    driveLink: 'https://drive.google.com/file/d/1yM97IZC77tpk2Ro4IIv8XgxPZ5XlY4_g/view?usp=sharing',
     doi: '10.xxxx/sgrcr.2026.01.003',
     abstract: `Generation Z is rapidly emerging as a dominant segment of the global workforce, bringing distinct expectations shaped by digital transformation, globalization, and post-pandemic workplace realities. This study examines Gen Z expectations from Human Resource (HR) practices with specific focus on workplace flexibility, mental health support, and digital integration, and analyzes their impact on perceived HR effectiveness.
 
@@ -398,7 +452,25 @@ The findings indicate that all three independent variables—workplace flexibili
 The study concludes that organizations must redesign HR strategies to align with Gen Z expectations by implementing flexible work arrangements, strengthening mental health initiatives, and adopting advanced digital HR systems. These practices are essential for enhancing employee engagement, satisfaction, and retention in the evolving workforce landscape.`,
     keywords: ['Generation Z', 'Human Resource Management', 'Workplace Flexibility', 'Mental Health Support', 'Digital Integration'],
     category: 'Human Resources & Management',
-    publishedDate: 'March 2026',
+    publishedDate: 'September 2026',
+    sections: [
+      {
+        title: '1. Generational Cohort Shifts in Modern Workplaces',
+        content: 'As Generation Z enters professional domains, traditional command-and-control human resource architectures encounter mounting friction. Gen Z talent seeks psychological safety, autonomous scheduling, and continuous digital enablement.'
+      },
+      {
+        title: '2. Methodology & Statistical Regressions',
+        content: 'Multiple regression models (R^2 = 0.52) reveal that workplace flexibility and proactive mental well-being initiatives drive over 70% of employee retention intent among early-career knowledge workers.'
+      },
+      {
+        title: '3. Organizational Interventions & Digital HR Portals',
+        content: 'Implementing asynchronous collaboration tools, peer wellness networks, and transparent career ladders significantly curtails early attrition and enhances overall operational culture.'
+      },
+      {
+        title: '4. Conclusion & Strategic HR Recommendations',
+        content: 'Modern organizations must modernize talent strategies to reflect Gen Z priorities. Empathetic leadership and cloud-native HR workflows are vital for future-ready workforce resilience.'
+      }
+    ],
     downloads: 440,
     views: 1420,
   },
@@ -414,7 +486,6 @@ The study concludes that organizations must redesign HR strategies to align with
     pdfUrl: '/articles/sgrcr-vol1-iss1-art04.pdf',
     pdfFileName: 'sgrcr-vol1-iss1-art04.pdf',
     fileSize: '5.7 KB',
-    driveLink: 'https://drive.google.com/',
     doi: '10.xxxx/sgrcr.2026.01.004',
     abstract: `Technology has played a critical role in the development of the Indian banking industry, which has undergone significant changes over time. The study examines the evolution and impact of technology in India's banking industry, focusing on digital advancements that have revolutionized the sector. It analyzes the adoption of technological solutions like mobile banking, internet banking, digital payments, and blockchain technology, and their transformation of traditional banking practices.
 
@@ -423,7 +494,25 @@ The study also addresses challenges and opportunities in technology integration,
 The study also provides insights into future prospects and disruptions that emerging technologies like artificial intelligence, machine learning, and fintech startups may bring to India's financial sector, including increased automation, personalized services, and new business models. Overall, the study offers a comprehensive analysis of how technology has transformed India's financial sector, its current state, challenges, and future outlook, and offers recommendations for policymakers and banking stakeholders.`,
     keywords: ['Indian Banking Industry', 'Digital Payments', 'Mobile Banking', 'Fintech Disruptions', 'Cybersecurity & Regulation'],
     category: 'Banking & Financial Technology',
-    publishedDate: 'March 2026',
+    publishedDate: 'September 2026',
+    sections: [
+      {
+        title: '1. Introduction & Contextual Background',
+        content: "The transformation of India's banking and financial landscape over the past two decades represents one of the most dynamic technological shifts in emerging economies. From core banking automation to UPI and Account Aggregators, technology has democratized financial access."
+      },
+      {
+        title: '2. Technology Adoption & Infrastructure Architecture',
+        content: 'Key infrastructural pillars including the India Stack, open API architectures, and cloud-native banking platforms have enabled exponential transaction scalability exceeding 130 billion annual operations.'
+      },
+      {
+        title: '3. Regulatory Frameworks, Cybersecurity & Governance',
+        content: 'As digitalization accelerates, Reserve Bank of India (RBI) mandates around data localization, tokenization, and zero-trust security ensure financial system integrity against rising digital threats.'
+      },
+      {
+        title: '4. Conclusion & Strategic Recommendations',
+        content: "Technological advancement in India's financial sector will continue to be driven by artificial intelligence and smart contracts. Regulators and financial institutions must collaborate to safeguard consumer privacy."
+      }
+    ],
     downloads: 310,
     views: 980,
   },
@@ -439,7 +528,6 @@ The study also provides insights into future prospects and disruptions that emer
     pdfUrl: '/articles/sgrcr-vol1-iss1-art05.pdf',
     pdfFileName: 'sgrcr-vol1-iss1-art05.pdf',
     fileSize: '5.7 KB',
-    driveLink: 'https://drive.google.com/',
     doi: '10.xxxx/sgrcr.2026.01.005',
     abstract: `This study investigates the connection between ancient trade wisdom and modern entrepreneurship, focusing specifically on the practices of traditional guilds (Shrenis) and family-run businesses. In historical trade systems, ethical conduct, collective decision-making, and knowledge transfer across generations were central to sustaining economic activity and building strong community networks. Such practices not only ensured financial stability but also reinforced social cohesion and trust, highlighting lessons that remain relevant for contemporary business environments.
 
@@ -448,7 +536,25 @@ The research further explores how the organizational structures of guilds resemb
 Finally, this comparative analysis provides practical insights for entrepreneurs seeking to integrate traditional wisdom with modern business strategies. By combining historical perspectives with contemporary practices, the study emphasizes the value of ethical, community-oriented, and resilient approaches in building successful and sustainable ventures in a competitive global market.`,
     keywords: ['Traditional Guilds (Shrenis)', 'Family Businesses', 'Ancient Trade Wisdom', 'Business Ethics', 'Succession Planning'],
     category: 'Commerce & Entrepreneurship',
-    publishedDate: 'March 2026',
+    publishedDate: 'September 2026',
+    sections: [
+      {
+        title: '1. Historical Foundations of Shrenis in Indian Economic History',
+        content: 'Ancient Indian commerce was characterized by sophisticated vocational guilds known as Shrenis. These entities exercised autonomy in framing commercial regulations, establishing craft quality standards, and guaranteeing business contracts.'
+      },
+      {
+        title: '2. Structural Parallels with Modern Multi-Generational Family Enterprises',
+        content: 'Contemporary family businesses display deep structural congruence with ancient Shrenis. Key shared attributes include value-based governance, intergenerational mentorship, and long-term stewardship orientations.'
+      },
+      {
+        title: '3. Succession Planning, Ethics & Knowledge Stewardship',
+        content: 'The preservation of tacit technical and commercial knowledge through familial apprenticeships provided historical guilds with enduring resilience. Modern family ventures face identical challenges in generational succession.'
+      },
+      {
+        title: '4. Conclusion & Implications for Modern Venture Strategy',
+        content: 'Integrating ancestral ethical benchmarks with modern corporate governance mechanisms provides a resilient blueprint for sustainable, community-oriented entrepreneurship.'
+      }
+    ],
     downloads: 290,
     views: 920,
   },
@@ -464,7 +570,6 @@ Finally, this comparative analysis provides practical insights for entrepreneurs
     pdfUrl: '/articles/sgrcr-vol1-iss1-art06.pdf',
     pdfFileName: 'sgrcr-vol1-iss1-art06.pdf',
     fileSize: '5.6 KB',
-    driveLink: 'https://drive.google.com/',
     doi: '10.xxxx/sgrcr.2026.01.006',
     abstract: `This study investigates the impact of fintech on inclusive finance, with a focus on the banking industry. It seeks to comprehend how fintech-driven inclusive finance affects bank profitability and what this means for global financial inclusion. The research will examine current literature, empirical evidence, and data from developing nations to shed light on the relationship between fintech, the banking industry, and inclusive finance.
 
@@ -473,7 +578,25 @@ Fintech is revolutionizing financial services by harnessing technology and cloud
 Fintech's cost-effectiveness has reduced the financial exclusion gap, making financial services more accessible for a wider population. The study will add to the existing body of knowledge on fintech and inclusive finance by giving insights into the complicated interplay between technology, the banking system, and financial inclusion. However, the paper also addresses regulatory challenges, emphasizing the need to balance fostering Fintech innovation with safeguarding consumer interests. The findings have significant implications for financial institutions, policymakers, and stakeholders, emphasizing the need to adapt to this dynamic financial landscape for a more inclusive and equitable financial system.`,
     keywords: ['Fintech', 'Financial Inclusion', 'Banking Profitability', 'Cloud-Based Financial Services', 'Financial Regulation'],
     category: 'Banking & Financial Services',
-    publishedDate: 'March 2026',
+    publishedDate: 'September 2026',
+    sections: [
+      {
+        title: '1. Introduction: The Democratization of Financial Services',
+        content: 'Financial exclusion has historically constrained poverty alleviation in developing nations. Cloud computing, mobile penetration, and machine-learning credit assessment models allow fintech entities to serve unbanked communities efficiently.'
+      },
+      {
+        title: '2. Impact on Traditional Banking Profitability & Cost Structures',
+        content: 'Commercial banks initially perceived fintech challengers as disruptors, but a strong convergence model has emerged: banks provide balance sheet scale and regulatory trust, while fintech partners deliver agile customer experiences.'
+      },
+      {
+        title: '3. Micro-Credit, Sachet Financial Products & Financial Literacy',
+        content: 'Micro-insurance and sachet digital lending products have lowered entry barriers for small vendors and low-income households. Sustainable financial inclusion requires parallel efforts in digital consumer education.'
+      },
+      {
+        title: '4. Conclusion & Regulatory Policy Imperatives',
+        content: 'Realizing the full potential of inclusive finance requires balanced regulatory oversight, open banking standards, and interoperable protocols that support innovation without risking systemic stability.'
+      }
+    ],
     downloads: 340,
     views: 1050,
   },
@@ -489,7 +612,6 @@ Fintech's cost-effectiveness has reduced the financial exclusion gap, making fin
     pdfUrl: '/articles/sgrcr-vol1-iss1-art07.pdf',
     pdfFileName: 'sgrcr-vol1-iss1-art07.pdf',
     fileSize: '5.8 KB',
-    driveLink: 'https://drive.google.com/',
     doi: '10.xxxx/sgrcr.2026.01.007',
     abstract: `The accelerating convergence of Artificial Intelligence, automation, and digital transformation is fundamentally reshaping the skills landscape for the global business workforce. This paper investigates the critical workforce skills that will define organisational competitiveness by 2030, with a focus on Indian businesses in a digitally transforming economy. A sequential exploratory mixed-methods design is employed: first, a three-round Delphi methodology with a panel of 42 industry experts across seven sectors, followed by a quantitative survey of 278 HR professionals and business leaders.
 
@@ -498,7 +620,25 @@ The findings yield a validated Future Skills Taxonomy for Business 2030 comprisi
 A critical finding is that 79.3% of organisations acknowledge the urgency of future-skills development, yet only 34.7% have implemented systematic reskilling programmes. The paper proposes a Dynamic Workforce Capability Framework (DWCF) that integrates individual development, organisational learning, and national policy enablement.`,
     keywords: ['Future Skills 2030', 'AI & Automation', 'Workforce Capabilities', 'Reskilling Programs', 'Learning & Development'],
     category: 'Human Resources & Organizational Strategy',
-    publishedDate: 'March 2026',
+    publishedDate: 'September 2026',
+    sections: [
+      {
+        title: '1. Macro-Environmental Drivers of Workforce Disruption',
+        content: 'Generative AI, enterprise robotics, and algorithmic systems are automating routine cognitive tasks at unprecedented speed. Consequently, human workers must cultivate synthesis capabilities, ethical judgment, and complex socio-emotional problem solving.'
+      },
+      {
+        title: '2. The Four Pillars of the 2030 Future Skills Taxonomy',
+        content: 'Empirical survey results identify four essential competencies: (1) Technical fluency and prompt engineering; (2) Critical analysis and contextual skepticism; (3) Empathic leadership; and (4) Continuous self-directed learning adaptability.'
+      },
+      {
+        title: '3. Institutional Challenges in Corporate Reskilling Programs',
+        content: 'Despite high conceptual awareness among corporate leaders, substantial bottlenecks persist around measurement methodologies for reskilling ROI and outdated pedagogical models in traditional corporate training academies.'
+      },
+      {
+        title: '4. Conclusion & Framework Implementation Roadmap',
+        content: 'Organizations must transition from static job-title paradigms to fluid skill-cluster architectures. Investing in experiential learning labs and collaborative AI workflows will determine corporate survivability in the 2030 economy.'
+      }
+    ],
     downloads: 275,
     views: 890,
   },
@@ -514,14 +654,31 @@ A critical finding is that 79.3% of organisations acknowledge the urgency of fut
     pdfUrl: '/articles/sgrcr-vol1-iss1-art08.pdf',
     pdfFileName: 'sgrcr-vol1-iss1-art08.pdf',
     fileSize: '5.5 KB',
-    driveLink: 'https://drive.google.com/',
     doi: '10.xxxx/sgrcr.2026.01.008',
     abstract: `The integration of artificial intelligence (AI) in education has transformed traditional learning environments by enhancing accessibility, personalization, and efficiency. This study aims to empirically analyze the influence of AI on students’ engagement and learning outcomes in Bengaluru.
 
 Using primary data collected from students through a structured questionnaire, the study evaluates how AI-based tools impact academic interaction, participation, and performance. The findings indicate that AI significantly enhances student engagement and improves learning outcomes, although certain challenges such as overdependence and reduced critical thinking were observed. The study contributes to understanding the role of AI in shaping modern educational practices.`,
     keywords: ['Artificial Intelligence in Education', 'Student Engagement', 'Learning Outcomes', 'Educational Technology', 'Bengaluru Higher Education'],
     category: 'Education & Technology',
-    publishedDate: 'March 2026',
+    publishedDate: 'September 2026',
+    sections: [
+      {
+        title: '1. Introduction to AI Pedagogy in Indian Higher Education',
+        content: 'The rapid democratization of adaptive learning platforms, automated formative assessment agents, and conversational tutoring systems is fundamentally restructuring higher education classrooms across major Indian knowledge hubs such as Bengaluru.'
+      },
+      {
+        title: '2. Empirical Survey Methodology & Sample Demographics',
+        content: 'A structured 5-point Likert questionnaire was administered to 240 undergraduate and postgraduate students across diverse disciplines. Structural analysis examined correlations between daily AI utilization, classroom participation, and academic performance.'
+      },
+      {
+        title: '3. Findings: Engagement Metrics, Cognitive Offloading & Pedagogical Risks',
+        content: 'Empirical findings show a statistically significant positive relationship between AI personalization and student motivation (p < 0.01). However, 42% of surveyed instructors reported concerns regarding cognitive offloading and integrity risks during self-directed study.'
+      },
+      {
+        title: '4. Conclusion & Responsible AI Integration in Universities',
+        content: 'Universities must develop comprehensive institutional AI literacy frameworks. Rather than instituting punitive bans, educators should formulate assessment methodologies that emphasize authentic debate, hands-on experimentation, and critical algorithmic auditing.'
+      }
+    ],
     downloads: 320,
     views: 1010,
   },
@@ -640,7 +797,7 @@ export const POLICIES: PolicyItem[] = [
     slug: 'academic-publication-policy',
     description: 'Readiness criteria aligned with Scopus CSAB, DORA, and ICMJE authorship standards.',
     highlights: [
-      'Regular BI-Quartly publication schedule for ISSN India compliance',
+      'Regular Quarterly (3 Issues per Year) publication schedule for ISSN India compliance',
       'Rigorous double-blind peer review and verifiable APA 7th Edition referencing',
       'Adherence to San Francisco Declaration on Research Assessment (DORA)',
     ],
@@ -654,9 +811,10 @@ export const JOURNAL_PARTICULARS = [
   { label: 'DOI Prefix', value: 'To be assigned (Crossref)' },
   { label: 'Language of Publication', value: 'English (UK / US consistent)' },
   { label: 'Subject / Scope', value: 'Commerce, Management, Economics, Social Sciences, and Allied Fields' },
-  { label: 'Periodicity', value: 'BI-Quartly (Four issues per volume per year)' },
+  { label: 'Publication Frequency / Periodicity', value: 'Quarterly (3 Issues per Year)' },
+  { label: 'Current Issue', value: 'Volume 1, Issue 1, September 2026' },
   { label: 'Contact Phone / Mobile', value: 'M: 9148484079' },
-  { label: 'Registered Editorial Address', value: 'Address line 1: Bommanahalli Town, City: Bengaluru, Pin Code: 560076, State: Karnataka, Country: India' },
+  { label: 'Contact Address', value: 'Shakti Research Centre and Academia (SRCAA), Address Line 1: Bommanahalli Town, City: Bengaluru, Pin Code: 560076, State: Karnataka, Country: India' },
   { label: 'Year of Commencement', value: '2026' },
   { label: 'Publisher / Owner', value: 'Shakti Research Centre and Academia (SRCAA)' },
   { label: 'Accreditation', value: 'ITC Conformity Assessment & Recognition Framework (Est. 2024)' },

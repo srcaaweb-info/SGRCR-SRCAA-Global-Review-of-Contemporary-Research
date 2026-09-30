@@ -70,50 +70,58 @@ export const EditorialBoardSection: React.FC = () => {
     switch (member.groupTier) {
       case 'chairperson':
         return {
-          icon: <Award className="w-3.5 h-3.5 text-[#ffffff]" />,
+          avatarIcon: <Award className="w-3.5 h-3.5 text-[#781f1d]" />,
+          badgeIcon: <Award className="w-3.5 h-3.5 text-[#c97775]" />,
           label: 'Chairperson – SGRCR',
           badgeClass: 'bg-[#1f0707] text-[#ffffff] border-[#1f0707]',
         };
       case 'chief_editor':
         return {
-          icon: <Award className="w-3.5 h-3.5 text-[#781f1d]" />,
+          avatarIcon: <Award className="w-3.5 h-3.5 text-[#781f1d]" />,
+          badgeIcon: <Award className="w-3.5 h-3.5 text-[#781f1d]" />,
           label: 'Chief Editor',
           badgeClass: 'bg-[#781f1d]/10 border-[#781f1d]/30 text-[#781f1d]',
         };
       case 'chief_reviewer':
         return {
-          icon: <FileCheck2 className="w-3.5 h-3.5 text-[#781f1d]" />,
+          avatarIcon: <FileCheck2 className="w-3.5 h-3.5 text-[#781f1d]" />,
+          badgeIcon: <FileCheck2 className="w-3.5 h-3.5 text-[#781f1d]" />,
           label: 'Chief Reviewer – SGRCR',
           badgeClass: 'bg-[#a13533]/15 border-[#a13533]/40 text-[#781f1d] font-bold',
         };
       case 'associate_editor':
         return {
-          icon: <BookOpen className="w-3.5 h-3.5 text-[#781f1d]" />,
+          avatarIcon: <BookOpen className="w-3.5 h-3.5 text-[#781f1d]" />,
+          badgeIcon: <BookOpen className="w-3.5 h-3.5 text-[#781f1d]" />,
           label: 'Associate Editor',
           badgeClass: 'bg-gray-100 border-gray-200 text-[#421413]',
         };
       case 'section_editor':
         return {
-          icon: <Layers className="w-3.5 h-3.5 text-[#781f1d]" />,
+          avatarIcon: <Layers className="w-3.5 h-3.5 text-[#781f1d]" />,
+          badgeIcon: <Layers className="w-3.5 h-3.5 text-[#781f1d]" />,
           label: 'Section Editor',
           badgeClass: 'bg-gray-100 border-gray-200 text-[#421413]',
         };
       case 'advisory_international':
         return {
-          icon: <Globe2 className="w-3.5 h-3.5 text-[#781f1d]" />,
+          avatarIcon: <Globe2 className="w-3.5 h-3.5 text-[#781f1d]" />,
+          badgeIcon: <Globe2 className="w-3.5 h-3.5 text-[#781f1d]" />,
           label: 'Advisory Board – International',
           badgeClass: 'bg-emerald-50 border-emerald-200 text-emerald-900',
         };
       case 'advisory_national':
         return {
-          icon: <Compass className="w-3.5 h-3.5 text-[#781f1d]" />,
+          avatarIcon: <Compass className="w-3.5 h-3.5 text-[#781f1d]" />,
+          badgeIcon: <Compass className="w-3.5 h-3.5 text-[#781f1d]" />,
           label: 'Advisory Board Member',
           badgeClass: 'bg-amber-50 border-amber-200 text-amber-900',
         };
       case 'editorial_member':
       default:
         return {
-          icon: <UserCheck className="w-3.5 h-3.5 text-[#781f1d]" />,
+          avatarIcon: <UserCheck className="w-3.5 h-3.5 text-[#781f1d]" />,
+          badgeIcon: <UserCheck className="w-3.5 h-3.5 text-[#781f1d]" />,
           label: 'Editorial Board Member',
           badgeClass: 'bg-gray-50 border-gray-200 text-[#421413]',
         };
@@ -203,17 +211,17 @@ export const EditorialBoardSection: React.FC = () => {
                   {/* Top Header: Avatar & Category Badge + Serial Number */}
                   <div className="flex items-start justify-between gap-3 mb-4">
                     <div className="relative">
-                      <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#1f0707] text-[#ffffff] font-serif font-bold text-base sm:text-lg flex items-center justify-center shadow-xs ring-2 ring-[#a13533]/60 group-hover:ring-[#781f1d] transition-all">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#1f0707] text-[#ffffff] font-serif font-bold text-base sm:text-lg flex items-center justify-center shadow-xs ring-2 ring-[#a13533]/60 group-hover:ring-[#781f1d] transition-all">
                         {member.initials}
                       </div>
                       <div className="absolute -bottom-1 -right-1 p-1 bg-[#ffffff] rounded-full shadow-xs border border-gray-200">
-                        {badge.icon}
+                        {badge.avatarIcon}
                       </div>
                     </div>
 
                     <div className="flex flex-col items-end gap-1">
                       <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[11px] font-semibold ${badge.badgeClass}`}>
-                        {badge.icon}
+                        {badge.badgeIcon}
                         <span>{badge.label}</span>
                       </span>
                       {member.serialNumber ? (
@@ -263,19 +271,6 @@ export const EditorialBoardSection: React.FC = () => {
                       </p>
                     </div>
 
-                    {/* Official Postal Address (if provided, e.g. Dr. S. M. Anas Iqbal) */}
-                    {member.officialPostalAddress && (
-                      <div className="p-2.5 bg-gray-50 rounded-lg border border-gray-200 text-xs text-[#421413] space-y-1">
-                        <div className="flex items-start gap-1.5 font-bold text-[#781f1d]">
-                          <MapPin className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                          <span>Official Postal Address:</span>
-                        </div>
-                        <p className="text-[11px] text-[#581e1d] pl-5 leading-relaxed">
-                          {member.officialPostalAddress}
-                        </p>
-                      </div>
-                    )}
-
                     {/* Sub Affiliation / University Affiliation */}
                     {member.subAffiliation && (
                       <div className="flex items-start gap-2 text-xs text-[#581e1d]">
@@ -284,13 +279,11 @@ export const EditorialBoardSection: React.FC = () => {
                       </div>
                     )}
 
-                    {/* Location */}
-                    {!member.officialPostalAddress && (
-                      <div className="flex items-start gap-2 text-xs text-[#781f1d]">
-                        <MapPin className="w-3.5 h-3.5 text-[#781f1d] shrink-0 mt-0.5" />
-                        <span className="leading-snug">{member.location}</span>
-                      </div>
-                    )}
+                    {/* State & Country Location */}
+                    <div className="flex items-start gap-2 text-xs text-[#781f1d] font-semibold">
+                      <MapPin className="w-3.5 h-3.5 text-[#781f1d] shrink-0 mt-0.5" />
+                      <span className="leading-snug">{member.location}</span>
+                    </div>
 
                     {/* Additional Roles / Responsibilities Tags */}
                     {member.additionalRoles && member.additionalRoles.length > 0 && (
@@ -402,8 +395,32 @@ export const EditorialBoardSection: React.FC = () => {
           </div>
         )}
 
+        {/* Editorial Office & Publisher Contact Address */}
+        <div className="mt-10 p-5 sm:p-6 bg-gray-50 border border-gray-200 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xs">
+          <div className="flex items-start gap-3">
+            <MapPin className="w-6 h-6 text-[#781f1d] shrink-0 mt-1" />
+            <div>
+              <p className="font-serif font-bold text-base text-[#1f0707]">
+                Contact Address — Publisher & Editorial Secretariat
+              </p>
+              <p className="text-xs sm:text-sm text-[#421413] mt-0.5 font-semibold">
+                Shakti Research Centre and Academia (SRCAA)
+              </p>
+              <p className="text-xs sm:text-sm text-[#581e1d] mt-0.5">
+                Address Line 1: Bommanahalli Town, City: Bengaluru, Pin Code: 560076, State: Karnataka, Country: India · Phone: M: 9148484079 · Email: srcaacontact@gmail.com
+              </p>
+            </div>
+          </div>
+          <a
+            href="#contact"
+            className="shrink-0 px-4 py-2 bg-[#1f0707] text-[#ffffff] hover:bg-[#421413] text-xs font-bold rounded-full transition-colors"
+          >
+            Contact Editorial Office
+          </a>
+        </div>
+
         {/* Editorial Standards Note */}
-        <div className="mt-10 p-5 sm:p-6 bg-gray-50 border border-gray-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
+        <div className="mt-4 p-5 sm:p-6 bg-gray-50 border border-gray-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-xs">
           <div className="flex items-start gap-3">
             <ShieldCheck className="w-6 h-6 text-[#781f1d] shrink-0 mt-1" />
             <div>

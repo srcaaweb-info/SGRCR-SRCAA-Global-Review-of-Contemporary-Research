@@ -41,8 +41,9 @@ const upload = multer({
 
 // Editorial destination inboxes
 const DEFAULT_EDITORIAL_EMAILS = [
-  'srcaaweb@gmail.com',
   'srcaacontact@gmail.com',
+  'srcaaweb@gmail.com',
+  'srcaaadministrator@gmail.com',
   'admin@srcaa.co.in'
 ];
 
@@ -77,48 +78,41 @@ interface CachedSubmission {
 
 const recentSubmissions: CachedSubmission[] = [];
 
-// Helper: Check if Titan SMTP is configured
-function isTitanConfigured(): boolean {
-  return Boolean(
-    (process.env.TITAN_SMTP_USER && process.env.TITAN_SMTP_PASS) ||
-    (process.env.SMTP_PROVIDER === 'titan' && process.env.SMTP_USER && process.env.SMTP_PASS)
-  );
-}
-
 // Helper: Check if Gmail SMTP is configured
 function isGmailConfigured(): boolean {
-  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'srcaacontact@gmail.com';
-  const rawPass = process.env.GMAIL_SMTP_PASS || 'qyjvwlsshqpwztqq';
+  const user = (
+    process.env.GMAIL_SMTP_USER ||
+    process.env.SMTP_USER ||
+    process.env.EMAIL_USER ||
+    'srcaacontact@gmail.com'
+  ).trim();
+  const rawPass =
+    process.env.GMAIL_SMTP_PASS ||
+    process.env.GMAIL_APP_PASSWORD ||
+    process.env.SMTP_PASS ||
+    process.env.EMAIL_PASS ||
+    '';
   const pass = rawPass.replace(/\s+/g, '').trim();
   return Boolean(user && pass);
-}
-
-// Build Titan Transporter
-function createTitanTransporter() {
-  const host = process.env.TITAN_SMTP_HOST || 'smtp.titan.email';
-  const port = Number(process.env.TITAN_SMTP_PORT || 465);
-  const secure = process.env.TITAN_SMTP_SECURE !== 'false';
-  const user = (process.env.TITAN_SMTP_USER && process.env.TITAN_SMTP_USER.trim()) || 'admin@srcaa.co.in';
-  const pass = (process.env.TITAN_SMTP_PASS && process.env.TITAN_SMTP_PASS.trim()) || '';
-
-  return nodemailer.createTransport({
-    host,
-    port,
-    secure,
-    auth: { user, pass },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
 }
 
 // Build Gmail Transporter
 function createGmailTransporter() {
   const host = process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com';
   const port = Number(process.env.GMAIL_SMTP_PORT || 465);
-  const secure = process.env.GMAIL_SMTP_SECURE !== 'false';
-  const user = (process.env.GMAIL_SMTP_USER && process.env.GMAIL_SMTP_USER.trim()) || 'srcaacontact@gmail.com';
-  const rawPass = process.env.GMAIL_SMTP_PASS || 'qyjvwlsshqpwztqq';
+  const secure = process.env.GMAIL_SMTP_SECURE !== 'false' && port === 465;
+  const user = (
+    process.env.GMAIL_SMTP_USER ||
+    process.env.SMTP_USER ||
+    process.env.EMAIL_USER ||
+    'srcaacontact@gmail.com'
+  ).trim();
+  const rawPass =
+    process.env.GMAIL_SMTP_PASS ||
+    process.env.GMAIL_APP_PASSWORD ||
+    process.env.SMTP_PASS ||
+    process.env.EMAIL_PASS ||
+    '';
   const pass = rawPass.replace(/\s+/g, '').trim();
 
   return nodemailer.createTransport({
@@ -136,23 +130,14 @@ function createGmailTransporter() {
 // API ROUTES
 // ==============================================================================
 
-// 1. SMTP Provider Status & Health Check
+// 1. SMTP Provider Status & Health Check (Gmail SMTP Only)
 app.get('/api/smtp-config', (_req, res) => {
-  const titanReady = isTitanConfigured();
   const gmailReady = isGmailConfigured();
-  const defaultProvider = process.env.SMTP_PROVIDER || 'gmail';
 
   res.json({
     status: 'ok',
-    activeProvider: defaultProvider,
+    activeProvider: 'gmail',
     providers: {
-      titan: {
-        name: 'Titan Mail SMTP',
-        host: process.env.TITAN_SMTP_HOST || 'smtp.titan.email',
-        port: Number(process.env.TITAN_SMTP_PORT || 465),
-        fromEmail: process.env.TITAN_FROM_EMAIL || 'admin@srcaa.co.in',
-        isConfigured: titanReady,
-      },
       gmail: {
         name: 'Google Gmail SMTP',
         host: process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com',
@@ -167,7 +152,7 @@ app.get('/api/smtp-config', (_req, res) => {
 });
 
 // 2. Submit Manuscript Endpoint
-app.post('/api/submit-manuscript', upload.single('attachment'), async (req, res) => {
+app.post('/api/submit-manuscript', upload.single('attachment') as unknown as express.RequestHandler, async (req, res) => {
   try {
     const {
       authorName,
@@ -181,7 +166,6 @@ app.post('/api/submit-manuscript', upload.single('attachment'), async (req, res)
       manuscriptLink = '',
       message = '',
       declaration,
-      smtpChoice = 'auto',
     } = req.body;
 
     const file = req.file;
@@ -204,7 +188,7 @@ app.post('/api/submit-manuscript', upload.single('attachment'), async (req, res)
     if (!file && !manuscriptLink?.trim()) {
       return res.status(400).json({
         success: false,
-        error: 'Please upload a manuscript file (.docx / .pdf) or provide a Google Drive / cloud link.',
+        error: 'Please upload a manuscript file (.docx / .pdf).',
       });
     }
 
@@ -219,18 +203,7 @@ app.post('/api/submit-manuscript', upload.single('attachment'), async (req, res)
     });
 
     const editorialRecipients = getEditorialRecipients();
-
-    // Determine SMTP Provider to use (default: gmail)
-    let selectedProvider = smtpChoice;
-    if (selectedProvider === 'auto' || !selectedProvider) {
-      if (isGmailConfigured()) {
-        selectedProvider = 'gmail';
-      } else if (isTitanConfigured()) {
-        selectedProvider = 'titan';
-      } else {
-        selectedProvider = process.env.SMTP_PROVIDER || 'gmail';
-      }
-    }
+    const selectedProvider = 'gmail';
 
     // Prepare Professional HTML Email for Editorial Board
     const emailSubject = `[SGRCR Submission Ref: ${referenceId}] ${title} — ${authorName}`;
@@ -268,7 +241,7 @@ app.post('/api/submit-manuscript', upload.single('attachment'), async (req, res)
     <div class="content">
       <div class="badge-bar">Reference ID: ${referenceId}</div>
       <p style="margin-top: 0; color: #581e1d; font-size: 14px;">
-        A new peer-reviewed manuscript has been transmitted to the Editorial Secretariat via <strong>${selectedProvider.toUpperCase()} SMTP Gateway</strong> on ${timestamp}.
+        A new peer-reviewed manuscript has been transmitted to the Editorial Secretariat via <strong>GMAIL SMTP Gateway</strong> on ${timestamp}.
       </p>
 
       <div class="section-title">1. Author Information</div>
@@ -312,14 +285,9 @@ app.post('/api/submit-manuscript', upload.single('attachment'), async (req, res)
           <td class="label">Keywords</td>
           <td class="value">${keywords}</td>
         </tr>` : ''}
-        ${manuscriptLink ? `
-        <tr>
-          <td class="label">Cloud / Drive Link</td>
-          <td class="value"><a href="${manuscriptLink}" target="_blank" style="color: #781f1d; word-break: break-all;">${manuscriptLink}</a></td>
-        </tr>` : ''}
         <tr>
           <td class="label">Attached File</td>
-          <td class="value">${file ? `${file.originalname} (${(file.size / (1024 * 1024)).toFixed(2)} MB)` : 'None (Cloud document link provided)'}</td>
+          <td class="value">${file ? `${file.originalname} (${(file.size / (1024 * 1024)).toFixed(2)} MB)` : 'None'}</td>
         </tr>
       </table>
 
@@ -340,6 +308,7 @@ app.post('/api/submit-manuscript', upload.single('attachment'), async (req, res)
 
     <div class="footer">
       <p style="margin: 0 0 6px;">SGRCR Editorial Office — Shakti Research Centre and Academia (SRCAA)</p>
+      <p style="margin: 0 0 6px;">Contact Address: Bommanahalli Town, Bengaluru – 560076, Karnataka, India</p>
       <p style="margin: 0;">Inboxes: ${editorialRecipients.join(' · ')}</p>
     </div>
   </div>
@@ -354,7 +323,7 @@ OFFICIAL MANUSCRIPT SUBMISSION RECEIPT
 ================================================================================
 Submission Reference: ${referenceId}
 Transmission Timestamp: ${timestamp}
-Gateway: ${selectedProvider.toUpperCase()} SMTP
+Gateway: GMAIL SMTP
 
 1. AUTHOR INFORMATION:
 --------------------------------------------------------------------------------
@@ -369,7 +338,6 @@ Title: ${title}
 Category: ${articleType}
 ${abstract ? `Abstract:\n${abstract}\n` : ''}
 ${keywords ? `Keywords: ${keywords}\n` : ''}
-${manuscriptLink ? `Cloud Document Link: ${manuscriptLink}\n` : ''}
 Attached Document: ${file ? `${file.originalname} (${(file.size / (1024 * 1024)).toFixed(2)} MB)` : 'None'}
 
 3. COVER LETTER / REMARKS:
@@ -379,6 +347,7 @@ ${message || 'None provided'}
 4. ETHICAL DECLARATION:
 --------------------------------------------------------------------------------
 [CONFIRMED] Meets COPE publication ethics, originality, and DORA evaluation standards.
+Contact Address: Shakti Research Centre and Academia (SRCAA), Bommanahalli Town, Bengaluru – 560076, Karnataka, India
 Editorial Inboxes: ${editorialRecipients.join(', ')}
 ================================================================================
 `;
@@ -397,23 +366,15 @@ Editorial Inboxes: ${editorialRecipients.join(', ')}
     let smtpDeliveryStatus: CachedSubmission['smtpDeliveryStatus'] = 'simulated_dev';
     let deliveryMessage = '';
 
-    // Determine sender address
-    const fromAddress =
-      selectedProvider === 'titan'
-        ? (process.env.TITAN_FROM_EMAIL || 'admin@srcaa.co.in')
-        : (process.env.GMAIL_FROM_EMAIL || 'srcaacontact@gmail.com');
-
-    // Attempt SMTP dispatch
-    const isReady = selectedProvider === 'titan' ? isTitanConfigured() : isGmailConfigured();
+    const fromAddress = process.env.GMAIL_FROM_EMAIL || 'srcaacontact@gmail.com';
+    const isReady = isGmailConfigured();
 
     if (isReady) {
       try {
-        const transporter =
-          selectedProvider === 'titan' ? createTitanTransporter() : createGmailTransporter();
+        const transporter = createGmailTransporter();
 
-        console.log(`[SMTP] Attempting dispatch for ${referenceId} via ${selectedProvider.toUpperCase()} from ${fromAddress} to:`, editorialRecipients);
+        console.log(`[SMTP] Attempting dispatch for ${referenceId} via GMAIL from ${fromAddress} to:`, editorialRecipients);
 
-        // Send to Editorial inboxes
         const mailResult = await transporter.sendMail({
           from: `"SGRCR Editorial Secretariat" <${fromAddress}>`,
           to: editorialRecipients.join(', '),
@@ -429,7 +390,7 @@ Editorial Inboxes: ${editorialRecipients.join(', ')}
         smtpDeliveryStatus = 'sent';
         deliveryMessage = `Manuscript submission Ref: ${referenceId} has been successfully transmitted to the Editorial Secretariat.`;
 
-        // Also attempt to send automated receipt confirmation to author
+        // Attempt automated receipt confirmation to author
         try {
           const authorAck = await transporter.sendMail({
             from: `"SGRCR Editorial Office" <${fromAddress}>`,
@@ -450,6 +411,8 @@ Editorial Inboxes: ${editorialRecipients.join(', ')}
                   Warm regards,<br/>
                   <strong>Editorial Secretariat</strong><br/>
                   SRCAA Global Review of Contemporary Research (SGRCR)<br/>
+                  Shakti Research Centre and Academia (SRCAA)<br/>
+                  Bommanahalli Town, Bengaluru – 560076, Karnataka, India<br/>
                   <a href="https://www.srcaa.co.in/" style="color: #781f1d;">www.srcaa.co.in</a>
                 </p>
               </div>
@@ -465,7 +428,6 @@ Editorial Inboxes: ${editorialRecipients.join(', ')}
         deliveryMessage = `Manuscript submission Ref: ${referenceId} has been securely logged with the editorial secretariat for review.`;
       }
     } else {
-      // In dev environment or demo mode
       smtpDeliveryStatus = 'simulated_dev';
       deliveryMessage = `Manuscript submission Ref: ${referenceId} recorded in the editorial queue for peer review.`;
     }
@@ -522,11 +484,12 @@ Editorial Inboxes: ${editorialRecipients.join(', ')}
   }
 });
 
-// 3. SMTP Diagnostic Test Endpoint
+// 3. SMTP Diagnostic Test Endpoint (Gmail Only)
 app.post('/api/test-smtp', async (req, res) => {
   try {
-    const { provider = 'gmail', recipient = 'srcaacontact@gmail.com' } = req.body;
-    const isReady = provider === 'titan' ? isTitanConfigured() : isGmailConfigured();
+    const { recipient = 'srcaacontact@gmail.com' } = req.body;
+    const provider = 'gmail';
+    const isReady = isGmailConfigured();
 
     if (!isReady) {
       return res.status(200).json({
@@ -535,22 +498,20 @@ app.post('/api/test-smtp', async (req, res) => {
         provider,
         recipient,
         configured: false,
-        message: `Provider '${provider}' password not yet set in environment. Routing to ${recipient} is active in simulation mode.`,
+        message: `Gmail SMTP password not yet set in environment. Routing to ${recipient} is active in simulation mode.`,
       });
     }
 
-    const transporter = provider === 'titan' ? createTitanTransporter() : createGmailTransporter();
-    const fromAddress = provider === 'titan'
-      ? (process.env.TITAN_FROM_EMAIL || 'admin@srcaa.co.in')
-      : (process.env.GMAIL_FROM_EMAIL || 'srcaacontact@gmail.com');
+    const transporter = createGmailTransporter();
+    const fromAddress = process.env.GMAIL_FROM_EMAIL || 'srcaacontact@gmail.com';
 
     await transporter.verify();
 
     await transporter.sendMail({
       from: `"SGRCR Gateway Test" <${fromAddress}>`,
       to: recipient,
-      subject: `[SGRCR Diagnostic] ${provider.toUpperCase()} SMTP Ping Test`,
-      text: `This is an automated test ping from the SGRCR Editorial Server to verify ${provider.toUpperCase()} SMTP connectivity.\nTimestamp: ${new Date().toISOString()}\nTarget: ${recipient}`,
+      subject: `[SGRCR Diagnostic] GMAIL SMTP Ping Test`,
+      text: `This is an automated test ping from the SGRCR Editorial Server to verify GMAIL SMTP connectivity.\nTimestamp: ${new Date().toISOString()}\nTarget: ${recipient}`,
     });
 
     return res.status(200).json({
@@ -559,7 +520,7 @@ app.post('/api/test-smtp', async (req, res) => {
       provider,
       recipient,
       configured: true,
-      message: `Diagnostic test email successfully dispatched to ${recipient} via ${provider.toUpperCase()} SMTP!`,
+      message: `Diagnostic test email successfully dispatched to ${recipient} via GMAIL SMTP!`,
     });
   } catch (err: any) {
     return res.status(200).json({
@@ -634,7 +595,7 @@ async function startServer() {
 
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`[SGRCR Backend] Running on http://0.0.0.0:${PORT}`);
-    console.log(`[SMTP Ready] Titan: ${isTitanConfigured()} | Gmail: ${isGmailConfigured()}`);
+    console.log(`[SMTP Ready] Gmail: ${isGmailConfigured()}`);
   });
 }
 

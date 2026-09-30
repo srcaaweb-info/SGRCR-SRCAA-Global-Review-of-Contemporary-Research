@@ -141,10 +141,12 @@ ${receipt.coAuthors ? `- Co-Authors: ${receipt.coAuthors}\n` : ''}
 - Article Category: ${receipt.articleType}
 - Attached Document: ${receipt.fileName ? `${receipt.fileName} (${formatFileSize(receipt.fileSize || 0)})` : 'Document Attached'}
 
-3. EDITORIAL TRANSMISSION DESTINATIONS:
+3. EDITORIAL TRANSMISSION DESTINATIONS & CONTACT ADDRESS:
 --------------------------------------------------------------------------------
-- Editorial Secretariat: SGRCR Editorial Office (srcaaweb@gmail.com, srcaacontact@gmail.com, admin@srcaa.co.in)
+- Editorial Secretariat: SGRCR Editorial Office (srcaacontact@gmail.com, srcaaweb@gmail.com, admin@srcaa.co.in)
 - Institutional Publisher: Shakti Research Centre and Academia (SRCAA)
+- Publication Frequency: Quarterly (3 Issues per Year)
+- Contact Address: Address Line 1: Bommanahalli Town, City: Bengaluru, Pin Code: 560076, State: Karnataka, Country: India (M: 9148484079)
 
 4. ETHICAL & COPE INTEGRITY DECLARATION:
 --------------------------------------------------------------------------------
@@ -230,6 +232,38 @@ of Conduct, and complies with DORA scientific evaluation criteria.
           message: `Manuscript Ref: ${fallbackRefId} registered in the SGRCR editorial queue.`,
           editorialInboxes: ['srcaaweb@gmail.com', 'srcaacontact@gmail.com', 'admin@srcaa.co.in'],
         };
+      }
+
+      // If backend Gmail SMTP was not yet configured with GMAIL_SMTP_PASS, also relay directly from client to Gmail via FormSubmit
+      if (result.smtpStatus !== 'sent') {
+        try {
+          const relayPayload = new FormData();
+          relayPayload.append('_subject', `[SGRCR Submission Ref: ${result.referenceId}] ${formData.title.trim()} — ${formData.authorName.trim()}`);
+          relayPayload.append('_cc', 'srcaaweb@gmail.com,srcaaadministrator@gmail.com,admin@srcaa.co.in');
+          relayPayload.append('_template', 'table');
+          relayPayload.append('_captcha', 'false');
+          relayPayload.append('Reference_ID', result.referenceId);
+          relayPayload.append('Corresponding_Author', formData.authorName.trim());
+          relayPayload.append('Institutional_Email', formData.email.trim());
+          relayPayload.append('Affiliation', formData.affiliation.trim());
+          if (formData.coAuthors.trim()) relayPayload.append('Co_Authors', formData.coAuthors.trim());
+          relayPayload.append('Category', formData.articleType);
+          relayPayload.append('Manuscript_Title', formData.title.trim());
+          if (formData.abstract.trim()) relayPayload.append('Abstract', formData.abstract.trim());
+          if (formData.keywords.trim()) relayPayload.append('Keywords', formData.keywords.trim());
+          if (formData.message.trim()) relayPayload.append('Cover_Letter_Remarks', formData.message.trim());
+          if (selectedFile) {
+            relayPayload.append('File_Attached', `${selectedFile.name} (${formatFileSize(selectedFile.size)})`);
+          }
+
+          await fetch('https://formsubmit.co/ajax/srcaacontact@gmail.com', {
+            method: 'POST',
+            headers: { Accept: 'application/json' },
+            body: relayPayload,
+          });
+        } catch {
+          // Non-blocking fallback
+        }
       }
 
       // Also persist to local cache for instant in-app editorial log review
@@ -574,6 +608,22 @@ of Conduct, and complies with DORA scientific evaluation criteria.
                       </>
                     )}
                   </button>
+
+                  <a
+                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
+                      'srcaacontact@gmail.com,srcaaweb@gmail.com,admin@srcaa.co.in'
+                    )}&su=${encodeURIComponent(
+                      `[SGRCR Submission Ref: ${submissionReceipt.referenceId}] ${submissionReceipt.title}`
+                    )}&body=${encodeURIComponent(generateReceiptText(submissionReceipt))}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#781f1d] hover:bg-[#421413] text-[#ffffff] font-bold text-xs sm:text-sm rounded-xl transition-all shadow-xs"
+                    title="Verify or send copy directly in Gmail"
+                  >
+                    <Mail className="w-4 h-4 text-[#ffffff]" />
+                    <span>Open / Verify in Gmail</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-[#c97775]" />
+                  </a>
 
                   {onOpenSubmissionsLog && (
                     <button

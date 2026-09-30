@@ -1,5 +1,6 @@
 import React from 'react';
 import { Archive, PenTool, ExternalLink, Award, Search, FileText } from 'lucide-react';
+import { PUBLICATION_FREQUENCY } from '../data/journalData';
 
 interface HeroProps {
   onOpenArticleArchive?: () => void;
@@ -7,11 +8,6 @@ interface HeroProps {
 
 export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
   const handleOpenSeparateArchive = (e: React.MouseEvent) => {
-    try {
-      window.open('/archive.html', '_blank', 'noopener,noreferrer');
-    } catch {
-      // Ignored if window.open is restricted in iframe
-    }
     if (onOpenArticleArchive) {
       e.preventDefault();
       onOpenArticleArchive();
@@ -45,7 +41,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
               />
             </div>
             <span className="mt-3 text-[#c97775] text-xs sm:text-sm 2xl:text-base font-bold tracking-widest uppercase">
-              ESTD Year: 2024
+              ESTD Year: 2024 · Frequency: {PUBLICATION_FREQUENCY}
             </span>
           </div>
 
@@ -59,7 +55,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
 
           {/* Description */}
           <p className="mt-5 text-base sm:text-lg md:text-xl 2xl:text-2xl text-[#ede0de] max-w-3xl 2xl:max-w-4xl mx-auto font-normal leading-relaxed">
-            An International Open Access Journal, Peer Reviewed, published by Shakti Research Centre and Academia (SRCAA). Publishing original research across Commerce, Management, Economics, Social Sciences, Technology, and Interdisciplinary Fields with Crossref DOI assignment.
+            An International Open Access, Double-Blind Peer-Reviewed Journal published {PUBLICATION_FREQUENCY} by Shakti Research Centre and Academia (SRCAA). Publishing original research across Commerce, Management, Economics, Social Sciences, Technology, and Interdisciplinary Fields.
           </p>
 
           {/* Action Buttons */}
@@ -74,14 +70,12 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
             </a>
 
             <a
-              href="/archive.html"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="#archives"
               onClick={handleOpenSeparateArchive}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 2xl:px-8 2xl:py-4 bg-[#ffffff] hover:bg-gray-100 text-[#1f0707] font-bold text-sm sm:text-base 2xl:text-lg rounded-full shadow-lg transition-all transform hover:-translate-y-0.5"
             >
               <Archive className="w-4 h-4 2xl:w-5 2xl:h-5 text-[#781f1d]" />
-              <span>Track Paper / Archives</span>
+              <span>Current Issue & Archives</span>
               <ExternalLink className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 text-[#781f1d]" />
             </a>
           </div>
@@ -105,8 +99,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
             <div className="flex items-start gap-2.5 bg-white/5 p-3 2xl:p-4 rounded-lg border border-white/10 backdrop-blur-sm">
               <FileText className="w-5 h-5 2xl:w-6 2xl:h-6 text-[#a13533] shrink-0 mt-0.5" />
               <div>
-                <p className="text-xs sm:text-sm 2xl:text-base font-bold text-[#ffffff]">BI-Quartly</p>
-                <p className="text-[11px] 2xl:text-xs text-[#cfb6b3]">ISSN India Compliance</p>
+                <p className="text-xs sm:text-sm 2xl:text-base font-bold text-[#ffffff]">Quarterly</p>
+                <p className="text-[11px] 2xl:text-xs text-[#cfb6b3]">3 Issues per Year</p>
               </div>
             </div>
             <div className="flex items-start gap-2.5 bg-white/5 p-3 2xl:p-4 rounded-lg border border-white/10 backdrop-blur-sm">

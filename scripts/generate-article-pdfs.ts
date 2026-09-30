@@ -23,7 +23,7 @@ const articlesToGen: ArticleDef[] = [
     pages: "1–14",
     category: "Commerce & Management",
     doi: "10.xxxx/sgrcr.2026.01.001",
-    publishedDate: "January 2026",
+    publishedDate: "September 2026",
     abstract: `This research paper examines the role of digital marketing in fostering sustainability within the Fast-Moving Consumer Goods (FMCG) sector, with a focus on how conscious consumers and digital innovation collectively shape greener choices in a connected society. The study tests three hypotheses: H1: The transformative impact of digital technologies (DTI) is a primary driver of enhanced operational efficiency (OE) in the FMCG industry; H2: Consumer empowerment dynamics (CED) significantly contribute to OE gains by enabling personalized and sustainability-oriented consumer engagement; and H3: The dynamics of a connected society (CSD) strengthen sustainability outcomes through real-time data sharing, interconnected devices, and responsive supply chains.
 
 The research utilized a quantitative approach, surveying 308 participants (N=308) representing diverse consumer and industry perspectives. Structured questionnaires were employed to measure the influence of digital technologies, consumer empowerment, and connected systems on sustainable practices and operational outcomes within the FMCG sector. Statistical analysis was applied to test the proposed hypotheses and establish the strength of associations among key variables.
@@ -56,7 +56,7 @@ Findings indicate that digital technologies such as AI, IoT, and data analytics 
     pages: "15–28",
     category: "Commerce & Technology",
     doi: "10.xxxx/sgrcr.2026.01.002",
-    publishedDate: "February 2026",
+    publishedDate: "September 2026",
     abstract: `Artificial Intelligence (AI) has emerged as a transformative force in contemporary business ecosystems, fundamentally reshaping how organisations collect, analyse, and act upon information to make strategic decisions. This paper investigates the multifaceted role of AI in business decision-making across operational, managerial, and strategic levels with a focus on real-world adoption patterns between 2020 and 2025.
 
 Using a mixed-methods research design combining a quantitative survey of 280 business executives with qualitative case analyses of five leading organisations, the study reveals that AI-driven decision-making tools significantly enhance accuracy, speed, and cost-efficiency. Organisations integrating AI into their core decision frameworks report a 38.4% improvement in decision accuracy and a 31.7% reduction in decision-cycle time. However, key barriers including algorithmic bias, data privacy concerns, workforce resistance, and infrastructure limitations persist.
@@ -89,7 +89,7 @@ The paper proposes a structured AI Decision Integration Framework (ADIF) as a ro
     pages: "29–42",
     category: "Human Resources & Management",
     doi: "10.xxxx/sgrcr.2026.01.003",
-    publishedDate: "March 2026",
+    publishedDate: "September 2026",
     abstract: `Generation Z is rapidly emerging as a dominant segment of the global workforce, bringing distinct expectations shaped by digital transformation, globalization, and post-pandemic workplace realities. This study examines Gen Z expectations from Human Resource (HR) practices with specific focus on workplace flexibility, mental health support, and digital integration, and analyzes their impact on perceived HR effectiveness.
 
 The research adopts a descriptive and analytical design using primary data collected from 80 Gen Z employees aged 22-27 across IT, service, and startup sectors. A structured questionnaire based on a 5-point Likert scale was used for data collection. Statistical tools such as descriptive statistics, reliability analysis (Cronbach's Alpha), correlation, and multiple regression were applied to analyze the data.
@@ -122,7 +122,7 @@ The findings indicate that all three independent variables-workplace flexibility
     pages: "43–56",
     category: "Banking & Financial Technology",
     doi: "10.xxxx/sgrcr.2026.01.004",
-    publishedDate: "March 2026",
+    publishedDate: "September 2026",
     abstract: `Technology has played a critical role in the development of the Indian banking industry, which has undergone significant changes over time. The study examines the evolution and impact of technology in India's banking industry, focusing on digital advancements that have revolutionized the sector. It analyzes the adoption of technological solutions like mobile banking, internet banking, digital payments, and blockchain technology, and their transformation of traditional banking practices.
 
 The study also addresses challenges and opportunities in technology integration, such as cybersecurity, data privacy, regulatory compliance, and the digital divide. It also highlights the role of government, regulators, and industry stakeholders in fostering a conducive environment for technological innovation and ensuring a level playing field for all players.
@@ -155,7 +155,7 @@ The study also provides insights into future prospects and disruptions that emer
     pages: "57–70",
     category: "Commerce & Entrepreneurship",
     doi: "10.xxxx/sgrcr.2026.01.005",
-    publishedDate: "March 2026",
+    publishedDate: "September 2026",
     abstract: `This study investigates the connection between ancient trade wisdom and modern entrepreneurship, focusing specifically on the practices of traditional guilds (Shrenis) and family-run businesses. In historical trade systems, ethical conduct, collective decision-making, and knowledge transfer across generations were central to sustaining economic activity and building strong community networks. Such practices not only ensured financial stability but also reinforced social cohesion and trust, highlighting lessons that remain relevant for contemporary business environments.
 
 The research further explores how the organizational structures of guilds resemble modern family enterprises. Both systems rely heavily on trust, succession planning, mentorship, and collaborative networks to thrive. By examining these parallels, the study demonstrates how age-old practices can inform effective leadership, strategic decision-making, and long-term sustainability in today's entrepreneurial landscape.
@@ -188,7 +188,7 @@ Finally, this comparative analysis provides practical insights for entrepreneurs
     pages: "71–84",
     category: "Banking & Financial Services",
     doi: "10.xxxx/sgrcr.2026.01.006",
-    publishedDate: "March 2026",
+    publishedDate: "September 2026",
     abstract: `This study investigates the impact of fintech on inclusive finance, with a focus on the banking industry. It seeks to comprehend how fintech-driven inclusive finance affects bank profitability and what this means for global financial inclusion. The research will examine current literature, empirical evidence, and data from developing nations to shed light on the relationship between fintech, the banking industry, and inclusive finance.
 
 Fintech is revolutionizing financial services by harnessing technology and cloud-based data to provide products that are more personalized to the needs of consumers at a lower cost. The ability of fintech to increase financial inclusion and help underserved groups is well acknowledged. It will also talk about the consequences of fintech for financial inclusion and sustainability, such as the challenges it brings to financial systems and the need for regulatory measures.
@@ -221,7 +221,7 @@ Fintech's cost-effectiveness has reduced the financial exclusion gap, making fin
     pages: "85–98",
     category: "Human Resources & Organizational Strategy",
     doi: "10.xxxx/sgrcr.2026.01.007",
-    publishedDate: "March 2026",
+    publishedDate: "September 2026",
     abstract: `The accelerating convergence of Artificial Intelligence, automation, and digital transformation is fundamentally reshaping the skills landscape for the global business workforce. This paper investigates the critical workforce skills that will define organisational competitiveness by 2030, with a focus on Indian businesses in a digitally transforming economy. A sequential exploratory mixed-methods design is employed: first, a three-round Delphi methodology with a panel of 42 industry experts across seven sectors, followed by a quantitative survey of 278 HR professionals and business leaders.
 
 The findings yield a validated Future Skills Taxonomy for Business 2030 comprising four clusters - Digital & Technological Literacy, Cognitive & Analytical Agility, Human-Centred Leadership, and Adaptive Collaboration. Three hypotheses are tested through multiple regression analysis: learning culture (beta = 0.44), leadership commitment (beta = 0.38), and L&D budget allocation (beta = 0.29) are the strongest predictors of reskilling programme effectiveness (R^2 = 0.613).
@@ -254,7 +254,7 @@ A critical finding is that 79.3% of organisations acknowledge the urgency of fut
     pages: "99–112",
     category: "Education & Technology",
     doi: "10.xxxx/sgrcr.2026.01.008",
-    publishedDate: "March 2026",
+    publishedDate: "September 2026",
     abstract: `The integration of artificial intelligence (AI) in education has transformed traditional learning environments by enhancing accessibility, personalization, and efficiency. This study aims to empirically analyze the influence of AI on students' engagement and learning outcomes in Bengaluru.
 
 Using primary data collected from students through a structured questionnaire, the study evaluates how AI-based tools impact academic interaction, participation, and performance. The findings indicate that AI significantly enhances student engagement and improves learning outcomes, although certain challenges such as overdependence and reduced critical thinking were observed. The study contributes to understanding the role of AI in shaping modern educational practices.`,
@@ -324,85 +324,80 @@ async function generateArticlePdf(art: ArticleDef) {
   // PAGE 1: Header, Title, Authors, Abstract, Keywords, Section 1
   const page1 = pdfDoc.addPage([pageWidth, pageHeight]);
 
-  // Top Running Journal Header Bar
+  // Top Journal Citation Header Box (ISSN Compliance Requirement)
   page1.drawRectangle({
     x: margin,
-    y: pageHeight - 45,
+    y: pageHeight - 82,
     width: contentWidth,
-    height: 1,
-    color: rgb(0.47, 0.12, 0.11),
+    height: 48,
+    color: rgb(0.98, 0.96, 0.95),
+    borderColor: rgb(0.47, 0.12, 0.11),
+    borderWidth: 1,
   });
 
+  // Line 1: Journal Name
   page1.drawText("SRCAA Global Review of Contemporary Research (SGRCR)", {
-    x: margin,
-    y: pageHeight - 38,
-    size: 9,
-    font: helveticaBold,
-    color: rgb(0.26, 0.08, 0.08),
-  });
-
-  page1.drawText(`Volume 1, Issue 1 (2026) | pp. ${cleanStr(art.pages)} | Open Access (CC BY 4.0)`, {
-    x: margin + contentWidth - 280,
-    y: pageHeight - 38,
-    size: 8,
-    font: helvetica,
-    color: rgb(0.47, 0.12, 0.11),
-  });
-
-  // ISSN & Server Archive Banner
-  page1.drawRectangle({
-    x: margin,
-    y: pageHeight - 75,
-    width: contentWidth,
-    height: 22,
-    color: rgb(0.96, 0.94, 0.93),
-  });
-
-  page1.drawText("PEER-REVIEWED RESEARCH ARTICLE | OFFICIAL SERVER REPOSITORY DIGITAL EDITION", {
     x: margin + 10,
-    y: pageHeight - 69,
-    size: 7.5,
+    y: pageHeight - 50,
+    size: 11,
+    font: helveticaBold,
+    color: rgb(0.12, 0.03, 0.03),
+  });
+
+  // Line 2: Volume 1, Issue 1, September 2026
+  page1.drawText(`Volume 1, Issue 1, ${art.publishedDate}`, {
+    x: margin + 10,
+    y: pageHeight - 65,
+    size: 9.5,
     font: helveticaBold,
     color: rgb(0.47, 0.12, 0.11),
+  });
+
+  page1.drawText(`Pages: ${cleanStr(art.pages)} | Frequency: Quarterly (3 Issues per Year) | Open Access (CC BY 4.0)`, {
+    x: margin + 185,
+    y: pageHeight - 65,
+    size: 7.8,
+    font: helvetica,
+    color: rgb(0.26, 0.08, 0.08),
   });
 
   page1.drawText(`DOI: https://doi.org/${art.doi}`, {
-    x: margin + contentWidth - 170,
-    y: pageHeight - 69,
+    x: margin + 10,
+    y: pageHeight - 77,
     size: 7.5,
     font: helvetica,
-    color: rgb(0.26, 0.08, 0.08),
+    color: rgb(0.35, 0.12, 0.11),
   });
 
   // Article Title
-  let curY = pageHeight - 105;
-  const titleLines = wrapText(art.title, 55);
+  let curY = pageHeight - 106;
+  const titleLines = wrapText(art.title, 58);
   for (const line of titleLines) {
     page1.drawText(line, {
       x: margin,
       y: curY,
-      size: 15,
+      size: 14.5,
       font: timesBold,
       color: rgb(0.12, 0.03, 0.03),
     });
-    curY -= 20;
+    curY -= 19;
   }
 
-  // Authors & Affiliation
-  curY -= 4;
-  page1.drawText(cleanStr(art.authors.join(", ")), {
+  // Author Name(s)
+  curY -= 3;
+  page1.drawText(`Author(s): ${cleanStr(art.authors.join(", "))}`, {
     x: margin,
     y: curY,
     size: 10.5,
     font: timesBold,
     color: rgb(0.47, 0.12, 0.11),
   });
-  curY -= 15;
+  curY -= 14;
 
-  page1.drawText("Affiliated with Shakti Research Centre and Academia (SRCAA) Contributing Scholars", {
+  page1.drawText("Publisher: Shakti Research Centre and Academia (SRCAA), Bommanahalli Town, Bengaluru - 560076, Karnataka, India", {
     x: margin,
     y: curY,
-    size: 8.5,
+    size: 8,
     font: timesItalic,
     color: rgb(0.35, 0.12, 0.11),
   });
@@ -419,14 +414,14 @@ async function generateArticlePdf(art: ArticleDef) {
     borderWidth: 0.5,
   });
 
-  page1.drawText(`Category: ${art.category}   |   Published: ${art.publishedDate}   |   Peer Review: Double-Blind Validated`, {
+  page1.drawText(`Category: ${art.category}  |  Issue: Volume 1, Issue 1, ${art.publishedDate}  |  Review: Double-Blind Peer Review`, {
     x: margin + 8,
     y: curY - 9,
     size: 7.5,
     font: helvetica,
     color: rgb(0.3, 0.3, 0.3),
   });
-  curY -= 28;
+  curY -= 26;
 
   // ABSTRACT BOX
   const abstractBoxY = curY;
@@ -473,7 +468,7 @@ async function generateArticlePdf(art: ArticleDef) {
     color: rgb(0.47, 0.12, 0.11),
   });
 
-  curY = abstractBoxY - abstractBoxHeight - 20;
+  curY = abstractBoxY - abstractBoxHeight - 18;
 
   // SECTION 1: Introduction
   if (art.sections.length > 0) {
@@ -503,15 +498,22 @@ async function generateArticlePdf(art: ArticleDef) {
 
   // Footer on Page 1
   page1.drawLine({
-    start: { x: margin, y: 45 },
-    end: { x: margin + contentWidth, y: 45 },
+    start: { x: margin, y: 48 },
+    end: { x: margin + contentWidth, y: 48 },
     thickness: 0.5,
     color: rgb(0.8, 0.8, 0.8),
   });
-  page1.drawText(`SRCAA Global Review of Contemporary Research (SGRCR) — Page 1 of 2 · Server-Hosted PDF`, {
+  page1.drawText(`SRCAA Global Review of Contemporary Research (SGRCR) | Volume 1, Issue 1, September 2026 | Page 1 of 2`, {
     x: margin,
-    y: 33,
-    size: 8,
+    y: 36,
+    size: 7.8,
+    font: helvetica,
+    color: rgb(0.45, 0.45, 0.45),
+  });
+  page1.drawText(`Contact Address: Shakti Research Centre and Academia (SRCAA), Bommanahalli Town, Bengaluru - 560076, Karnataka, India`, {
+    x: margin,
+    y: 25,
+    size: 7,
     font: helvetica,
     color: rgb(0.5, 0.5, 0.5),
   });
@@ -527,7 +529,7 @@ async function generateArticlePdf(art: ArticleDef) {
     height: 0.5,
     color: rgb(0.7, 0.7, 0.7),
   });
-  page2.drawText("SGRCR | Volume 1, Issue 1 (2026) | Full Text Manuscript", {
+  page2.drawText(`SRCAA Global Review of Contemporary Research (SGRCR) | Volume 1, Issue 1, ${art.publishedDate} | ${cleanStr(art.authors.join(", "))}`, {
     x: margin,
     y: pageHeight - 38,
     size: 8,
@@ -539,7 +541,7 @@ async function generateArticlePdf(art: ArticleDef) {
 
   for (let i = 1; i < art.sections.length; i++) {
     const sec = art.sections[i];
-    if (p2Y < 260) break;
+    if (p2Y < 280) break;
 
     page2.drawText(cleanStr(sec.title), {
       x: margin,
@@ -552,7 +554,7 @@ async function generateArticlePdf(art: ArticleDef) {
 
     const secLines = wrapText(sec.content, 84);
     for (const line of secLines) {
-      if (p2Y < 260) break;
+      if (p2Y < 280) break;
       page2.drawText(line, {
         x: margin,
         y: p2Y,
@@ -566,7 +568,7 @@ async function generateArticlePdf(art: ArticleDef) {
   }
 
   // Academic References Box
-  p2Y = Math.max(p2Y, 260);
+  p2Y = Math.max(p2Y, 275);
   page2.drawText("References & Scholarly Citations", {
     x: margin,
     y: p2Y,
@@ -577,7 +579,7 @@ async function generateArticlePdf(art: ArticleDef) {
   p2Y -= 13;
 
   const references = [
-    `1. ${art.authors[0]} (2026). ${cleanStr(art.title)}. SRCAA Global Review of Contemporary Research (SGRCR), 1(1), pp. ${cleanStr(art.pages)}.`,
+    `1. ${art.authors.join(", ")} (2026). ${cleanStr(art.title)}. SRCAA Global Review of Contemporary Research (SGRCR), Volume 1, Issue 1 (September 2026), pp. ${cleanStr(art.pages)}.`,
     `2. Sharma, R., & Gupta, M. (2025). Contemporary Trends in Multidisciplinary Research & Innovation. Academic Press, New Delhi.`,
     `3. UNESCO (2023). Global Standards for Open-Access Scientific Publishing and Open Science Frameworks. Paris: UNESCO.`,
     `4. Committee on Publication Ethics (COPE). (2024). Core Practices for Academic Journal Transparency and Digital Archiving.`,
@@ -597,38 +599,45 @@ async function generateArticlePdf(art: ArticleDef) {
     }
   }
 
-  // Archiving & Open Access Copyright Box
-  p2Y = 160;
+  // Archiving, Frequency & Contact Address Box
+  p2Y = 175;
   page2.drawRectangle({
     x: margin,
-    y: p2Y - 80,
+    y: p2Y - 105,
     width: contentWidth,
-    height: 90,
+    height: 115,
     color: rgb(0.96, 0.96, 0.98),
     borderColor: rgb(0.8, 0.85, 0.9),
     borderWidth: 0.75,
   });
 
-  page2.drawText("EDITORIAL ARCHIVING & OPEN ACCESS COMPLIANCE STATEMENT", {
+  page2.drawText("JOURNAL PARTICULARS, PUBLICATION FREQUENCY & CONTACT ADDRESS", {
     x: margin + 12,
-    y: p2Y - 2,
+    y: p2Y - 3,
     size: 8.5,
     font: helveticaBold,
     color: rgb(0.15, 0.25, 0.45),
   });
 
-  const copyrightText = `Published by Shakti Research Centre and Academia (SRCAA) under the Creative Commons Attribution 4.0 International (CC BY 4.0) License. Readers are permitted to copy, redistribute, remix, and build upon this work with appropriate scholarly attribution. This document is officially catalogued in the SGRCR website permanent server repository for ISSN validation, DOI indexing, and peer-reviewed scholarly preservation.`;
-  const copyLines = wrapText(copyrightText, 86);
+  const infoLines = [
+    "Journal Title: SRCAA Global Review of Contemporary Research (SGRCR) | Issue: Volume 1, Issue 1, September 2026",
+    "Publication Frequency: Quarterly (3 Issues per Year) | Format: Online Open Access (CC BY 4.0 International License)",
+    "Publisher: Shakti Research Centre and Academia (SRCAA)",
+    "Contact Address: Address Line 1: Bommanahalli Town, City: Bengaluru, Pin Code: 560076, State: Karnataka, Country: India",
+    "Phone / Mobile: M: 9148484079 | Email: srcaacontact@gmail.com, admin@srcaa.co.in | Web: https://www.srcaa.co.in/",
+    "Repository Status: Hosted directly on the SGRCR website server (/articles/*.pdf) for permanent scholarly preservation."
+  ];
+
   let cY = p2Y - 18;
-  for (const line of copyLines) {
-    page2.drawText(line, {
+  for (const line of infoLines) {
+    page2.drawText(cleanStr(line), {
       x: margin + 12,
       y: cY,
-      size: 7.5,
+      size: 7.4,
       font: helvetica,
       color: rgb(0.2, 0.25, 0.3),
     });
-    cY -= 11;
+    cY -= 13;
   }
 
   // Footer on Page 2
@@ -638,10 +647,17 @@ async function generateArticlePdf(art: ArticleDef) {
     thickness: 0.5,
     color: rgb(0.8, 0.8, 0.8),
   });
-  page2.drawText(`SRCAA Global Review of Contemporary Research (SGRCR) — Page 2 of 2 · Official Server PDF`, {
+  page2.drawText(`SRCAA Global Review of Contemporary Research (SGRCR) | Volume 1, Issue 1, September 2026 | Page 2 of 2`, {
     x: margin,
     y: 38,
-    size: 8,
+    size: 7.8,
+    font: helvetica,
+    color: rgb(0.45, 0.45, 0.45),
+  });
+  page2.drawText(`Contact Address: Shakti Research Centre and Academia (SRCAA), Bommanahalli Town, Bengaluru - 560076, Karnataka, India`, {
+    x: margin,
+    y: 27,
+    size: 7,
     font: helvetica,
     color: rgb(0.5, 0.5, 0.5),
   });
@@ -654,6 +670,13 @@ async function generateArticlePdf(art: ArticleDef) {
   }
   const outPath = path.resolve(outDir, fileName);
   fs.writeFileSync(outPath, pdfBytes);
+
+  // Also write backward-compatible filename for Article 1 if referenced
+  if (art.number === 1) {
+    const legacyPath = path.resolve(outDir, 'sgrcr-vol-iss1-art01.pdf');
+    fs.writeFileSync(legacyPath, pdfBytes);
+  }
+
   console.log(`Generated: ${fileName} (${(pdfBytes.byteLength / 1024).toFixed(1)} KB)`);
 }
 

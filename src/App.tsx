@@ -14,10 +14,14 @@ import { ArchivesSection } from './components/ArchivesSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { ArticleArchiveView } from './components/ArticleArchiveView';
+import { ArticleDetailView } from './components/ArticleDetailView';
 import { EditorialSubmissionsModal } from './components/EditorialSubmissionsModal';
+import { ARTICLES } from './data/journalData';
+import { Article } from './types';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'main' | 'archive'>('main');
+  const [currentView, setCurrentView] = useState<'main' | 'archive' | 'article'>('main');
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [isSubmissionsModalOpen, setIsSubmissionsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -28,6 +32,17 @@ export default function App() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    const articleParam = params.get('article');
+    if (articleParam) {
+      const found = ARTICLES.find(
+        (a) => a.id === articleParam || String(a.articleNumber) === articleParam
+      );
+      if (found) {
+        setSelectedArticle(found);
+        setCurrentView('article');
+        return;
+      }
+    }
     if (params.get('view') === 'archive' || params.get('tab') === 'archive') {
       setCurrentView('archive');
     }
@@ -36,19 +51,56 @@ export default function App() {
     }
   }, []);
 
-  const handleOpenArticleArchive = () => {
+  const handleOpenArticlePage = (article: Article) => {
+    setSelectedArticle(article);
+    setCurrentView('article');
     try {
-      window.open('/archive.html', '_blank', 'noopener,noreferrer');
+      const url = new URL(window.location.href);
+      url.searchParams.set('article', article.id);
+      window.history.pushState({}, '', url.toString());
     } catch {
-      // In case window.open is blocked in preview iframe
+      // Ignored if history API restricted
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackFromArticle = () => {
+    setSelectedArticle(null);
+    setCurrentView('main');
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('article');
+      window.history.pushState({}, '', url.toString());
+    } catch {
+      // Ignored
+    }
+  };
+
+  const handleOpenArticleArchive = () => {
     setCurrentView('archive');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div className="w-full bg-[#ffffff] text-[#1f0707] min-h-screen transition-colors duration-200 overflow-x-hidden">
-      {currentView === 'archive' ? (
-        <ArticleArchiveView onBackToMain={() => setCurrentView('main')} />
+      {currentView === 'article' && selectedArticle ? (
+        <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden">
+          <TopBar onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)} />
+          <ArticleDetailView
+            article={selectedArticle}
+            onBack={handleBackFromArticle}
+            onSelectArticle={handleOpenArticlePage}
+          />
+          <Footer
+            onOpenArticleArchive={handleOpenArticleArchive}
+            onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)}
+          />
+        </div>
+      ) : currentView === 'archive' ? (
+        <ArticleArchiveView
+          onBackToMain={() => setCurrentView('main')}
+          onOpenArticlePage={handleOpenArticlePage}
+        />
       ) : (
         <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden">
           <CookieBanner />
@@ -66,7 +118,10 @@ export default function App() {
             <EditorialBoardSection />
             <PoliciesSection />
             <IssnSection />
-            <ArchivesSection onOpenArchives={handleOpenArticleArchive} />
+            <ArchivesSection
+              onOpenArchives={handleOpenArticleArchive}
+              onOpenArticlePage={handleOpenArticlePage}
+            />
             <ContactSection />
           </main>
           <Footer

@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { 
-  ShieldCheck, 
-  BookOpen, 
-  Users, 
-  AlertTriangle, 
-  FileX, 
-  Scale, 
+import {
+  ShieldCheck,
+  BookOpen,
+  Users,
+  AlertTriangle,
+  FileX,
+  Scale,
   Award,
-  ChevronRight,
-  ExternalLink
 } from 'lucide-react';
-import { POLICIES } from '../data/journalData';
+import {
+  POLICIES,
+  PUBLICATION_FREQUENCY,
+  OFFICIAL_CONTACT_ADDRESS,
+} from '../data/journalData';
 
 export const PoliciesSection: React.FC = () => {
   const [activePolicy, setActivePolicy] = useState<string>('editorial-guidelines');
@@ -18,7 +20,6 @@ export const PoliciesSection: React.FC = () => {
   return (
     <section id="policies" className="py-12 sm:py-16 md:py-20 lg:py-24 2xl:py-28 bg-[#ffffff] border-b border-gray-200">
       <div className="journal-container">
-        
         {/* Section Header */}
         <div className="mb-8 sm:mb-12">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-[#781f1d] text-xs font-bold uppercase tracking-widest border border-gray-200">
@@ -29,7 +30,7 @@ export const PoliciesSection: React.FC = () => {
             Editorial Integrity & Publication Policies
           </h2>
           <p className="mt-2 text-sm sm:text-base 2xl:text-lg text-[#581e1d] max-w-2xl 2xl:max-w-4xl">
-            SGRCR operates under eight codified governance standards benchmarked against COPE, DORA, ICMJE, and Scopus CSAB criteria.
+            SGRCR operates on a consistent <strong>{PUBLICATION_FREQUENCY}</strong> publication schedule under codified governance standards benchmarked against COPE, DORA, ICMJE, and Scopus CSAB criteria.
           </p>
         </div>
 
@@ -42,7 +43,7 @@ export const PoliciesSection: React.FC = () => {
                 key={p.id}
                 type="button"
                 onClick={() => setActivePolicy(p.slug)}
-                className={`px-3 py-3 rounded-xl text-left border transition-all text-xs font-bold flex flex-col justify-between gap-2 ${
+                className={`px-3 py-3 rounded-xl text-left border transition-all text-xs font-bold flex flex-col justify-between gap-2 cursor-pointer ${
                   isActive
                     ? 'bg-[#1f0707] text-[#ffffff] border-[#1f0707] shadow-xs'
                     : 'bg-[#ffffff] text-[#421413] border-gray-200 hover:bg-gray-50 shadow-2xs'
@@ -59,7 +60,6 @@ export const PoliciesSection: React.FC = () => {
 
         {/* Selected Policy Content Panel */}
         <div className="bg-gray-50/70 border border-gray-200 rounded-2xl p-6 sm:p-8 md:p-10 shadow-xs space-y-6 text-[#421413] leading-relaxed text-sm sm:text-base">
-          
           {/* Policy 1: Editorial Guidelines */}
           {activePolicy === 'editorial-guidelines' && (
             <div id="editorial-guidelines" className="space-y-4 animate-in fade-in-50 duration-200">
@@ -70,7 +70,7 @@ export const PoliciesSection: React.FC = () => {
                 Editorial Guidelines & Decision-Making Framework
               </h3>
               <p>
-                These guidelines govern the composition, responsibilities, and decision-making processes of the Editorial Board of SGRCR, ensuring consistency, transparency, and academic rigour across all stages from submission screening to publication.
+                These guidelines govern the composition, responsibilities, and decision-making processes of the Editorial Board of SGRCR, ensuring consistency, transparency, and academic rigour across all stages from submission screening to <strong>{PUBLICATION_FREQUENCY}</strong> publication.
               </p>
 
               <h4 className="font-bold text-base text-[#1f0707] pt-2">Editorial Board Structure</h4>
@@ -214,9 +214,9 @@ export const PoliciesSection: React.FC = () => {
                 </div>
 
                 <div className="p-4 bg-[#ffffff] rounded-xl border border-gray-200 shadow-xs">
-                  <strong className="block text-sm text-[#1f0707] mb-1">Bengaluru Court Jurisdiction</strong>
+                  <strong className="block text-sm text-[#1f0707] mb-1">Bengaluru Court Jurisdiction & Contact Address</strong>
                   <p className="text-xs text-[#581e1d]">
-                    All matters and agreements relating to SGRCR and SRCAA publications are governed by the laws of India under the exclusive jurisdiction of the competent courts at Bengaluru, Karnataka.
+                    All matters relating to SGRCR and {OFFICIAL_CONTACT_ADDRESS.publisher} ({OFFICIAL_CONTACT_ADDRESS.shortFormatted}) are governed by Indian law under the exclusive jurisdiction of the courts at Bengaluru, Karnataka.
                   </p>
                 </div>
               </div>
@@ -233,21 +233,19 @@ export const PoliciesSection: React.FC = () => {
                 Academic Standards & Scopus CSAB Readiness
               </h3>
               <p>
-                SGRCR's editorial policies are structured in full compliance with the core benchmarking criteria applied by Scopus/Elsevier Content Selection and Advisory Board (CSAB).
+                SGRCR's editorial policies are structured in full compliance with the core benchmarking criteria applied by Scopus/Elsevier Content Selection and Advisory Board (CSAB) and the ISSN National Centre, India.
               </p>
 
               <h4 className="font-bold text-base text-[#1f0707] pt-2">Key Quality Benchmarks</h4>
               <ul className="space-y-1.5 text-xs sm:text-sm list-disc list-inside text-[#581e1d]">
-                <li>Mandatory assignment of persistent Digital Object Identifiers (Crossref DOI).</li>
-                <li>Fixed BI-Quartly publication periodicity strictly maintained without delay.</li>
-                <li>Complete article-level metadata with verified references formatted in APA 7th Edition.</li>
+                <li>Mandatory assignment of persistent Digital Object Identifiers (Crossref DOI) and direct website PDF hosting (<code>/articles/*.pdf</code>).</li>
+                <li>Fixed <strong>{PUBLICATION_FREQUENCY}</strong> publication frequency strictly maintained without delay.</li>
+                <li>Complete article-level metadata (Journal Title, Volume, Issue, Month & Year, Article Title, Author Names) formatted in APA 7th Edition.</li>
                 <li>Diversity across editorial board appointments and contributing author institutions.</li>
               </ul>
             </div>
           )}
-
         </div>
-
       </div>
     </section>
   );

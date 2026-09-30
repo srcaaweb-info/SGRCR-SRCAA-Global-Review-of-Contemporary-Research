@@ -1,17 +1,22 @@
 import React from 'react';
-import { 
-  BookOpen, 
-  LockOpen, 
-  ShieldCheck, 
-  Layers3, 
-  Briefcase, 
-  Users, 
-  Cpu, 
-  Scale, 
-  Globe2,
-  CheckCircle2
+import {
+  BookOpen,
+  LockOpen,
+  ShieldCheck,
+  Layers3,
+  Briefcase,
+  Users,
+  Cpu,
+  Scale,
+  Calendar,
+  MapPin,
 } from 'lucide-react';
-import { RESEARCH_DOMAINS } from '../data/journalData';
+import {
+  RESEARCH_DOMAINS,
+  PUBLICATION_FREQUENCY,
+  CURRENT_ISSUE_LABEL,
+  OFFICIAL_CONTACT_ADDRESS,
+} from '../data/journalData';
 
 export const JournalMetadataSection: React.FC = () => {
   const getDomainIcon = (iconName: string) => {
@@ -35,19 +40,49 @@ export const JournalMetadataSection: React.FC = () => {
   return (
     <section id="journal-metadata" className="py-12 sm:py-16 md:py-20 lg:py-24 2xl:py-28 bg-[#ffffff] border-b border-gray-200">
       <div className="journal-container">
-        
         {/* Section Header */}
         <div className="mb-8 sm:mb-12">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-[#781f1d] text-xs font-bold uppercase tracking-widest border border-gray-200">
             <BookOpen className="w-3.5 h-3.5" />
-            Journal Scope & Specifications
+            Journal Information & Scope
           </span>
           <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl 2xl:text-5xl text-[#1f0707] mt-3">
-            Key Features & Research Domains
+            Journal Information & Research Domains
           </h2>
           <p className="mt-2 text-sm sm:text-base 2xl:text-lg text-[#581e1d] max-w-2xl 2xl:max-w-4xl">
-            SGRCR publishes cutting-edge empirical, conceptual, and review articles across interconnected disciplines that shape contemporary business, governance, and societal progress.
+            Published on a <strong>{PUBLICATION_FREQUENCY}</strong> schedule by <strong>{OFFICIAL_CONTACT_ADDRESS.publisher}</strong>, SGRCR publishes empirical, conceptual, and review articles across interconnected disciplines.
           </p>
+        </div>
+
+        {/* Journal Information Summary Bar (Frequency & Contact Address) */}
+        <div className="mb-8 p-5 sm:p-6 bg-gray-50 border border-gray-200 rounded-2xl grid grid-cols-1 md:grid-cols-3 gap-4 text-xs sm:text-sm">
+          <div className="flex items-start gap-3">
+            <Calendar className="w-5 h-5 text-[#781f1d] shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold text-[#1f0707] block">Publication Frequency</span>
+              <span className="text-[#781f1d] font-semibold">{PUBLICATION_FREQUENCY}</span>
+              <span className="text-xs text-[#581e1d] block mt-0.5">Current Issue: {CURRENT_ISSUE_LABEL}</span>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <BookOpen className="w-5 h-5 text-[#781f1d] shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold text-[#1f0707] block">Publisher & Access Format</span>
+              <span className="text-[#421413] font-semibold">{OFFICIAL_CONTACT_ADDRESS.publisher}</span>
+              <span className="text-xs text-[#581e1d] block mt-0.5">Open Access (CC BY 4.0) · Direct Website PDFs</span>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <MapPin className="w-5 h-5 text-[#781f1d] shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold text-[#1f0707] block">Contact Address</span>
+              <span className="text-xs text-[#421413] block leading-relaxed">
+                Address Line 1: {OFFICIAL_CONTACT_ADDRESS.addressLine1}, City: {OFFICIAL_CONTACT_ADDRESS.city}, Pin Code: {OFFICIAL_CONTACT_ADDRESS.pinCode}, State: {OFFICIAL_CONTACT_ADDRESS.state}, Country: {OFFICIAL_CONTACT_ADDRESS.country} ({OFFICIAL_CONTACT_ADDRESS.mobileDisplay})
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* 3 Core Structural Features */}
@@ -57,10 +92,10 @@ export const JournalMetadataSection: React.FC = () => {
               <LockOpen className="w-5 h-5 2xl:w-6 2xl:h-6" />
             </div>
             <h3 className="font-serif font-bold text-lg 2xl:text-xl text-[#1f0707] mb-1">
-              Open Access Repository
+              Open Access & Direct PDFs
             </h3>
             <p className="text-xs sm:text-sm 2xl:text-base text-[#581e1d] leading-relaxed">
-              Immediate, unrestricted global access to all peer-reviewed articles under Creative Commons CC BY 4.0 license. No subscription or paywall barrier.
+              Immediate, unrestricted global access to all peer-reviewed articles with dedicated article entries and direct website PDF downloads under Creative Commons CC BY 4.0.
             </p>
           </article>
 
@@ -72,7 +107,7 @@ export const JournalMetadataSection: React.FC = () => {
               Double-Blind Peer Review
             </h3>
             <p className="text-xs sm:text-sm 2xl:text-base text-[#581e1d] leading-relaxed">
-              Rigorous, blinded assessment by at least two independent subject-matter referees ensuring impartial merit, originality, and methodological soundness.
+              Rigorous, blinded assessment by at least two independent subject-matter referees across every {PUBLICATION_FREQUENCY} issue, ensuring impartial merit and methodological soundness.
             </p>
           </article>
 
@@ -89,7 +124,7 @@ export const JournalMetadataSection: React.FC = () => {
           </article>
         </div>
 
-        {/* 6 Research Domains Grid - Responsive on Mobile, Laptop, and Lab */}
+        {/* 6 Research Domains Grid */}
         <div className="mt-8">
           <h3 className="font-serif font-bold text-xl sm:text-2xl 2xl:text-3xl text-[#1f0707] mb-6">
             Covered Academic Disciplines
@@ -132,7 +167,6 @@ export const JournalMetadataSection: React.FC = () => {
             ))}
           </div>
         </div>
-
       </div>
     </section>
   );

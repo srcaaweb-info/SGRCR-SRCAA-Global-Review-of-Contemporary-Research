@@ -23,6 +23,11 @@ export interface EditorialMember {
   researchFocus?: string[];
 }
 
+export interface ArticleSection {
+  title: string;
+  content: string;
+}
+
 export interface Article {
   id: string;
   articleNumber: number;
@@ -34,13 +39,13 @@ export interface Article {
   pages: string;
   pdfUrl: string; // Direct on-server / website PDF path (ISSN requirement compliance)
   fileSize?: string;
-  pdfFileName?: string;
-  driveLink?: string;
+  pdfFileName: string;
   doi: string;
   abstract: string;
   keywords: string[];
   category: string;
-  publishedDate: string;
+  publishedDate: string; // Month & Year of the issue, e.g., "September 2026"
+  sections?: ArticleSection[];
   downloads?: number;
   views?: number;
 }

@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import { 
-  X, 
-  Download, 
-  ExternalLink, 
-  FileText, 
-  Maximize2, 
-  Minimize2, 
-  ShieldCheck, 
-  BookOpen, 
-  Check, 
-  Copy
+import {
+  X,
+  Download,
+  ExternalLink,
+  FileText,
+  Maximize2,
+  Minimize2,
+  ShieldCheck,
+  Check,
+  Copy,
 } from 'lucide-react';
 import { Article } from '../types';
 
@@ -30,7 +29,7 @@ export const ArticlePdfViewerModal: React.FC<ArticlePdfViewerModalProps> = ({
   if (!isOpen || !article) return null;
 
   const handleCopyCitation = () => {
-    const citation = `${article.authors.join(', ')} (${article.year}). ${article.title}. SRCAA Global Review of Contemporary Research (SGRCR), ${article.volume}(${article.issue}), ${article.pages}. https://doi.org/${article.doi}`;
+    const citation = `${article.authors.join(', ')} (${article.year}). ${article.title}. SRCAA Global Review of Contemporary Research (SGRCR), Volume ${article.volume}, Issue ${article.issue} (${article.publishedDate}), pp. ${article.pages}. https://doi.org/${article.doi}`;
     navigator.clipboard.writeText(citation);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -38,11 +37,9 @@ export const ArticlePdfViewerModal: React.FC<ArticlePdfViewerModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1f0707]/80 backdrop-blur-xs p-2 sm:p-4 animate-in fade-in duration-200">
-      <div 
+      <div
         className={`bg-[#ffffff] rounded-2xl shadow-2xl flex flex-col w-full border border-gray-200 overflow-hidden transition-all duration-300 ${
-          isFullscreen 
-            ? 'h-[98vh] max-w-[98vw]' 
-            : 'h-[90vh] max-w-5xl'
+          isFullscreen ? 'h-[98vh] max-w-[98vw]' : 'h-[90vh] max-w-5xl'
         }`}
       >
         {/* Top Header */}
@@ -57,7 +54,7 @@ export const ArticlePdfViewerModal: React.FC<ArticlePdfViewerModalProps> = ({
                   Article {article.articleNumber}
                 </span>
                 <span className="text-[11px] text-[#c97775] font-semibold">
-                  Peer-Reviewed Full Paper
+                  SRCAA Global Review of Contemporary Research (SGRCR) · Volume {article.volume}, Issue {article.issue}, {article.publishedDate}
                 </span>
               </div>
               <h3 className="font-serif font-bold text-sm sm:text-base text-[#ffffff] truncate mt-0.5" title={article.title}>
@@ -67,43 +64,39 @@ export const ArticlePdfViewerModal: React.FC<ArticlePdfViewerModalProps> = ({
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            {/* Download Button */}
             <a
               href={article.pdfUrl}
               download={article.pdfFileName || `sgrcr-article-${article.articleNumber}.pdf`}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#a13533] hover:bg-[#781f1d] text-[#ffffff] text-xs font-bold rounded-lg transition-colors shadow-xs"
-              title="Download PDF directly to your device"
+              title="Download PDF directly from website"
             >
               <Download className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Download</span>
+              <span className="hidden sm:inline">Download PDF</span>
             </a>
 
-            {/* Open in separate native tab */}
             <a
               href={article.pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="p-1.5 text-[#cfb6b3] hover:text-[#ffffff] hover:bg-[#421413] rounded-lg transition-colors"
-              title="Open raw PDF in new browser tab"
+              title="Open direct website PDF in new tab"
             >
               <ExternalLink className="w-4 h-4" />
             </a>
 
-            {/* Fullscreen toggle */}
             <button
               type="button"
               onClick={() => setIsFullscreen(!isFullscreen)}
-              className="p-1.5 text-[#cfb6b3] hover:text-[#ffffff] hover:bg-[#421413] rounded-lg transition-colors"
-              title={isFullscreen ? "Exit full screen" : "Full screen"}
+              className="p-1.5 text-[#cfb6b3] hover:text-[#ffffff] hover:bg-[#421413] rounded-lg transition-colors cursor-pointer"
+              title={isFullscreen ? 'Exit full screen' : 'Full screen'}
             >
               {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
             </button>
 
-            {/* Close */}
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 text-[#cfb6b3] hover:text-[#ffffff] hover:bg-[#421413] rounded-lg transition-colors ml-1"
+              className="p-1.5 text-[#cfb6b3] hover:text-[#ffffff] hover:bg-[#421413] rounded-lg transition-colors ml-1 cursor-pointer"
               title="Close PDF viewer"
             >
               <X className="w-5 h-5" />
@@ -114,9 +107,9 @@ export const ArticlePdfViewerModal: React.FC<ArticlePdfViewerModalProps> = ({
         {/* Metadata Strip */}
         <div className="bg-[#faf6f3] px-4 sm:px-6 py-2 border-b border-[#cfb6b3] flex flex-wrap items-center justify-between gap-2 text-xs">
           <div className="flex flex-wrap items-center gap-3 text-[#421413]">
-            <span><strong className="text-[#781f1d]">Authors:</strong> {article.authors.join('; ')}</span>
+            <span><strong className="text-[#781f1d]">Author(s):</strong> {article.authors.join(', ')}</span>
             <span className="text-gray-400">|</span>
-            <span>Vol. {article.volume}, Issue {article.issue} ({article.year}) · pp. {article.pages}</span>
+            <span>Volume {article.volume}, Issue {article.issue}, {article.publishedDate} · pp. {article.pages}</span>
             <span className="text-gray-400">|</span>
             <span className="font-semibold text-[#781f1d] flex items-center gap-1">
               <ShieldCheck className="w-3.5 h-3.5 text-[#781f1d]" />
@@ -128,7 +121,7 @@ export const ArticlePdfViewerModal: React.FC<ArticlePdfViewerModalProps> = ({
             <button
               type="button"
               onClick={handleCopyCitation}
-              className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#ffffff] hover:bg-[#ede4dc] border border-[#cfb6b3] text-[11px] font-bold text-[#421413] rounded-md transition-colors"
+              className="inline-flex items-center gap-1 px-2.5 py-1 bg-[#ffffff] hover:bg-[#ede4dc] border border-[#cfb6b3] text-[11px] font-bold text-[#421413] rounded-md transition-colors cursor-pointer"
             >
               {copied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3 text-[#781f1d]" />}
               <span>{copied ? 'Citation Copied' : 'Copy APA Citation'}</span>
@@ -143,22 +136,20 @@ export const ArticlePdfViewerModal: React.FC<ArticlePdfViewerModalProps> = ({
             title={`PDF of ${article.title}`}
             className="w-full h-full border-0 flex-1 bg-white"
           />
-          
-          {/* Fallback Notice */}
+
           <div className="bg-[#ffffff] p-2 text-center text-xs text-[#581e1d] border-t border-gray-200 flex flex-wrap items-center justify-center gap-3">
-            <span>File: <span className="font-mono text-[#781f1d] font-semibold">{article.pdfFileName}</span></span>
+            <span>Direct Website PDF: <span className="font-mono text-[#781f1d] font-semibold">{article.pdfUrl}</span></span>
             <span className="text-gray-300">·</span>
-            <a 
-              href={article.pdfUrl} 
-              target="_blank" 
+            <a
+              href={article.pdfUrl}
+              target="_blank"
               rel="noopener noreferrer"
               className="font-bold text-[#781f1d] hover:underline inline-flex items-center gap-1"
             >
-              Open in Native Window <ExternalLink className="w-3 h-3" />
+              Open Direct PDF File <ExternalLink className="w-3 h-3" />
             </a>
           </div>
         </div>
-
       </div>
     </div>
   );
