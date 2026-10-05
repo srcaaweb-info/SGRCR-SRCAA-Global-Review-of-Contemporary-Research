@@ -22,6 +22,7 @@ import {
 } from '../data/journalData';
 import { Article } from '../types';
 import { ArticlePdfViewerModal } from './ArticlePdfViewerModal';
+import { navigateToSection } from '../utils/navigation';
 
 interface ArchivesSectionProps {
   onOpenArchives?: () => void;
@@ -44,10 +45,11 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({
     setTimeout(() => setCopiedId(null), 2500);
   };
 
-  const handleOpenSeparateTab = (e: React.MouseEvent) => {
+  const handleOpenSeparateTab = () => {
     if (onOpenArchives) {
-      e.preventDefault();
       onOpenArchives();
+    } else {
+      navigateToSection('archives');
     }
   };
 
@@ -75,10 +77,10 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({
           </div>
 
           <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <a
-              href="/archive.html"
+            <button
+              type="button"
               onClick={handleOpenSeparateTab}
-              className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 bg-[#1f0707] hover:bg-[#421413] text-[#ffffff] font-bold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 border border-[#781f1d]"
+              className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 bg-[#1f0707] hover:bg-[#421413] text-[#ffffff] font-bold text-sm sm:text-base rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 border border-[#781f1d] cursor-pointer"
               title="Open full Archives & Publications repository"
             >
               <Archive className="w-4 h-4 text-[#a13533]" />
@@ -86,7 +88,7 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({
               <span className="inline-flex items-center gap-1 bg-[#a13533] text-[#ffffff] text-xs font-extrabold px-2 py-0.5 rounded-full uppercase tracking-wider">
                 Browse All <ExternalLink className="w-3 h-3" />
               </span>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -256,14 +258,14 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({
                 </p>
               </div>
             </div>
-            <a
-              href="/archive.html"
+            <button
+              type="button"
               onClick={handleOpenSeparateTab}
-              className="shrink-0 px-5 py-2.5 bg-[#a13533] hover:bg-[#c97775] text-[#ffffff] font-bold text-xs sm:text-sm rounded-lg shadow-xs flex items-center gap-2 transition-transform hover:scale-105"
+              className="shrink-0 px-5 py-2.5 bg-[#a13533] hover:bg-[#c97775] text-[#ffffff] font-bold text-xs sm:text-sm rounded-lg shadow-xs flex items-center gap-2 transition-transform hover:scale-105 cursor-pointer"
             >
               <span>Open Archives & Publications</span>
               <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+            </button>
           </div>
         </div>
 
@@ -274,9 +276,9 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({
             <div>
               <strong className="text-[#1f0707] block mb-1">Volume 1 · Issue 2 (Call for Papers Open — {PUBLICATION_FREQUENCY})</strong>
               <p>Manuscript submissions for the next issue under our {PUBLICATION_FREQUENCY} publication schedule are actively being accepted for double-blind peer review.</p>
-              <a href="#author-guidelines" className="text-[#781f1d] font-bold hover:underline mt-2 inline-block">
+              <button type="button" onClick={() => navigateToSection('author-guidelines')} className="text-[#781f1d] font-bold hover:underline mt-2 inline-block cursor-pointer">
                 View submission criteria →
-              </a>
+              </button>
             </div>
           </div>
           <div className="p-4 bg-[#ffffff] border border-gray-200 rounded-xl flex items-start gap-3 shadow-xs">
@@ -284,9 +286,9 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({
             <div>
               <strong className="text-[#1f0707] block mb-1">Statutory Digital Archiving & Indexing</strong>
               <p>Every published issue and peer-reviewed manuscript is indexed with persistent URIs, article-level DOI assignments, and open-access PDF viewing in compliance with statutory digital archiving standards.</p>
-              <a href="#issn-compliance" className="text-[#781f1d] font-bold hover:underline mt-2 inline-block">
+              <button type="button" onClick={() => navigateToSection('issn-compliance')} className="text-[#781f1d] font-bold hover:underline mt-2 inline-block cursor-pointer">
                 Read ISSN India compliance details →
-              </a>
+              </button>
             </div>
           </div>
         </div>

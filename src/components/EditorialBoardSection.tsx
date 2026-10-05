@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { EDITORIAL_MEMBERS } from '../data/journalData';
 import { EditorialMember } from '../types';
+import { navigateToSection } from '../utils/navigation';
 
 export const EditorialBoardSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -411,12 +412,13 @@ export const EditorialBoardSection: React.FC = () => {
               </p>
             </div>
           </div>
-          <a
-            href="#contact"
-            className="shrink-0 px-4 py-2 bg-[#1f0707] text-[#ffffff] hover:bg-[#421413] text-xs font-bold rounded-full transition-colors"
+          <button
+            type="button"
+            onClick={() => navigateToSection('contact')}
+            className="shrink-0 px-4 py-2 bg-[#1f0707] text-[#ffffff] hover:bg-[#421413] text-xs font-bold rounded-full transition-colors cursor-pointer"
           >
             Contact Editorial Office
-          </a>
+          </button>
         </div>
 
         {/* Editorial Standards Note */}
@@ -432,12 +434,13 @@ export const EditorialBoardSection: React.FC = () => {
               </p>
             </div>
           </div>
-          <a
-            href="#policies"
-            className="shrink-0 px-4 py-2 bg-[#ffffff] border border-[#781f1d] text-[#781f1d] hover:bg-[#781f1d] hover:text-[#ffffff] text-xs font-bold rounded-full transition-colors"
+          <button
+            type="button"
+            onClick={() => navigateToSection('policies')}
+            className="shrink-0 px-4 py-2 bg-[#ffffff] border border-[#781f1d] text-[#781f1d] hover:bg-[#781f1d] hover:text-[#ffffff] text-xs font-bold rounded-full transition-colors cursor-pointer"
           >
             Review Policy 1 & 2
-          </a>
+          </button>
         </div>
 
       </div>

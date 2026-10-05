@@ -1,16 +1,18 @@
 import React from 'react';
 import { Archive, PenTool, ExternalLink, Award, Search, FileText } from 'lucide-react';
 import { PUBLICATION_FREQUENCY } from '../data/journalData';
+import { navigateToSection } from '../utils/navigation';
 
 interface HeroProps {
   onOpenArticleArchive?: () => void;
 }
 
 export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
-  const handleOpenSeparateArchive = (e: React.MouseEvent) => {
+  const handleOpenSeparateArchive = () => {
     if (onOpenArticleArchive) {
-      e.preventDefault();
       onOpenArticleArchive();
+    } else {
+      navigateToSection('archives');
     }
   };
 
@@ -60,24 +62,25 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
 
           {/* Action Buttons */}
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-2xl 2xl:max-w-3xl mx-auto">
-            <a
-              href="#submit-manuscript"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 2xl:px-8 2xl:py-4 bg-[#a13533] hover:bg-[#781f1d] text-[#ffffff] font-bold text-sm sm:text-base 2xl:text-lg rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 border border-[#c97775]"
+            <button
+              type="button"
+              onClick={() => navigateToSection('submit-manuscript')}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 2xl:px-8 2xl:py-4 bg-[#a13533] hover:bg-[#781f1d] text-[#ffffff] font-bold text-sm sm:text-base 2xl:text-lg rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 border border-[#c97775] cursor-pointer"
             >
               <PenTool className="w-4 h-4 2xl:w-5 2xl:h-5 text-[#ffffff]" />
               <span>Submit Paper</span>
               <ExternalLink className="w-3.5 h-3.5 2xl:w-4 2xl:h-4" />
-            </a>
+            </button>
 
-            <a
-              href="#archives"
+            <button
+              type="button"
               onClick={handleOpenSeparateArchive}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 2xl:px-8 2xl:py-4 bg-[#ffffff] hover:bg-gray-100 text-[#1f0707] font-bold text-sm sm:text-base 2xl:text-lg rounded-full shadow-lg transition-all transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 2xl:px-8 2xl:py-4 bg-[#ffffff] hover:bg-gray-100 text-[#1f0707] font-bold text-sm sm:text-base 2xl:text-lg rounded-full shadow-lg transition-all transform hover:-translate-y-0.5 cursor-pointer"
             >
               <Archive className="w-4 h-4 2xl:w-5 2xl:h-5 text-[#781f1d]" />
               <span>Current Issue & Archives</span>
               <ExternalLink className="w-3.5 h-3.5 2xl:w-4 2xl:h-4 text-[#781f1d]" />
-            </a>
+            </button>
           </div>
 
           {/* Feature Badges */}

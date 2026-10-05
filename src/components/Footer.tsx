@@ -5,6 +5,7 @@ import {
   CURRENT_ISSUE_LABEL,
   OFFICIAL_CONTACT_ADDRESS,
 } from '../data/journalData';
+import { navigateToSection } from '../utils/navigation';
 
 interface FooterProps {
   onOpenSubmissionsLog?: () => void;
@@ -13,13 +14,14 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onOpenArticleArchive }) => {
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    navigateToSection('top');
   };
 
-  const handleOpenArticleArchive = (e: React.MouseEvent) => {
+  const handleOpenArticleArchive = () => {
     if (onOpenArticleArchive) {
-      e.preventDefault();
       onOpenArticleArchive();
+    } else {
+      navigateToSection('archives');
     }
   };
 
@@ -63,29 +65,29 @@ export const Footer: React.FC<FooterProps> = ({ onOpenArticleArchive }) => {
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
-                <a href="#about" className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={() => navigateToSection('about')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   About the Journal
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#journal-metadata" className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={() => navigateToSection('journal-metadata')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   Journal Information & Scope
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#editorial-board" className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={() => navigateToSection('editorial-board')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   Editorial Board & Our Editors
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#author-guidelines" className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={() => navigateToSection('author-guidelines')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   Author Guidelines & Submission
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#archives" onClick={handleOpenArticleArchive} className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={handleOpenArticleArchive} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   Archives ({CURRENT_ISSUE_LABEL})
-                </a>
+                </button>
               </li>
               <li>
                 <a
@@ -108,39 +110,39 @@ export const Footer: React.FC<FooterProps> = ({ onOpenArticleArchive }) => {
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm">
               <li>
-                <a href="#editorial-guidelines" className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={() => navigateToSection('editorial-guidelines')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   Policy 1 · Editorial Guidelines
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#reviewer-guidelines" className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={() => navigateToSection('reviewer-guidelines')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   Policy 2 · Reviewer Guidelines
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#plagiarism-guidelines" className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={() => navigateToSection('plagiarism-guidelines')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   Policy 3 · Plagiarism & AI Guidelines
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#withdrawal-policy" className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={() => navigateToSection('withdrawal-policy')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   Policy 5 · Withdrawal & Retraction Policy
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#legal-policy" className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={() => navigateToSection('legal-policy')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   Policy 6 · Legal & Licensing (CC BY 4.0)
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#academic-publication-policy" className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={() => navigateToSection('academic-publication-policy')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   Policy 7 · Academic & Publication Policy
-                </a>
+                </button>
               </li>
               <li>
-                <a href="#issn-compliance" className="hover:text-[#ffffff] transition-colors">
+                <button type="button" onClick={() => navigateToSection('issn-compliance')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   ISSN India Particulars & Frequency
-                </a>
+                </button>
               </li>
             </ul>
           </div>

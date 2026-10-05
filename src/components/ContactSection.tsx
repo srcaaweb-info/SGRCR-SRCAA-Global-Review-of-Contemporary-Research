@@ -16,6 +16,7 @@ import {
   OFFICIAL_CONTACT_ADDRESS,
   PUBLICATION_FREQUENCY,
 } from '../data/journalData';
+import { navigateToSection } from '../utils/navigation';
 
 const CONTACT_EMAILS = [
   {
@@ -307,13 +308,14 @@ export const ContactSection: React.FC = () => {
                 Authors may submit papers via our online portal or email manuscripts in Word/PDF format to <a href={`mailto:${OFFICIAL_CONTACT_ADDRESS.primaryEmail}`} className="text-[#781f1d] font-bold hover:underline">{OFFICIAL_CONTACT_ADDRESS.primaryEmail}</a>.
               </p>
             </div>
-            <a
-              href="#submit-manuscript"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#781f1d] hover:underline mt-4 pt-3 border-t border-gray-100"
+            <button
+              type="button"
+              onClick={() => navigateToSection('submit-manuscript')}
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#781f1d] hover:underline mt-4 pt-3 border-t border-gray-100 cursor-pointer"
             >
               <span>Submit Manuscript Online</span>
               <ExternalLink className="w-3 h-3" />
-            </a>
+            </button>
           </div>
         </div>
       </div>

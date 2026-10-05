@@ -1,5 +1,6 @@
 import React from 'react';
 import { BadgeCheck, ExternalLink, Mail, Phone } from 'lucide-react';
+import { navigateToSection } from '../utils/navigation';
 
 interface TopBarProps {
   onOpenSubmissionsLog?: () => void;
@@ -33,14 +34,15 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenSubmissionsLog }) => {
               <Phone className="w-3 h-3 text-[#a13533]" />
               <span>M: 9148484079</span>
             </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-1 text-[#c97775] hover:text-[#ffffff] transition-colors font-semibold"
+            <button
+              type="button"
+              onClick={() => navigateToSection('contact')}
+              className="inline-flex items-center gap-1 text-[#c97775] hover:text-[#ffffff] transition-colors font-semibold cursor-pointer"
             >
               <Mail className="w-3 h-3" />
               <span className="hidden sm:inline">Editorial Office</span>
               <span className="sm:hidden">Contact</span>
-            </a>
+            </button>
             {onOpenSubmissionsLog && (
               <button
                 type="button"

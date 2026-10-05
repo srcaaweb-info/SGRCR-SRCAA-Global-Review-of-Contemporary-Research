@@ -18,6 +18,7 @@ import { ArticleDetailView } from './components/ArticleDetailView';
 import { EditorialSubmissionsModal } from './components/EditorialSubmissionsModal';
 import { ARTICLES } from './data/journalData';
 import { Article } from './types';
+import { cleanAddressBarUrl } from './utils/navigation';
 
 const POLICY_SLUGS = new Set([
   'editorial-guidelines',
@@ -27,17 +28,6 @@ const POLICY_SLUGS = new Set([
   'legal-policy',
   'academic-publication-policy',
 ]);
-
-function clearUrlHashAndParams(paramsToRemove: string[] = []) {
-  try {
-    const url = new URL(window.location.href);
-    url.hash = '';
-    paramsToRemove.forEach((p) => url.searchParams.delete(p));
-    window.history.replaceState({}, '', url.pathname + url.search);
-  } catch {
-    // Ignored if history API restricted
-  }
-}
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'main' | 'archive' | 'article'>('main');
@@ -55,8 +45,25 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     const initialHash = window.location.hash ? window.location.hash.slice(1) : '';
 
-    // Always strip any hash (such as #submit-manuscript) from the address bar
-    clearUrlHashAndParams();
+    // Always strip any # hash from the address bar immediately
+    cleanAddressBarUrl();
+
+    const handleHashChange = () => {
+      const hashTarget = window.location.hash ? window.location.hash.slice(1) : '';
+      cleanAddressBarUrl();
+      if (hashTarget) {
+        if (hashTarget === 'top') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (POLICY_SLUGS.has(hashTarget)) {
+          window.dispatchEvent(new CustomEvent('sgrcr-select-policy', { detail: hashTarget }));
+          document.getElementById('policies')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          document.getElementById(hashTarget)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
 
     const articleParam = params.get('article');
     if (articleParam) {
@@ -66,12 +73,12 @@ export default function App() {
       if (found) {
         setSelectedArticle(found);
         setCurrentView('article');
-        return;
+        return () => window.removeEventListener('hashchange', handleHashChange);
       }
     }
     if (params.get('view') === 'archive' || params.get('tab') === 'archive') {
       setCurrentView('archive');
-      return;
+      return () => window.removeEventListener('hashchange', handleHashChange);
     }
     if (params.get('modal') === 'submissions' || params.get('view') === 'submissions') {
       setIsSubmissionsModalOpen(true);
@@ -89,7 +96,23 @@ export default function App() {
         }
       }, 100);
     }
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  useEffect(() => {
+    const handleSectionNav = (e: Event) => {
+      const sectionId = (e as CustomEvent<string>).detail;
+      cleanAddressBarUrl(['article', 'view', 'tab']);
+      if (currentView !== 'main') {
+        setSelectedArticle(null);
+        setCurrentView('main');
+        setPendingScrollTarget(sectionId || 'top');
+      }
+    };
+    window.addEventListener('sgrcr-navigate-section', handleSectionNav);
+    return () => window.removeEventListener('sgrcr-navigate-section', handleSectionNav);
+  }, [currentView]);
 
   useEffect(() => {
     if (currentView === 'main' && pendingScrollTarget) {
@@ -108,53 +131,6 @@ export default function App() {
     }
   }, [currentView, pendingScrollTarget]);
 
-  // Intercept all in-page # anchor links so hashes like #submit-manuscript never pollute the URL bar
-  useEffect(() => {
-    const handleAnchorClick = (e: MouseEvent) => {
-      if (e.defaultPrevented) return;
-      const target = e.target as HTMLElement | null;
-      const anchor = target?.closest('a');
-      if (!anchor) return;
-
-      const href = anchor.getAttribute('href');
-      if (!href || !href.startsWith('#')) return;
-
-      e.preventDefault();
-      clearUrlHashAndParams(['article', 'view', 'tab']);
-
-      const sectionId = href.slice(1);
-      if (!sectionId || sectionId === 'top') {
-        if (currentView !== 'main') {
-          setSelectedArticle(null);
-          setCurrentView('main');
-        }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        return;
-      }
-
-      if (currentView !== 'main') {
-        setSelectedArticle(null);
-        setCurrentView('main');
-        setPendingScrollTarget(sectionId);
-        return;
-      }
-
-      if (POLICY_SLUGS.has(sectionId)) {
-        window.dispatchEvent(new CustomEvent('sgrcr-select-policy', { detail: sectionId }));
-        document.getElementById('policies')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        return;
-      }
-
-      const el = document.getElementById(sectionId);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    };
-
-    document.addEventListener('click', handleAnchorClick);
-    return () => document.removeEventListener('click', handleAnchorClick);
-  }, [currentView]);
-
   const handleOpenArticlePage = (article: Article) => {
     setSelectedArticle(article);
     setCurrentView('article');
@@ -172,19 +148,19 @@ export default function App() {
   const handleBackFromArticle = () => {
     setSelectedArticle(null);
     setCurrentView('main');
-    clearUrlHashAndParams(['article']);
+    cleanAddressBarUrl(['article']);
   };
 
   const handleOpenArticleArchive = () => {
     setCurrentView('archive');
-    clearUrlHashAndParams(['article']);
+    cleanAddressBarUrl(['article']);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBackToMain = () => {
     setSelectedArticle(null);
     setCurrentView('main');
-    clearUrlHashAndParams(['article', 'view', 'tab']);
+    cleanAddressBarUrl(['article', 'view', 'tab']);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
