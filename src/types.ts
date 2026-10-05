@@ -33,6 +33,12 @@ export interface Article {
   articleNumber: number;
   title: string;
   authors: string[];
+  affiliations?: string[];
+  correspondingAuthor?: string;
+  receivedDate?: string;
+  revisedDate?: string;
+  acceptedDate?: string;
+  publishedFullDate?: string;
   volume: number;
   issue: number;
   year: number;
@@ -44,8 +50,9 @@ export interface Article {
   abstract: string;
   keywords: string[];
   category: string;
-  publishedDate: string; // Month & Year of the issue, e.g., "September 2026"
+  publishedDate: string; // Month & Year of the issue, e.g., "July 2026"
   sections?: ArticleSection[];
+  references?: string[];
   downloads?: number;
   views?: number;
 }

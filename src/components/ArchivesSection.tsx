@@ -109,7 +109,7 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({
             <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-[#581e1d]">
               <span className="inline-flex items-center gap-1.5 bg-[#ffffff] px-3 py-1.5 rounded-md border border-gray-200">
                 <Calendar className="w-3.5 h-3.5 text-[#781f1d]" />
-                Published Issue: Volume 1, Issue 1, September 2026
+                Published Issue: {CURRENT_ISSUE_LABEL}
               </span>
             </div>
           </div>
@@ -135,7 +135,7 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({
                           SRCAA Global Review of Contemporary Research (SGRCR)
                         </p>
                         <p className="font-semibold text-[#1f0707]">
-                          Volume {article.volume}, Issue {article.issue}, {article.publishedDate} · Pages: {article.pages}
+                          Volume {article.volume} Issue {article.issue} ({article.publishedDate}) · Pages: {article.pages}
                         </p>
                       </div>
 
@@ -146,6 +146,11 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({
                         <span className="px-2.5 py-0.5 bg-gray-100 text-[#421413] text-[11px] font-semibold rounded-md border border-gray-200">
                           {article.category}
                         </span>
+                        {article.publishedFullDate && (
+                          <span className="px-2.5 py-0.5 bg-gray-50 text-[#581e1d] text-[11px] font-medium rounded-md border border-gray-200">
+                            Received: {article.receivedDate} · Accepted: {article.acceptedDate} · Published: {article.publishedFullDate}
+                          </span>
+                        )}
                       </div>
 
                       <h4 className="font-serif font-bold text-lg sm:text-xl text-[#1f0707] leading-snug hover:text-[#781f1d] transition-colors">
@@ -160,9 +165,23 @@ export const ArchivesSection: React.FC<ArchivesSectionProps> = ({
                         </a>
                       </h4>
 
-                      <p className="text-xs sm:text-sm font-semibold text-[#581e1d]">
-                        <span className="text-[#781f1d] font-bold">Author Name(s):</span> {article.authors.join(', ')}
-                      </p>
+                      <div className="space-y-1 text-xs sm:text-sm text-[#581e1d]">
+                        <p className="font-semibold">
+                          <span className="text-[#781f1d] font-bold">Name Of Author:</span> {article.authors.join(', ')}
+                        </p>
+                        {article.correspondingAuthor && (
+                          <p className="text-xs">
+                            <span className="text-[#781f1d] font-bold">Corresponding Author:</span> {article.correspondingAuthor}
+                          </p>
+                        )}
+                        {article.affiliations && article.affiliations.length > 0 && (
+                          <div className="text-xs italic text-[#421413] space-y-0.5 pt-0.5">
+                            {article.affiliations.map((aff, idx) => (
+                              <p key={idx}>{aff}</p>
+                            ))}
+                          </div>
+                        )}
+                      </div>
 
                       {/* Keywords */}
                       <div className="flex flex-wrap items-center gap-1.5 pt-1">

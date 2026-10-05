@@ -121,7 +121,7 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({
   journal={SRCAA Global Review of Contemporary Research (SGRCR)},
   volume={${article.volume}},
   number={${article.issue}},
-  month={September},
+  month={July},
   pages={${article.pages}},
   year={${article.year}},
   doi={${article.doi}}
@@ -237,7 +237,7 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({
                 className="w-full px-3.5 py-2.5 bg-[#faf6f3] border border-[#cfb6b3] rounded-xl text-sm text-[#1f0707] focus:ring-2 focus:ring-[#781f1d] focus:outline-hidden font-medium"
               >
                 <option value="all">All Volumes & Issues</option>
-                <option value="vol-1-issue-1">Volume 1, Issue 1, September 2026</option>
+                <option value="vol-1-issue-1">Volume 1, Issue 1 (July 2026)</option>
               </select>
             </div>
           </div>
@@ -320,10 +320,31 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({
                   </a>
                 </h3>
 
-                {/* Authors */}
-                <div className="flex flex-wrap items-center gap-1.5 text-sm text-[#421413]">
-                  <strong className="text-[#781f1d]">Author Name(s):</strong>
-                  <span className="font-semibold">{article.authors.join(', ')}</span>
+                {/* Authors & Affiliations */}
+                <div className="space-y-1 text-sm text-[#421413]">
+                  <div>
+                    <strong className="text-[#781f1d]">Name Of Author: </strong>
+                    <span className="font-semibold">{article.authors.join(', ')}</span>
+                  </div>
+                  {article.correspondingAuthor && (
+                    <div className="text-xs">
+                      <strong className="text-[#781f1d]">Corresponding Author: </strong>
+                      <span className="font-semibold">{article.correspondingAuthor}</span>
+                    </div>
+                  )}
+                  {article.affiliations && article.affiliations.length > 0 && (
+                    <div className="text-xs italic text-[#581e1d] space-y-0.5 pt-0.5">
+                      {article.affiliations.map((aff, idx) => (
+                        <p key={idx}>{aff}</p>
+                      ))}
+                    </div>
+                  )}
+                  {article.publishedFullDate && (
+                    <div className="text-xs text-[#581e1d] pt-1">
+                      <strong className="text-[#781f1d]">Article History: </strong>
+                      Received: {article.receivedDate} · Revised: {article.revisedDate} · Accepted: {article.acceptedDate} · Published: {article.publishedFullDate}
+                    </div>
+                  )}
                 </div>
 
                 {/* Keywords */}

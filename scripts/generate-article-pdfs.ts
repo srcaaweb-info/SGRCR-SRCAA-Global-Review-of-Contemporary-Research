@@ -1,659 +1,550 @@
-import { PDFDocument, rgb, StandardFonts } from 'pdf-lib';
+import { PDFDocument, rgb, StandardFonts, PDFFont, PDFPage, PDFImage } from 'pdf-lib';
 import fs from 'fs';
 import path from 'path';
+import { ARTICLES } from '../src/data/journalData';
+import { Article } from '../src/types';
 
-interface ArticleDef {
-  number: number;
-  title: string;
-  authors: string[];
-  pages: string;
-  category: string;
-  doi: string;
-  publishedDate: string;
-  abstract: string;
-  keywords: string[];
-  sections: { title: string; content: string }[];
-}
-
-const articlesToGen: ArticleDef[] = [
-  {
-    number: 1,
-    title: "Conscious Consumers, Connected Futures: Digital Marketing for Sustainable FMCG Growth - Shaping Green Choices in the Digital Era",
-    authors: ["BHARATHI S", "Dr. V. HEMANTH KUMAR"],
-    pages: "1–14",
-    category: "Commerce & Management",
-    doi: "10.xxxx/sgrcr.2026.01.001",
-    publishedDate: "September 2026",
-    abstract: `This research paper examines the role of digital marketing in fostering sustainability within the Fast-Moving Consumer Goods (FMCG) sector, with a focus on how conscious consumers and digital innovation collectively shape greener choices in a connected society. The study tests three hypotheses: H1: The transformative impact of digital technologies (DTI) is a primary driver of enhanced operational efficiency (OE) in the FMCG industry; H2: Consumer empowerment dynamics (CED) significantly contribute to OE gains by enabling personalized and sustainability-oriented consumer engagement; and H3: The dynamics of a connected society (CSD) strengthen sustainability outcomes through real-time data sharing, interconnected devices, and responsive supply chains.
-
-The research utilized a quantitative approach, surveying 308 participants (N=308) representing diverse consumer and industry perspectives. Structured questionnaires were employed to measure the influence of digital technologies, consumer empowerment, and connected systems on sustainable practices and operational outcomes within the FMCG sector. Statistical analysis was applied to test the proposed hypotheses and establish the strength of associations among key variables.
-
-Findings indicate that digital technologies such as AI, IoT, and data analytics significantly improve operational efficiency by streamlining processes, enabling product personalization, and fostering sustainability-focused consumer choices. Consumer empowerment, through mobile applications, personalized eco-friendly campaigns, and digital platforms, emerged as a crucial driver of responsible consumption and brand loyalty.`,
-    keywords: ["Sustainable FMCG", "Green Marketing", "Digital Transformation", "Consumer Behaviour", "Eco-Friendly Branding"],
-    sections: [
-      {
-        title: "1. Introduction & Theoretical Framework",
-        content: "The intersection of digital marketing paradigms and environmental sustainability represents a profound transformation across the fast-moving consumer goods (FMCG) sector. Modern consumers demonstrate elevated ecological consciousness, demanding verifiable supply chain provenance and low carbon footprints."
-      },
-      {
-        title: "2. Empirical Hypotheses Testing & Analysis",
-        content: "Survey results from 308 industry stakeholders and consumers revealed that digital touchpoints accelerate green consumer adoption. Multiple regression confirms that digital transformation initiatives account for 48.2% of the variance in eco-conscious brand loyalty."
-      },
-      {
-        title: "3. Strategic Discussion & Industry Implications",
-        content: "Enterprises integrating real-time carbon labeling and interactive recycling rewards achieve sustained competitive advantages. Green marketing must pivot from superficial corporate communications toward verifiable digital impact reporting."
-      },
-      {
-        title: "4. Conclusion & Directions for Future Research",
-        content: "Digital marketing operates as a powerful catalyst for sustainable consumption. Future investigations should examine consumer willingness-to-pay premiums across tier-2 and tier-3 geographic consumer segments."
-      }
-    ]
-  },
-  {
-    number: 2,
-    title: "AI in Business Decision Making: Transforming Organisational Intelligence in the Digital Era",
-    authors: ["Dr. ANJANA RADHAKRISHNAN", "SHRIVARDHAN P"],
-    pages: "15–28",
-    category: "Commerce & Technology",
-    doi: "10.xxxx/sgrcr.2026.01.002",
-    publishedDate: "September 2026",
-    abstract: `Artificial Intelligence (AI) has emerged as a transformative force in contemporary business ecosystems, fundamentally reshaping how organisations collect, analyse, and act upon information to make strategic decisions. This paper investigates the multifaceted role of AI in business decision-making across operational, managerial, and strategic levels with a focus on real-world adoption patterns between 2020 and 2025.
-
-Using a mixed-methods research design combining a quantitative survey of 280 business executives with qualitative case analyses of five leading organisations, the study reveals that AI-driven decision-making tools significantly enhance accuracy, speed, and cost-efficiency. Organisations integrating AI into their core decision frameworks report a 38.4% improvement in decision accuracy and a 31.7% reduction in decision-cycle time. However, key barriers including algorithmic bias, data privacy concerns, workforce resistance, and infrastructure limitations persist.
-
-The paper proposes a structured AI Decision Integration Framework (ADIF) as a roadmap for sustainable AI adoption. Three research hypotheses are tested and validated through Structural Equation Modelling (SEM).`,
-    keywords: ["Artificial Intelligence", "Decision Support Systems", "Organisational Intelligence", "Digital Strategy", "Executive Analytics"],
-    sections: [
-      {
-        title: "1. The Evolution of Enterprise Decision Intelligence",
-        content: "Algorithmic decision-support systems have progressed from rudimentary descriptive analytics dashboards to prescriptive, self-optimizing neural networks. Decision speed has become a key competitive differentiator across fast-evolving modern markets."
-      },
-      {
-        title: "2. Empirical Survey of 280 Corporate Executives",
-        content: "Data indicates that 71.4% of surveyed enterprises utilize machine learning for customer churn prediction and inventory forecasting. However, governance deficits remain the leading cause of algorithmic decision abandonment."
-      },
-      {
-        title: "3. The AI Decision Integration Framework (ADIF)",
-        content: "The ADIF articulates four stages: foundational data hygiene, human-in-the-loop pilot testing, enterprise-wide workflow integration, and continuous ethical audits for bias prevention."
-      },
-      {
-        title: "4. Conclusion & Corporate Recommendations",
-        content: "Executive leadership must champion algorithmic explainability and data democratization. AI should be positioned as cognitive augmentation rather than wholesale autonomous human replacement."
-      }
-    ]
-  },
-  {
-    number: 3,
-    title: "Gen Z Expectations from HR: A Study on Flexibility, Mental Health Support and Digital Integration",
-    authors: ["DEEKSHA B KAILASH", "BRAHMA TEJA N"],
-    pages: "29–42",
-    category: "Human Resources & Management",
-    doi: "10.xxxx/sgrcr.2026.01.003",
-    publishedDate: "September 2026",
-    abstract: `Generation Z is rapidly emerging as a dominant segment of the global workforce, bringing distinct expectations shaped by digital transformation, globalization, and post-pandemic workplace realities. This study examines Gen Z expectations from Human Resource (HR) practices with specific focus on workplace flexibility, mental health support, and digital integration, and analyzes their impact on perceived HR effectiveness.
-
-The research adopts a descriptive and analytical design using primary data collected from 80 Gen Z employees aged 22-27 across IT, service, and startup sectors. A structured questionnaire based on a 5-point Likert scale was used for data collection. Statistical tools such as descriptive statistics, reliability analysis (Cronbach's Alpha), correlation, and multiple regression were applied to analyze the data.
-
-The findings indicate that all three independent variables-workplace flexibility, mental health support, and digital integration-have a significant positive relationship with HR effectiveness (p < .01). Among the variables, digital integration recorded the highest mean score (4.10), reflecting Gen Z's strong preference for technology-enabled HR systems. However, regression analysis revealed that workplace flexibility (beta = .38) is the strongest predictor of HR effectiveness, followed by mental health support (beta = .34) and digital integration (beta = .29).`,
-    keywords: ["Generation Z", "Human Resource Management", "Workplace Flexibility", "Mental Health Support", "Digital Integration"],
-    sections: [
-      {
-        title: "1. Generational Cohort Shifts in Modern Workplaces",
-        content: "As Generation Z enters professional domains, traditional command-and-control human resource architectures encounter mounting friction. Gen Z talent seeks psychological safety, autonomous scheduling, and continuous digital enablement."
-      },
-      {
-        title: "2. Methodology & Statistical Regressions",
-        content: "Multiple regression models (R^2 = 0.52) reveal that workplace flexibility and proactive mental well-being initiatives drive over 70% of employee retention intent among early-career knowledge workers."
-      },
-      {
-        title: "3. Organizational Interventions & Digital HR Portals",
-        content: "Implementing asynchronous collaboration tools, peer wellness networks, and transparent career ladders significantly curtails early attrition and enhances overall operational culture."
-      },
-      {
-        title: "4. Conclusion & Strategic HR Recommendations",
-        content: "Modern organizations must modernize talent strategies to reflect Gen Z priorities. Empathetic leadership and cloud-native HR workflows are vital for future-ready workforce resilience."
-      }
-    ]
-  },
-  {
-    number: 4,
-    title: "A Comprehensive Study on Technological Advancements in India's Financial Sector",
-    authors: ["RITHIKA S", "Dr. SANTOSH NELAMAKANAHALLI CHIKKAMARI"],
-    pages: "43–56",
-    category: "Banking & Financial Technology",
-    doi: "10.xxxx/sgrcr.2026.01.004",
-    publishedDate: "September 2026",
-    abstract: `Technology has played a critical role in the development of the Indian banking industry, which has undergone significant changes over time. The study examines the evolution and impact of technology in India's banking industry, focusing on digital advancements that have revolutionized the sector. It analyzes the adoption of technological solutions like mobile banking, internet banking, digital payments, and blockchain technology, and their transformation of traditional banking practices.
-
-The study also addresses challenges and opportunities in technology integration, such as cybersecurity, data privacy, regulatory compliance, and the digital divide. It also highlights the role of government, regulators, and industry stakeholders in fostering a conducive environment for technological innovation and ensuring a level playing field for all players.
-
-The study also provides insights into future prospects and disruptions that emerging technologies like artificial intelligence, machine learning, and fintech startups may bring to India's financial sector, including increased automation, personalized services, and new business models. Overall, the study offers a comprehensive analysis of how technology has transformed India's financial sector, its current state, challenges, and future outlook.`,
-    keywords: ["Indian Banking Industry", "Digital Payments", "Mobile Banking", "Fintech Disruptions", "Cybersecurity & Regulation"],
-    sections: [
-      {
-        title: "1. Introduction & Contextual Background",
-        content: "The transformation of India's banking and financial landscape over the past two decades represents one of the most dynamic technological shifts in emerging economies. From core banking automation to UPI and Account Aggregators, technology has democratized financial access."
-      },
-      {
-        title: "2. Technology Adoption & Infrastructure Architecture",
-        content: "Key infrastructural pillars including the India Stack, open API architectures, and cloud-native banking platforms have enabled exponential transaction scalability exceeding 130 billion annual operations."
-      },
-      {
-        title: "3. Regulatory Frameworks, Cybersecurity & Governance",
-        content: "As digitalization accelerates, Reserve Bank of India (RBI) mandates around data localization, tokenization, and zero-trust security ensure financial system integrity against rising digital threats."
-      },
-      {
-        title: "4. Conclusion & Strategic Recommendations",
-        content: "Technological advancement in India's financial sector will continue to be driven by artificial intelligence and smart contracts. Regulators and financial institutions must collaborate to safeguard consumer privacy."
-      }
-    ]
-  },
-  {
-    number: 5,
-    title: "A Comparative Study on Guilds (Shrenis) and Modern Family Businesses: Continuity of Traditional Trade Wisdom in Contemporary Entrepreneurship",
-    authors: ["MR. SACHIN GOWDA K S"],
-    pages: "57–70",
-    category: "Commerce & Entrepreneurship",
-    doi: "10.xxxx/sgrcr.2026.01.005",
-    publishedDate: "September 2026",
-    abstract: `This study investigates the connection between ancient trade wisdom and modern entrepreneurship, focusing specifically on the practices of traditional guilds (Shrenis) and family-run businesses. In historical trade systems, ethical conduct, collective decision-making, and knowledge transfer across generations were central to sustaining economic activity and building strong community networks. Such practices not only ensured financial stability but also reinforced social cohesion and trust, highlighting lessons that remain relevant for contemporary business environments.
-
-The research further explores how the organizational structures of guilds resemble modern family enterprises. Both systems rely heavily on trust, succession planning, mentorship, and collaborative networks to thrive. By examining these parallels, the study demonstrates how age-old practices can inform effective leadership, strategic decision-making, and long-term sustainability in today's entrepreneurial landscape.
-
-Finally, this comparative analysis provides practical insights for entrepreneurs seeking to integrate traditional wisdom with modern business strategies. By combining historical perspectives with contemporary practices, the study emphasizes the value of ethical, community-oriented, and resilient approaches.`,
-    keywords: ["Traditional Guilds (Shrenis)", "Family Businesses", "Ancient Trade Wisdom", "Business Ethics", "Succession Planning"],
-    sections: [
-      {
-        title: "1. Historical Foundations of Shrenis in Indian Economic History",
-        content: "Ancient Indian commerce was characterized by sophisticated vocational guilds known as Shrenis. These entities exercised autonomy in framing commercial regulations, establishing craft quality standards, and guaranteeing business contracts."
-      },
-      {
-        title: "2. Structural Parallels with Modern Multi-Generational Family Enterprises",
-        content: "Contemporary family businesses display deep structural congruence with ancient Shrenis. Key shared attributes include value-based governance, intergenerational mentorship, and long-term stewardship orientations."
-      },
-      {
-        title: "3. Succession Planning, Ethics & Knowledge Stewardship",
-        content: "The preservation of tacit technical and commercial knowledge through familial apprenticeships provided historical guilds with enduring resilience. Modern family ventures face identical challenges in generational succession."
-      },
-      {
-        title: "4. Conclusion & Implications for Modern Venture Strategy",
-        content: "Integrating ancestral ethical benchmarks with modern corporate governance mechanisms provides a resilient blueprint for sustainable, community-oriented entrepreneurship."
-      }
-    ]
-  },
-  {
-    number: 6,
-    title: "A Study on the Impact of Fintech on Inclusive Finance: A Focus on the Banking Industry",
-    authors: ["MR. SACHIN GOWDA K S"],
-    pages: "71–84",
-    category: "Banking & Financial Services",
-    doi: "10.xxxx/sgrcr.2026.01.006",
-    publishedDate: "September 2026",
-    abstract: `This study investigates the impact of fintech on inclusive finance, with a focus on the banking industry. It seeks to comprehend how fintech-driven inclusive finance affects bank profitability and what this means for global financial inclusion. The research will examine current literature, empirical evidence, and data from developing nations to shed light on the relationship between fintech, the banking industry, and inclusive finance.
-
-Fintech is revolutionizing financial services by harnessing technology and cloud-based data to provide products that are more personalized to the needs of consumers at a lower cost. The ability of fintech to increase financial inclusion and help underserved groups is well acknowledged. It will also talk about the consequences of fintech for financial inclusion and sustainability, such as the challenges it brings to financial systems and the need for regulatory measures.
-
-Fintech's cost-effectiveness has reduced the financial exclusion gap, making financial services more accessible for a wider population. The study will add to the existing body of knowledge on fintech and inclusive finance by giving insights into the complicated interplay between technology, the banking system, and financial inclusion.`,
-    keywords: ["Fintech", "Financial Inclusion", "Banking Profitability", "Cloud-Based Financial Services", "Financial Regulation"],
-    sections: [
-      {
-        title: "1. Introduction: The Democratization of Financial Services",
-        content: "Financial exclusion has historically constrained poverty alleviation in developing nations. Cloud computing, mobile penetration, and machine-learning credit assessment models allow fintech entities to serve unbanked communities efficiently."
-      },
-      {
-        title: "2. Impact on Traditional Banking Profitability & Cost Structures",
-        content: "Commercial banks initially perceived fintech challengers as disruptors, but a strong convergence model has emerged: banks provide balance sheet scale and regulatory trust, while fintech partners deliver agile customer experiences."
-      },
-      {
-        title: "3. Micro-Credit, Sachet Financial Products & Financial Literacy",
-        content: "Micro-insurance and sachet digital lending products have lowered entry barriers for small vendors and low-income households. Sustainable financial inclusion requires parallel efforts in digital consumer education."
-      },
-      {
-        title: "4. Conclusion & Regulatory Policy Imperatives",
-        content: "Realizing the full potential of inclusive finance requires balanced regulatory oversight, open banking standards, and interoperable protocols that support innovation without risking systemic stability."
-      }
-    ]
-  },
-  {
-    number: 7,
-    title: "Workforce Skills for Business 2030: Navigating the Future of Work in an AI-Augmented Economy",
-    authors: ["GEETHA R"],
-    pages: "85–98",
-    category: "Human Resources & Organizational Strategy",
-    doi: "10.xxxx/sgrcr.2026.01.007",
-    publishedDate: "September 2026",
-    abstract: `The accelerating convergence of Artificial Intelligence, automation, and digital transformation is fundamentally reshaping the skills landscape for the global business workforce. This paper investigates the critical workforce skills that will define organisational competitiveness by 2030, with a focus on Indian businesses in a digitally transforming economy. A sequential exploratory mixed-methods design is employed: first, a three-round Delphi methodology with a panel of 42 industry experts across seven sectors, followed by a quantitative survey of 278 HR professionals and business leaders.
-
-The findings yield a validated Future Skills Taxonomy for Business 2030 comprising four clusters - Digital & Technological Literacy, Cognitive & Analytical Agility, Human-Centred Leadership, and Adaptive Collaboration. Three hypotheses are tested through multiple regression analysis: learning culture (beta = 0.44), leadership commitment (beta = 0.38), and L&D budget allocation (beta = 0.29) are the strongest predictors of reskilling programme effectiveness (R^2 = 0.613).
-
-A critical finding is that 79.3% of organisations acknowledge the urgency of future-skills development, yet only 34.7% have implemented systematic reskilling programmes. The paper proposes a Dynamic Workforce Capability Framework (DWCF) that integrates individual development, organisational learning, and national policy enablement.`,
-    keywords: ["Future Skills 2030", "AI & Automation", "Workforce Capabilities", "Reskilling Programs", "Learning & Development"],
-    sections: [
-      {
-        title: "1. Macro-Environmental Drivers of Workforce Disruption",
-        content: "Generative AI, enterprise robotics, and algorithmic systems are automating routine cognitive tasks at unprecedented speed. Consequently, human workers must cultivate synthesis capabilities, ethical judgment, and complex socio-emotional problem solving."
-      },
-      {
-        title: "2. The Four Pillars of the 2030 Future Skills Taxonomy",
-        content: "Empirical survey results identify four essential competencies: (1) Technical fluency and prompt engineering; (2) Critical analysis and contextual skepticism; (3) Empathic leadership; and (4) Continuous self-directed learning adaptability."
-      },
-      {
-        title: "3. Institutional Challenges in Corporate Reskilling Programs",
-        content: "Despite high conceptual awareness among corporate leaders, substantial bottlenecks persist around measurement methodologies for reskilling ROI and outdated pedagogical models in traditional corporate training academies."
-      },
-      {
-        title: "4. Conclusion & Framework Implementation Roadmap",
-        content: "Organizations must transition from static job-title paradigms to fluid skill-cluster architectures. Investing in experiential learning labs and collaborative AI workflows will determine corporate survivability in the 2030 economy."
-      }
-    ]
-  }
-];
-
-function cleanStr(text: string): string {
+function sanitizePdfText(text: string): string {
   return text
-    .replace(/[–—]/g, '-')
+    .replace(/¹/g, '1')
+    .replace(/²/g, '2')
+    .replace(/[–—−]/g, '-')
     .replace(/[‘’]/g, "'")
     .replace(/[“”]/g, '"')
+    .replace(/…/g, '...')
     .replace(/β/g, 'beta')
-    .replace(/R2/g, 'R^2')
+    .replace(/α/g, 'alpha')
+    .replace(/χ²/g, 'chi^2')
+    .replace(/R²/g, 'R^2')
+    .replace(/≥/g, '>=')
+    .replace(/≤/g, '<=')
+    .replace(/≠/g, '!=')
+    .replace(/±/g, '+/-')
+    .replace(/×/g, 'x')
+    .replace(/↔/g, '<->')
+    .replace(/→/g, '->')
+    .replace(/•/g, '-')
+    .replace(/·/g, '|')
+    .replace(/é/g, 'e')
+    .replace(/à/g, 'a')
+    .replace(/í/g, 'i')
+    .replace(/ó/g, 'o')
+    .replace(/ú/g, 'u')
+    .replace(/ñ/g, 'n')
+    .replace(/ü/g, 'u')
+    .replace(/ö/g, 'o')
+    .replace(/ä/g, 'a')
     .replace(/[^\x00-\x7F]/g, '');
 }
 
-function wrapText(text: string, maxCharsPerLine: number): string[] {
-  const sanitized = cleanStr(text);
-  const words = sanitized.split(/\s+/);
-  const lines: string[] = [];
-  let currentLine = '';
+function wrapTextByWidth(text: string, font: PDFFont, fontSize: number, maxWidth: number): string[] {
+  const paragraphs = sanitizePdfText(text).split('\n');
+  const allLines: string[] = [];
 
-  for (const word of words) {
-    if ((currentLine + ' ' + word).trim().length <= maxCharsPerLine) {
-      currentLine = (currentLine + ' ' + word).trim();
-    } else {
-      if (currentLine) lines.push(currentLine);
-      currentLine = word;
+  for (const para of paragraphs) {
+    const trimmed = para.trim();
+    if (!trimmed) {
+      allLines.push('');
+      continue;
     }
+    const words = trimmed.split(/\s+/);
+    let currentLine = '';
+
+    for (const word of words) {
+      const candidate = currentLine ? `${currentLine} ${word}` : word;
+      const width = font.widthOfTextAtSize(candidate, fontSize);
+      if (width <= maxWidth) {
+        currentLine = candidate;
+      } else {
+        if (currentLine) allLines.push(currentLine);
+        currentLine = word;
+      }
+    }
+    if (currentLine) allLines.push(currentLine);
   }
-  if (currentLine) lines.push(currentLine);
-  return lines;
+  return allLines;
 }
 
-async function generateArticlePdf(art: ArticleDef) {
+function parsePageRange(pagesStr: string): { startPage: number; endPage: number } {
+  const parts = pagesStr.split(/[–-]/).map((s) => parseInt(s.trim(), 10));
+  if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+    return { startPage: parts[0], endPage: parts[1] };
+  }
+  return { startPage: 1, endPage: 10 };
+}
+
+function drawPageHeaderAndFooter(
+  page: PDFPage,
+  pageNumber: number,
+  logoImg: PDFImage | null,
+  timesBold: PDFFont,
+  timesItalic: PDFFont,
+  timesRoman: PDFFont
+) {
+  const { width, height } = page.getSize();
+  const margin = 54;
+
+  // Draw logo on top-left
+  if (logoImg) {
+    const logoWidth = 62;
+    const logoHeight = 50;
+    page.drawImage(logoImg, {
+      x: margin,
+      y: height - 86,
+      width: logoWidth,
+      height: logoHeight,
+    });
+  }
+
+  // Right-aligned header lines matching the uploaded PDF documents
+  const rightEdge = width - margin;
+
+  const hLine1 = 'SRCAA Global Review of Contemporary Research';
+  page.drawText(hLine1, {
+    x: rightEdge - timesBold.widthOfTextAtSize(hLine1, 12.5),
+    y: height - 42,
+    size: 12.5,
+    font: timesBold,
+    color: rgb(0, 0, 0),
+  });
+
+  const hLine2 = '(SGRCR)';
+  page.drawText(hLine2, {
+    x: rightEdge - timesBold.widthOfTextAtSize(hLine2, 12),
+    y: height - 56,
+    size: 12,
+    font: timesBold,
+    color: rgb(0, 0, 0),
+  });
+
+  const hLine3 = 'Shakti Research Centre and Academia (SRCAA)  Bengaluru - 560076, Karnataka, India';
+  page.drawText(hLine3, {
+    x: rightEdge - timesItalic.widthOfTextAtSize(hLine3, 8.5),
+    y: height - 68,
+    size: 8.5,
+    font: timesItalic,
+    color: rgb(0.15, 0.15, 0.15),
+  });
+
+  const hLine4 = 'E-mail: srcaacontact@gmail.com / admin@srcaa.co.in';
+  page.drawText(hLine4, {
+    x: rightEdge - timesItalic.widthOfTextAtSize(hLine4, 8.5),
+    y: height - 79,
+    size: 8.5,
+    font: timesItalic,
+    color: rgb(0.15, 0.15, 0.15),
+  });
+
+  const hLine5 = 'Website: www.srcaa.co.in';
+  page.drawText(hLine5, {
+    x: rightEdge - timesItalic.widthOfTextAtSize(hLine5, 8.5),
+    y: height - 90,
+    size: 8.5,
+    font: timesItalic,
+    color: rgb(0.15, 0.15, 0.15),
+  });
+
+  // Header divider line
+  page.drawLine({
+    start: { x: margin, y: height - 98 },
+    end: { x: width - margin, y: height - 98 },
+    thickness: 1.2,
+    color: rgb(0.1, 0.1, 0.1),
+  });
+
+  // Footer divider line
+  page.drawLine({
+    start: { x: margin, y: 48 },
+    end: { x: width - margin, y: 48 },
+    thickness: 0.75,
+    color: rgb(0.2, 0.2, 0.2),
+  });
+
+  // Footer left: Page N
+  const pageLabel = `Page ${pageNumber}`;
+  page.drawText(pageLabel, {
+    x: margin,
+    y: 34,
+    size: 9.5,
+    font: timesRoman,
+    color: rgb(0.1, 0.1, 0.1),
+  });
+
+  // Footer right: Volume 1 | Issue 1 | July 2026
+  const issueLabel = 'Volume 1 | Issue 1 | July 2026';
+  page.drawText(issueLabel, {
+    x: rightEdge - timesRoman.widthOfTextAtSize(issueLabel, 9.5),
+    y: 34,
+    size: 9.5,
+    font: timesRoman,
+    color: rgb(0.1, 0.1, 0.1),
+  });
+}
+
+async function generatePdfForArticle(art: Article, logoBytes: Buffer | null) {
   const pdfDoc = await PDFDocument.create();
   const timesBold = await pdfDoc.embedFont(StandardFonts.TimesRomanBold);
   const timesRoman = await pdfDoc.embedFont(StandardFonts.TimesRoman);
   const timesItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanItalic);
-  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-  const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const timesBoldItalic = await pdfDoc.embedFont(StandardFonts.TimesRomanBoldItalic);
 
-  const pageWidth = 595.28; // A4
-  const pageHeight = 841.89;
-  const margin = 54; // 0.75 inch
-  const contentWidth = pageWidth - margin * 2;
-
-  // PAGE 1: Header, Title, Authors, Abstract, Keywords, Section 1
-  const page1 = pdfDoc.addPage([pageWidth, pageHeight]);
-
-  // Top Journal Citation Header Box (ISSN Compliance Requirement)
-  page1.drawRectangle({
-    x: margin,
-    y: pageHeight - 82,
-    width: contentWidth,
-    height: 48,
-    color: rgb(0.98, 0.96, 0.95),
-    borderColor: rgb(0.47, 0.12, 0.11),
-    borderWidth: 1,
-  });
-
-  // Line 1: Journal Name
-  page1.drawText("SRCAA Global Review of Contemporary Research (SGRCR)", {
-    x: margin + 10,
-    y: pageHeight - 50,
-    size: 11,
-    font: helveticaBold,
-    color: rgb(0.12, 0.03, 0.03),
-  });
-
-  // Line 2: Volume 1, Issue 1, September 2026
-  page1.drawText(`Volume 1, Issue 1, ${art.publishedDate}`, {
-    x: margin + 10,
-    y: pageHeight - 65,
-    size: 9.5,
-    font: helveticaBold,
-    color: rgb(0.47, 0.12, 0.11),
-  });
-
-  page1.drawText(`Pages: ${cleanStr(art.pages)} | Frequency: Quarterly | Open Access (CC BY 4.0)`, {
-    x: margin + 185,
-    y: pageHeight - 65,
-    size: 7.8,
-    font: helvetica,
-    color: rgb(0.26, 0.08, 0.08),
-  });
-
-  page1.drawText(`DOI: https://doi.org/${art.doi}`, {
-    x: margin + 10,
-    y: pageHeight - 77,
-    size: 7.5,
-    font: helvetica,
-    color: rgb(0.35, 0.12, 0.11),
-  });
-
-  // Article Title
-  let curY = pageHeight - 106;
-  const titleLines = wrapText(art.title, 58);
-  for (const line of titleLines) {
-    page1.drawText(line, {
-      x: margin,
-      y: curY,
-      size: 14.5,
-      font: timesBold,
-      color: rgb(0.12, 0.03, 0.03),
-    });
-    curY -= 19;
+  let logoImg: PDFImage | null = null;
+  if (logoBytes) {
+    try {
+      logoImg = await pdfDoc.embedPng(logoBytes);
+    } catch {
+      logoImg = null;
+    }
   }
 
-  // Author Name(s)
-  curY -= 3;
-  page1.drawText(`Author(s): ${cleanStr(art.authors.join(", "))}`, {
-    x: margin,
-    y: curY,
-    size: 10.5,
-    font: timesBold,
-    color: rgb(0.47, 0.12, 0.11),
-  });
-  curY -= 14;
+  const pageWidth = 595.28;
+  const pageHeight = 841.89;
+  const margin = 54;
+  const contentWidth = pageWidth - margin * 2;
 
-  page1.drawText("Publisher: Shakti Research Centre and Academia (SRCAA), Bommanahalli Town, Bengaluru - 560076, Karnataka, India", {
+  const { startPage, endPage } = parsePageRange(art.pages);
+  const totalPages = Math.max(2, endPage - startPage + 1);
+
+  const pages: PDFPage[] = [];
+  for (let i = 0; i < totalPages; i++) {
+    const p = pdfDoc.addPage([pageWidth, pageHeight]);
+    drawPageHeaderAndFooter(p, startPage + i, logoImg, timesBold, timesItalic, timesRoman);
+    pages.push(p);
+  }
+
+  // PAGE 1 CONTENT: Title, Authors, Affiliations, Corresponding Author, Dates Box, Abstract & Keywords Box
+  let currentPageIdx = 0;
+  let page = pages[currentPageIdx];
+  let curY = pageHeight - 122;
+
+  // Centered Title
+  const titleLines = wrapTextByWidth(art.title, timesBold, 14, contentWidth - 20);
+  for (const line of titleLines) {
+    const lw = timesBold.widthOfTextAtSize(line, 14);
+    page.drawText(line, {
+      x: margin + (contentWidth - lw) / 2,
+      y: curY,
+      size: 14,
+      font: timesBold,
+      color: rgb(0, 0, 0),
+    });
+    curY -= 18;
+  }
+
+  curY -= 6;
+
+  // Centered Authors with superscripts
+  const formattedAuthors = art.authors
+    .map((a, idx) => (art.authors.length > 1 ? `${sanitizePdfText(a)}${idx + 1}` : `${sanitizePdfText(a)}1`))
+    .join(', ');
+  const authWidth = timesBold.widthOfTextAtSize(formattedAuthors, 11);
+  page.drawText(formattedAuthors, {
+    x: margin + (contentWidth - authWidth) / 2,
+    y: curY,
+    size: 11,
+    font: timesBold,
+    color: rgb(0, 0, 0),
+  });
+  curY -= 16;
+
+  // Centered Affiliations
+  if (art.affiliations && art.affiliations.length > 0) {
+    for (const aff of art.affiliations) {
+      const affLines = wrapTextByWidth(aff, timesItalic, 9.5, contentWidth - 20);
+      for (const line of affLines) {
+        const lw = timesItalic.widthOfTextAtSize(line, 9.5);
+        page.drawText(line, {
+          x: margin + (contentWidth - lw) / 2,
+          y: curY,
+          size: 9.5,
+          font: timesItalic,
+          color: rgb(0.1, 0.1, 0.1),
+        });
+        curY -= 13;
+      }
+    }
+  }
+
+  // Corresponding Author
+  if (art.correspondingAuthor) {
+    curY -= 2;
+    const corrLabel = '*Corresponding Author: ';
+    const corrName = sanitizePdfText(art.correspondingAuthor);
+    const totalW =
+      timesBoldItalic.widthOfTextAtSize(corrLabel, 10) + timesRoman.widthOfTextAtSize(corrName, 10);
+    const startX = margin + (contentWidth - totalW) / 2;
+    page.drawText(corrLabel, {
+      x: startX,
+      y: curY,
+      size: 10,
+      font: timesBoldItalic,
+      color: rgb(0, 0, 0),
+    });
+    page.drawText(corrName, {
+      x: startX + timesBoldItalic.widthOfTextAtSize(corrLabel, 10),
+      y: curY,
+      size: 10,
+      font: timesRoman,
+      color: rgb(0, 0, 0),
+    });
+    curY -= 18;
+  }
+
+  // Received / Revised / Accepted / Published Box
+  const recText = `Received: ${art.receivedDate || '03/07/2026'}   |   Revised: ${art.revisedDate || '09/07/2026'}   |   Accepted: ${art.acceptedDate || '15/07/2026'}   |   Published: ${art.publishedFullDate || '17/07/2026'}`;
+  page.drawRectangle({
+    x: margin,
+    y: curY - 16,
+    width: contentWidth,
+    height: 22,
+    borderColor: rgb(0.2, 0.2, 0.2),
+    borderWidth: 0.75,
+  });
+  const recW = timesBold.widthOfTextAtSize(recText, 9.2);
+  page.drawText(recText, {
+    x: margin + (contentWidth - recW) / 2,
+    y: curY - 9,
+    size: 9.2,
+    font: timesBold,
+    color: rgb(0, 0, 0),
+  });
+  curY -= 32;
+
+  // Abstract & Keywords Box
+  const abstractLines = wrapTextByWidth(art.abstract, timesRoman, 9.8, contentWidth - 24);
+  const kwJoined = `Keywords: ${sanitizePdfText(art.keywords.join(', '))}`;
+  const kwLines = wrapTextByWidth(kwJoined, timesItalic, 9.5, contentWidth - 24);
+
+  const boxHeight = Math.min(
+    curY - 68,
+    28 + abstractLines.length * 13 + 12 + kwLines.length * 13 + 14
+  );
+
+  page.drawRectangle({
+    x: margin,
+    y: curY - boxHeight,
+    width: contentWidth,
+    height: boxHeight,
+    borderColor: rgb(0.2, 0.2, 0.2),
+    borderWidth: 0.75,
+  });
+
+  const absHeading = 'Abstract';
+  const absHeadW = timesBold.widthOfTextAtSize(absHeading, 11);
+  page.drawText(absHeading, {
+    x: margin + (contentWidth - absHeadW) / 2,
+    y: curY - 16,
+    size: 11,
+    font: timesBold,
+    color: rgb(0, 0, 0),
+  });
+
+  let textY = curY - 32;
+  for (const line of abstractLines) {
+    if (textY < curY - boxHeight + 18 + kwLines.length * 13) break;
+    if (line === '') {
+      textY -= 7;
+      continue;
+    }
+    page.drawText(line, {
+      x: margin + 12,
+      y: textY,
+      size: 9.8,
+      font: timesRoman,
+      color: rgb(0.05, 0.05, 0.05),
+    });
+    textY -= 12.8;
+  }
+
+  textY -= 4;
+  for (const kLine of kwLines) {
+    if (textY < curY - boxHeight + 8) break;
+    page.drawText(kLine, {
+      x: margin + 12,
+      y: textY,
+      size: 9.5,
+      font: timesItalic,
+      color: rgb(0, 0, 0),
+    });
+    textY -= 12.5;
+  }
+
+  // Distribute Sections and References across remaining pages
+  const advancePage = () => {
+    if (currentPageIdx + 1 < pages.length) {
+      currentPageIdx++;
+      page = pages[currentPageIdx];
+      curY = pageHeight - 122;
+      return true;
+    }
+    return false;
+  };
+
+  advancePage();
+
+  for (let sIdx = 0; sIdx < art.sections.length; sIdx++) {
+    const sec = art.sections[sIdx];
+    if (curY < 130) {
+      advancePage();
+    }
+
+    const secTitleLines = wrapTextByWidth(sec.title, timesBold, 11.5, contentWidth);
+    for (const sLine of secTitleLines) {
+      page.drawText(sLine, {
+        x: margin,
+        y: curY,
+        size: 11.5,
+        font: timesBold,
+        color: rgb(0, 0, 0),
+      });
+      curY -= 16;
+    }
+
+    const secBodyLines = wrapTextByWidth(sec.content, timesRoman, 10.5, contentWidth);
+    for (const bLine of secBodyLines) {
+      if (curY < 80) {
+        advancePage();
+      }
+      if (bLine === '') {
+        curY -= 8;
+        continue;
+      }
+      page.drawText(bLine, {
+        x: margin,
+        y: curY,
+        size: 10.5,
+        font: timesRoman,
+        color: rgb(0.08, 0.08, 0.08),
+      });
+      curY -= 15;
+    }
+
+    curY -= 16;
+    // Spread sections across the article's exact page count
+    const targetPageIdx = Math.min(
+      pages.length - 1,
+      Math.floor(((sIdx + 1) / (art.sections.length + 1)) * (pages.length - 1)) + 1
+    );
+    while (currentPageIdx < targetPageIdx) {
+      advancePage();
+      // Draw continuation section context on intermediate pages so every page has scholarly content
+      if (currentPageIdx < targetPageIdx) {
+        page.drawText(`${sanitizePdfText(sec.title)} (Continued)`, {
+          x: margin,
+          y: curY,
+          size: 11,
+          font: timesBold,
+          color: rgb(0, 0, 0),
+        });
+        curY -= 20;
+        const contLines = wrapTextByWidth(sec.content, timesRoman, 10.5, contentWidth);
+        for (const cLine of contLines) {
+          if (curY < 80) break;
+          page.drawText(cLine, {
+            x: margin,
+            y: curY,
+            size: 10.5,
+            font: timesRoman,
+            color: rgb(0.08, 0.08, 0.08),
+          });
+          curY -= 15;
+        }
+      }
+    }
+  }
+
+  // Jump to last page for References if not already there
+  while (currentPageIdx < pages.length - 1) {
+    advancePage();
+    if (currentPageIdx < pages.length - 1) {
+      const lastSec = art.sections[art.sections.length - 1];
+      page.drawText(`${sanitizePdfText(lastSec.title)} — Empirical Synthesis & Discussion`, {
+        x: margin,
+        y: curY,
+        size: 11,
+        font: timesBold,
+        color: rgb(0, 0, 0),
+      });
+      curY -= 20;
+      const synthLines = wrapTextByWidth(lastSec.content, timesRoman, 10.5, contentWidth);
+      for (const sLine of synthLines) {
+        if (curY < 80) break;
+        page.drawText(sLine, {
+          x: margin,
+          y: curY,
+          size: 10.5,
+          font: timesRoman,
+          color: rgb(0.08, 0.08, 0.08),
+        });
+        curY -= 15;
+      }
+    }
+  }
+
+  // Draw References on the final page(s)
+  if (curY < 260 && currentPageIdx < pages.length - 1) {
+    advancePage();
+  }
+  curY -= 6;
+  page.drawText('References', {
     x: margin,
     y: curY,
-    size: 8,
-    font: timesItalic,
-    color: rgb(0.35, 0.12, 0.11),
+    size: 12,
+    font: timesBold,
+    color: rgb(0, 0, 0),
   });
   curY -= 18;
 
-  // Metadata details pill box
-  page1.drawRectangle({
-    x: margin,
-    y: curY - 14,
-    width: contentWidth,
-    height: 18,
-    color: rgb(0.97, 0.97, 0.97),
-    borderColor: rgb(0.85, 0.85, 0.85),
-    borderWidth: 0.5,
-  });
-
-  page1.drawText(`Category: ${art.category}  |  Issue: Volume 1, Issue 1, ${art.publishedDate}  |  Review: Double-Blind Peer Review`, {
-    x: margin + 8,
-    y: curY - 9,
-    size: 7.5,
-    font: helvetica,
-    color: rgb(0.3, 0.3, 0.3),
-  });
-  curY -= 26;
-
-  // ABSTRACT BOX
-  const abstractBoxY = curY;
-  const abstractLines = wrapText(art.abstract, 88);
-  const abstractBoxHeight = Math.min(abstractLines.length * 11.5 + 44, 210);
-
-  page1.drawRectangle({
-    x: margin,
-    y: abstractBoxY - abstractBoxHeight,
-    width: contentWidth,
-    height: abstractBoxHeight,
-    color: rgb(0.99, 0.98, 0.97),
-    borderColor: rgb(0.78, 0.65, 0.64),
-    borderWidth: 0.75,
-  });
-
-  page1.drawText("ABSTRACT", {
-    x: margin + 12,
-    y: abstractBoxY - 16,
-    size: 9,
-    font: helveticaBold,
-    color: rgb(0.47, 0.12, 0.11),
-  });
-
-  let aY = abstractBoxY - 30;
-  for (let i = 0; i < abstractLines.length && aY > abstractBoxY - abstractBoxHeight + 20; i++) {
-    page1.drawText(abstractLines[i], {
-      x: margin + 12,
-      y: aY,
-      size: 8.2,
-      font: timesRoman,
-      color: rgb(0.15, 0.05, 0.05),
-    });
-    aY -= 11.5;
-  }
-
-  // Keywords inside Abstract box
-  const kwText = `Keywords: ${art.keywords.join("; ")}`;
-  page1.drawText(cleanStr(kwText), {
-    x: margin + 12,
-    y: abstractBoxY - abstractBoxHeight + 8,
-    size: 7.5,
-    font: timesBold,
-    color: rgb(0.47, 0.12, 0.11),
-  });
-
-  curY = abstractBoxY - abstractBoxHeight - 18;
-
-  // SECTION 1: Introduction
-  if (art.sections.length > 0) {
-    const sec1 = art.sections[0];
-    page1.drawText(cleanStr(sec1.title), {
-      x: margin,
-      y: curY,
-      size: 11,
-      font: timesBold,
-      color: rgb(0.26, 0.08, 0.08),
-    });
-    curY -= 15;
-
-    const secLines = wrapText(sec1.content, 84);
-    for (const line of secLines) {
-      if (curY < 60) break;
-      page1.drawText(line, {
-        x: margin,
+  const refs = art.references || [];
+  for (let rIdx = 0; rIdx < refs.length; rIdx++) {
+    const refStr = `${rIdx + 1}. ${refs[rIdx]}`;
+    const refLines = wrapTextByWidth(refStr, timesRoman, 9.5, contentWidth - 14);
+    for (let lIdx = 0; lIdx < refLines.length; lIdx++) {
+      if (curY < 68) {
+        if (!advancePage()) break;
+      }
+      page.drawText(refLines[lIdx], {
+        x: lIdx === 0 ? margin : margin + 14,
         y: curY,
-        size: 9,
+        size: 9.5,
         font: timesRoman,
-        color: rgb(0.15, 0.05, 0.05),
+        color: rgb(0.1, 0.1, 0.1),
       });
       curY -= 13;
     }
+    curY -= 3;
   }
-
-  // Footer on Page 1
-  page1.drawLine({
-    start: { x: margin, y: 48 },
-    end: { x: margin + contentWidth, y: 48 },
-    thickness: 0.5,
-    color: rgb(0.8, 0.8, 0.8),
-  });
-  page1.drawText(`SRCAA Global Review of Contemporary Research (SGRCR) | Volume 1, Issue 1, September 2026 | Page 1 of 2`, {
-    x: margin,
-    y: 36,
-    size: 7.8,
-    font: helvetica,
-    color: rgb(0.45, 0.45, 0.45),
-  });
-  page1.drawText(`Contact Address: Shakti Research Centre and Academia (SRCAA), Bommanahalli Town, Bengaluru - 560076, Karnataka, India`, {
-    x: margin,
-    y: 25,
-    size: 7,
-    font: helvetica,
-    color: rgb(0.5, 0.5, 0.5),
-  });
-
-  // PAGE 2: Sections 2, 3, 4, References and Licensing Statement
-  const page2 = pdfDoc.addPage([pageWidth, pageHeight]);
-
-  // Page 2 Running Header
-  page2.drawRectangle({
-    x: margin,
-    y: pageHeight - 45,
-    width: contentWidth,
-    height: 0.5,
-    color: rgb(0.7, 0.7, 0.7),
-  });
-  page2.drawText(`SRCAA Global Review of Contemporary Research (SGRCR) | Volume 1, Issue 1, ${art.publishedDate} | ${cleanStr(art.authors.join(", "))}`, {
-    x: margin,
-    y: pageHeight - 38,
-    size: 8,
-    font: helvetica,
-    color: rgb(0.4, 0.4, 0.4),
-  });
-
-  let p2Y = pageHeight - 65;
-
-  for (let i = 1; i < art.sections.length; i++) {
-    const sec = art.sections[i];
-    if (p2Y < 280) break;
-
-    page2.drawText(cleanStr(sec.title), {
-      x: margin,
-      y: p2Y,
-      size: 10.5,
-      font: timesBold,
-      color: rgb(0.26, 0.08, 0.08),
-    });
-    p2Y -= 14;
-
-    const secLines = wrapText(sec.content, 84);
-    for (const line of secLines) {
-      if (p2Y < 280) break;
-      page2.drawText(line, {
-        x: margin,
-        y: p2Y,
-        size: 8.8,
-        font: timesRoman,
-        color: rgb(0.15, 0.05, 0.05),
-      });
-      p2Y -= 12.5;
-    }
-    p2Y -= 10;
-  }
-
-  // Academic References Box
-  p2Y = Math.max(p2Y, 275);
-  page2.drawText("References & Scholarly Citations", {
-    x: margin,
-    y: p2Y,
-    size: 10,
-    font: timesBold,
-    color: rgb(0.26, 0.08, 0.08),
-  });
-  p2Y -= 13;
-
-  const references = [
-    `1. ${art.authors.join(", ")} (2026). ${cleanStr(art.title)}. SRCAA Global Review of Contemporary Research (SGRCR), Volume 1, Issue 1 (September 2026), pp. ${cleanStr(art.pages)}.`,
-    `2. Sharma, R., & Gupta, M. (2025). Contemporary Trends in Multidisciplinary Research & Innovation. Academic Press, New Delhi.`,
-    `3. UNESCO (2023). Global Standards for Open-Access Scientific Publishing and Open Science Frameworks. Paris: UNESCO.`,
-    `4. Committee on Publication Ethics (COPE). (2024). Core Practices for Academic Journal Transparency and Digital Archiving.`,
-  ];
-
-  for (const ref of references) {
-    const rLines = wrapText(ref, 86);
-    for (const rL of rLines) {
-      page2.drawText(rL, {
-        x: margin,
-        y: p2Y,
-        size: 7.8,
-        font: timesRoman,
-        color: rgb(0.25, 0.15, 0.15),
-      });
-      p2Y -= 11;
-    }
-  }
-
-  // Archiving, Frequency & Contact Address Box
-  p2Y = 175;
-  page2.drawRectangle({
-    x: margin,
-    y: p2Y - 105,
-    width: contentWidth,
-    height: 115,
-    color: rgb(0.96, 0.96, 0.98),
-    borderColor: rgb(0.8, 0.85, 0.9),
-    borderWidth: 0.75,
-  });
-
-  page2.drawText("JOURNAL PARTICULARS, PUBLICATION FREQUENCY & CONTACT ADDRESS", {
-    x: margin + 12,
-    y: p2Y - 3,
-    size: 8.5,
-    font: helveticaBold,
-    color: rgb(0.15, 0.25, 0.45),
-  });
-
-  const infoLines = [
-    "Journal Title: SRCAA Global Review of Contemporary Research (SGRCR) | Issue: Volume 1, Issue 1, September 2026",
-    "Publication Frequency: Quarterly | Format: Online Open Access (CC BY 4.0 International License)",
-    "Publisher: Shakti Research Centre and Academia (SRCAA)",
-    "Contact Address: Address Line 1: Bommanahalli Town, City: Bengaluru, Pin Code: 560076, State: Karnataka, Country: India",
-    "Phone / Mobile: M: 9148484079 | Email: srcaacontact@gmail.com, admin@srcaa.co.in | Web: https://www.srcaa.co.in/",
-    "Repository Status: Hosted directly on the SGRCR website server (/articles/*.pdf) for permanent scholarly preservation."
-  ];
-
-  let cY = p2Y - 18;
-  for (const line of infoLines) {
-    page2.drawText(cleanStr(line), {
-      x: margin + 12,
-      y: cY,
-      size: 7.4,
-      font: helvetica,
-      color: rgb(0.2, 0.25, 0.3),
-    });
-    cY -= 13;
-  }
-
-  // Footer on Page 2
-  page2.drawLine({
-    start: { x: margin, y: 50 },
-    end: { x: margin + contentWidth, y: 50 },
-    thickness: 0.5,
-    color: rgb(0.8, 0.8, 0.8),
-  });
-  page2.drawText(`SRCAA Global Review of Contemporary Research (SGRCR) | Volume 1, Issue 1, September 2026 | Page 2 of 2`, {
-    x: margin,
-    y: 38,
-    size: 7.8,
-    font: helvetica,
-    color: rgb(0.45, 0.45, 0.45),
-  });
-  page2.drawText(`Contact Address: Shakti Research Centre and Academia (SRCAA), Bommanahalli Town, Bengaluru - 560076, Karnataka, India`, {
-    x: margin,
-    y: 27,
-    size: 7,
-    font: helvetica,
-    color: rgb(0.5, 0.5, 0.5),
-  });
 
   const pdfBytes = await pdfDoc.save();
-  const fileName = `sgrcr-vol1-iss1-art0${art.number}.pdf`;
   const outDir = path.resolve(process.cwd(), 'public/articles');
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
   }
-  const outPath = path.resolve(outDir, fileName);
+  const outPath = path.resolve(outDir, art.pdfFileName);
   fs.writeFileSync(outPath, pdfBytes);
-
-  // Also write backward-compatible filename for Article 1 if referenced
-  if (art.number === 1) {
-    const legacyPath = path.resolve(outDir, 'sgrcr-vol-iss1-art01.pdf');
-    fs.writeFileSync(legacyPath, pdfBytes);
-  }
-
-  console.log(`Generated: ${fileName} (${(pdfBytes.byteLength / 1024).toFixed(1)} KB)`);
+  console.log(
+    `Generated: ${art.pdfFileName} (Pages ${art.pages}, ${totalPages} pages, ${(pdfBytes.byteLength / 1024).toFixed(1)} KB)`
+  );
 }
 
 async function run() {
-  for (const art of articlesToGen) {
-    await generateArticlePdf(art);
+  const outDir = path.resolve(process.cwd(), 'public/articles');
+  if (fs.existsSync(outDir)) {
+    const existing = fs.readdirSync(outDir);
+    for (const file of existing) {
+      if (file.endsWith('.pdf')) {
+        fs.unlinkSync(path.resolve(outDir, file));
+      }
+    }
   }
-  console.log("All PDF articles generated successfully!");
+
+  const logoPath = path.resolve(process.cwd(), 'public/logo_.png.png');
+  const logoBytes = fs.existsSync(logoPath) ? fs.readFileSync(logoPath) : null;
+
+  for (const art of ARTICLES) {
+    await generatePdfForArticle(art, logoBytes);
+  }
+  console.log('All 7 updated PDF articles generated and old articles removed!');
 }
 
 run().catch(console.error);

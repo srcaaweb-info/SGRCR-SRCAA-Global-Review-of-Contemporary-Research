@@ -50,7 +50,7 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
   journal={SRCAA Global Review of Contemporary Research (SGRCR)},
   volume={${article.volume}},
   number={${article.issue}},
-  month={September},
+  month={July},
   year={${article.year}},
   pages={${article.pages}},
   doi={${article.doi}}
@@ -135,13 +135,31 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
               {article.title}
             </h1>
 
-            {/* Author Name(s) */}
-            <div className="pt-1">
+            {/* Author Name(s), Affiliations & Article History */}
+            <div className="pt-1 space-y-2">
               <p className="text-sm sm:text-base font-bold text-[#781f1d]">
-                Author(s): <span className="text-[#1f0707]">{article.authors.join(', ')}</span>
+                Name Of Author: <span className="text-[#1f0707]">{article.authors.join(', ')}</span>
               </p>
+              {article.correspondingAuthor && (
+                <p className="text-xs sm:text-sm font-bold text-[#781f1d]">
+                  Corresponding Author: <span className="text-[#1f0707]">{article.correspondingAuthor}</span>
+                </p>
+              )}
+              {article.affiliations && article.affiliations.length > 0 && (
+                <div className="text-xs sm:text-sm italic text-[#421413] space-y-0.5">
+                  <p className="not-italic font-bold text-[#781f1d]">Affiliation:</p>
+                  {article.affiliations.map((aff, idx) => (
+                    <p key={idx}>{aff}</p>
+                  ))}
+                </div>
+              )}
+              {article.publishedFullDate && (
+                <p className="text-xs text-[#581e1d]">
+                  <strong>Article History:</strong> Received: {article.receivedDate} · Revised: {article.revisedDate} · Accepted: {article.acceptedDate} · Published: {article.publishedFullDate}
+                </p>
+              )}
               <p className="text-xs text-[#581e1d] mt-1">
-                Published in <strong>SRCAA Global Review of Contemporary Research (SGRCR)</strong> — Volume {article.volume}, Issue {article.issue}, {article.publishedDate} (pp. {article.pages}) · DOI: <span className="font-mono font-semibold">{article.doi}</span>
+                Published in <strong>SRCAA Global Review of Contemporary Research (SGRCR)</strong> — Volume {article.volume} Issue {article.issue} ({article.publishedDate}) (pp. {article.pages}) · DOI: <span className="font-mono font-semibold">{article.doi}</span>
               </p>
             </div>
 
