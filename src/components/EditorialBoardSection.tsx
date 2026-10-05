@@ -131,14 +131,14 @@ export const EditorialBoardSection: React.FC = () => {
 
   const filterOptions = [
     { id: 'all', label: 'All Members', count: EDITORIAL_MEMBERS.length },
-    { id: 'chairperson', label: 'Chairperson', count: 1 },
-    { id: 'chief_editor', label: 'Chief Editors', count: 2 },
-    { id: 'chief_reviewer', label: 'Chief Reviewer', count: 1 },
-    { id: 'associate_editor', label: 'Associate Editors', count: 2 },
-    { id: 'section_editor', label: 'Section Editors', count: 2 },
-    { id: 'advisory_international', label: 'Advisory (International)', count: 3 },
-    { id: 'advisory_national', label: 'Advisory Board', count: 1 },
-    { id: 'editorial_member', label: 'Editorial Board Members', count: 5 },
+    { id: 'chairperson', label: 'Chairperson', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'chairperson').length },
+    { id: 'chief_editor', label: 'Chief Editors', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'chief_editor').length },
+    { id: 'chief_reviewer', label: 'Chief Reviewer', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'chief_reviewer').length },
+    { id: 'associate_editor', label: 'Associate Editors', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'associate_editor').length },
+    { id: 'section_editor', label: 'Section Editors', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'section_editor').length },
+    { id: 'advisory_international', label: 'Advisory (International)', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'advisory_international').length },
+    { id: 'advisory_national', label: 'Advisory Board', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'advisory_national').length },
+    { id: 'editorial_member', label: 'Editorial Board Members', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'editorial_member').length },
   ];
 
   return (

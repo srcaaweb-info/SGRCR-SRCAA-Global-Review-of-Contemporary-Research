@@ -237,11 +237,32 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
       'Adjunct Research Faculty, Lincoln University College, Malaysia'
     ],
   },
+  {
+    id: 'dr-md-ruhul-amin',
+    serialNumber: 11,
+    name: 'Dr. Md. Ruhul Amin',
+    role: 'Professor',
+    editorialRole: 'Advisory Board Member (International)',
+    category: 'advisory',
+    groupTier: 'advisory_international',
+    department: 'Department of Public Administration',
+    affiliation: 'Comilla University',
+    subAffiliation: 'Kotbari, Cumilla, Bangladesh',
+    location: 'Kotbari, Cumilla, Bangladesh',
+    initials: 'RA',
+    avatarBg: '#8c3432',
+    email: 'rubel@cou.ac.bd',
+    institutionalProfile: 'https://cou.ac.bd/dppad/129/department-member-details',
+    additionalRoles: [
+      'Advisory Board Member – International',
+      'Comilla University, Bangladesh'
+    ],
+  },
 
   // ADVISORY BOARD
   {
     id: 'prof-dr-b-paramesh',
-    serialNumber: 11,
+    serialNumber: 12,
     name: 'Prof. Dr. B. Paramesh',
     role: 'Principal',
     editorialRole: 'Advisory Board Member',
@@ -260,7 +281,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
   // EDITORIAL BOARD MEMBERS
   {
     id: 'dr-girisha-m-c',
-    serialNumber: 12,
+    serialNumber: 13,
     name: 'Dr. Girisha M. C.',
     role: 'Associate Professor & Chairman',
     editorialRole: 'Editorial Board Member',
@@ -276,7 +297,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
   },
   {
     id: 'dr-shashikala-c-s',
-    serialNumber: 13,
+    serialNumber: 14,
     name: 'Dr. Shashikala C. S.',
     role: 'Faculty & Associate Researcher',
     editorialRole: 'Editorial Board Member',
@@ -292,7 +313,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
   },
   {
     id: 'mr-sachin-gowda-k-s',
-    serialNumber: 14,
+    serialNumber: 15,
     name: 'Mr. Sachin Gowda K. S.',
     role: 'Assistant Professor',
     editorialRole: 'Editorial Board Member',
@@ -309,7 +330,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
   },
   {
     id: 'dr-lakshman-singh',
-    serialNumber: 15,
+    serialNumber: 16,
     name: 'Dr. Lakshman Singh',
     role: 'Dy. General Manager (Planning–Projects)',
     editorialRole: 'Editorial Board Member',
@@ -326,7 +347,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
   },
   {
     id: 'dr-dinesh-kumar-s',
-    serialNumber: 16,
+    serialNumber: 17,
     name: 'Dr. Dinesh Kumar S.',
     role: 'Associate Professor',
     editorialRole: 'Editorial Board Member',
