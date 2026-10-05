@@ -80,7 +80,7 @@ export const IssnSection: React.FC = () => {
                     <span>Volume 1 · Issue 2</span>
                     <span className="text-amber-700 bg-amber-100 px-2 py-0.5 rounded-sm">Call for Papers</span>
                   </div>
-                  <p className="text-[#581e1d] mt-1">Quarterly (3 Issues per Year) · January 2027</p>
+                  <p className="text-[#581e1d] mt-1">Quarterly · January 2027</p>
                 </div>
 
                 <div className="p-3 bg-gray-50/80 rounded-lg border border-gray-200">
@@ -88,7 +88,7 @@ export const IssnSection: React.FC = () => {
                     <span>Volume 1 · Issue 3</span>
                     <span className="text-[#581e1d] bg-gray-100 px-2 py-0.5 rounded-sm">Upcoming</span>
                   </div>
-                  <p className="text-[#581e1d] mt-1">Quarterly (3 Issues per Year) · May 2027</p>
+                  <p className="text-[#581e1d] mt-1">Quarterly · May 2027</p>
                 </div>
               </div>
             </div>

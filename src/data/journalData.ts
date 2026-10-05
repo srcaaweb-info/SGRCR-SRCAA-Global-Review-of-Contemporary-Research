@@ -1,6 +1,6 @@
 import { EditorialMember, Article, ResearchDomain, PolicyItem } from '../types';
 
-export const PUBLICATION_FREQUENCY = 'Quarterly (3 Issues per Year)';
+export const PUBLICATION_FREQUENCY = 'Quarterly';
 export const CURRENT_ISSUE_LABEL = 'Volume 1, Issue 1, September 2026';
 
 export const OFFICIAL_CONTACT_ADDRESS = {
@@ -642,7 +642,8 @@ A critical finding is that 79.3% of organisations acknowledge the urgency of fut
     downloads: 275,
     views: 890,
   },
-  
+];
+
 export const RESEARCH_DOMAINS: ResearchDomain[] = [
   {
     id: 'comm-mgmt',
@@ -756,7 +757,7 @@ export const POLICIES: PolicyItem[] = [
     slug: 'academic-publication-policy',
     description: 'Readiness criteria aligned with Scopus CSAB, DORA, and ICMJE authorship standards.',
     highlights: [
-      'Regular Quarterly (3 Issues per Year) publication schedule for ISSN India compliance',
+      'Regular Quarterly publication schedule for ISSN India compliance',
       'Rigorous double-blind peer review and verifiable APA 7th Edition referencing',
       'Adherence to San Francisco Declaration on Research Assessment (DORA)',
     ],
@@ -770,7 +771,7 @@ export const JOURNAL_PARTICULARS = [
   { label: 'DOI Prefix', value: 'To be assigned (Crossref)' },
   { label: 'Language of Publication', value: 'English (UK / US consistent)' },
   { label: 'Subject / Scope', value: 'Commerce, Management, Economics, Social Sciences, and Allied Fields' },
-  { label: 'Publication Frequency / Periodicity', value: 'Quarterly (3 Issues per Year)' },
+  { label: 'Publication Frequency / Periodicity', value: 'Quarterly' },
   { label: 'Current Issue', value: 'Volume 1, Issue 1, September 2026' },
   { label: 'Contact Phone / Mobile', value: 'M: 9148484079' },
   { label: 'Contact Address', value: 'Shakti Research Centre and Academia (SRCAA), Address Line 1: Bommanahalli Town, City: Bengaluru, Pin Code: 560076, State: Karnataka, Country: India' },

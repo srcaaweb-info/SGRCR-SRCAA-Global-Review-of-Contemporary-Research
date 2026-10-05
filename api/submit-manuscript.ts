@@ -151,7 +151,7 @@ export default async function handler(req: any, res: any) {
   <div style="max-width: 680px; margin: 24px auto; background: #ffffff; border: 1px solid #e5d8d6; border-radius: 12px; overflow: hidden;">
     <div style="background: #1f0707; color: #ffffff; padding: 28px 32px; border-bottom: 4px solid #a13533;">
       <h1 style="margin: 0; font-size: 20px; color: #ffffff;">SRCAA Global Review of Contemporary Research (SGRCR)</h1>
-      <p style="margin: 6px 0 0; font-size: 12px; color: #c97775; font-weight: 600; text-transform: uppercase;">Official Manuscript Submission Dossier · Frequency: Quarterly (3 Issues per Year)</p>
+      <p style="margin: 6px 0 0; font-size: 12px; color: #c97775; font-weight: 600; text-transform: uppercase;">Official Manuscript Submission Dossier · Frequency: Quarterly</p>
     </div>
     <div style="padding: 28px 32px;">
       <div style="display: inline-block; background: #fbeeed; border: 1px solid #f2cfcd; color: #781f1d; padding: 6px 14px; border-radius: 6px; font-weight: 700; font-size: 13px; margin-bottom: 16px;">

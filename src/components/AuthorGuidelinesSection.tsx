@@ -145,7 +145,7 @@ ${receipt.coAuthors ? `- Co-Authors: ${receipt.coAuthors}\n` : ''}
 --------------------------------------------------------------------------------
 - Editorial Secretariat: SGRCR Editorial Office (srcaacontact@gmail.com, srcaaweb@gmail.com, admin@srcaa.co.in)
 - Institutional Publisher: Shakti Research Centre and Academia (SRCAA)
-- Publication Frequency: Quarterly (3 Issues per Year)
+- Publication Frequency: Quarterly
 - Contact Address: Address Line 1: Bommanahalli Town, City: Bengaluru, Pin Code: 560076, State: Karnataka, Country: India (M: 9148484079)
 
 4. ETHICAL & COPE INTEGRITY DECLARATION:

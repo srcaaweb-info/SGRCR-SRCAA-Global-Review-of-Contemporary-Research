@@ -100,7 +100,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
               <FileText className="w-5 h-5 2xl:w-6 2xl:h-6 text-[#a13533] shrink-0 mt-0.5" />
               <div>
                 <p className="text-xs sm:text-sm 2xl:text-base font-bold text-[#ffffff]">Quarterly</p>
-                <p className="text-[11px] 2xl:text-xs text-[#cfb6b3]">3 Issues per Year</p>
+                <p className="text-[11px] 2xl:text-xs text-[#cfb6b3]">Issues per Year</p>
               </div>
             </div>
             <div className="flex items-start gap-2.5 bg-white/5 p-3 2xl:p-4 rounded-lg border border-white/10 backdrop-blur-sm">

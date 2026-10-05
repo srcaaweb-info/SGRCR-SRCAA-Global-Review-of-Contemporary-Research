@@ -222,7 +222,7 @@ export const EditorialSubmissionsModal: React.FC<Props> = ({
               }`}
             >
               <FileText className="w-4 h-4" />
-              <span>Published Papers (8)</span>
+              <span>Published Papers ({ARTICLES.length})</span>
             </button>
 
             <button
@@ -407,7 +407,7 @@ export const EditorialSubmissionsModal: React.FC<Props> = ({
                   <ShieldCheck className="w-4 h-4 text-emerald-700" />
                   <span className="font-bold text-[#421413]">{CURRENT_ISSUE_LABEL} Official Website PDFs</span>
                 </div>
-                <span className="text-[11px] text-[#781f1d] font-semibold">8 Peer-Reviewed Articles</span>
+                <span className="text-[11px] text-[#781f1d] font-semibold">{ARTICLES.length} Peer-Reviewed Articles</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
