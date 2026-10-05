@@ -642,48 +642,7 @@ A critical finding is that 79.3% of organisations acknowledge the urgency of fut
     downloads: 275,
     views: 890,
   },
-  {
-    id: 'article-008',
-    articleNumber: 8,
-    title: 'Artificial Intelligence in Education: An Empirical Analysis of Its Influence on Students’ Engagement',
-    authors: ['SRIDEVI M'],
-    volume: 1,
-    issue: 1,
-    year: 2026,
-    pages: '99–112',
-    pdfUrl: '/articles/sgrcr-vol1-iss1-art08.pdf',
-    pdfFileName: 'sgrcr-vol1-iss1-art08.pdf',
-    fileSize: '5.5 KB',
-    doi: '10.xxxx/sgrcr.2026.01.008',
-    abstract: `The integration of artificial intelligence (AI) in education has transformed traditional learning environments by enhancing accessibility, personalization, and efficiency. This study aims to empirically analyze the influence of AI on students’ engagement and learning outcomes in Bengaluru.
-
-Using primary data collected from students through a structured questionnaire, the study evaluates how AI-based tools impact academic interaction, participation, and performance. The findings indicate that AI significantly enhances student engagement and improves learning outcomes, although certain challenges such as overdependence and reduced critical thinking were observed. The study contributes to understanding the role of AI in shaping modern educational practices.`,
-    keywords: ['Artificial Intelligence in Education', 'Student Engagement', 'Learning Outcomes', 'Educational Technology', 'Bengaluru Higher Education'],
-    category: 'Education & Technology',
-    publishedDate: 'September 2026',
-    sections: [
-      {
-        title: '1. Introduction to AI Pedagogy in Indian Higher Education',
-        content: 'The rapid democratization of adaptive learning platforms, automated formative assessment agents, and conversational tutoring systems is fundamentally restructuring higher education classrooms across major Indian knowledge hubs such as Bengaluru.'
-      },
-      {
-        title: '2. Empirical Survey Methodology & Sample Demographics',
-        content: 'A structured 5-point Likert questionnaire was administered to 240 undergraduate and postgraduate students across diverse disciplines. Structural analysis examined correlations between daily AI utilization, classroom participation, and academic performance.'
-      },
-      {
-        title: '3. Findings: Engagement Metrics, Cognitive Offloading & Pedagogical Risks',
-        content: 'Empirical findings show a statistically significant positive relationship between AI personalization and student motivation (p < 0.01). However, 42% of surveyed instructors reported concerns regarding cognitive offloading and integrity risks during self-directed study.'
-      },
-      {
-        title: '4. Conclusion & Responsible AI Integration in Universities',
-        content: 'Universities must develop comprehensive institutional AI literacy frameworks. Rather than instituting punitive bans, educators should formulate assessment methodologies that emphasize authentic debate, hands-on experimentation, and critical algorithmic auditing.'
-      }
-    ],
-    downloads: 320,
-    views: 1010,
-  },
-];
-
+  
 export const RESEARCH_DOMAINS: ResearchDomain[] = [
   {
     id: 'comm-mgmt',
