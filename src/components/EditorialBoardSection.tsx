@@ -227,7 +227,7 @@ export const EditorialBoardSection: React.FC = () => {
                       </span>
                       {member.serialNumber ? (
                         <span className="text-[10px] font-bold uppercase tracking-wider text-[#781f1d] bg-gray-100 px-2 py-0.5 rounded-sm border border-gray-200">
-                          Member #{member.serialNumber}
+                          Member {member.serialNumber}
                         </span>
                       ) : (
                         <span className="text-[10px] font-bold uppercase tracking-wider text-[#781f1d] bg-gray-100 px-2 py-0.5 rounded-sm border border-gray-200">
