@@ -30,14 +30,24 @@ export const Navbar: React.FC<NavbarProps> = ({
   const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
-  const handleArchivesClick = (e: React.MouseEvent) => {
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    e.preventDefault();
+    closeMobileMenu();
     try {
-      window.open('/archive.html', '_blank', 'noopener,noreferrer');
+      const url = new URL(window.location.href);
+      url.hash = '';
+      window.history.replaceState({}, '', url.pathname + url.search);
     } catch {
-      // Ignored if window.open is restricted in iframe
+      // Ignored if history API is restricted
     }
-    if (onOpenArchives) onOpenArchives();
-    if (onOpenArticleArchive) onOpenArticleArchive();
+    if (sectionId === 'top') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   return (
@@ -48,6 +58,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Logo & Emblem */}
           <a
             href="#top"
+            onClick={(e) => handleNavClick(e, 'top')}
             className="flex items-center gap-2.5 sm:gap-3 group focus:outline-hidden focus-visible:ring-2 focus-visible:ring-[#a13533] rounded-lg p-1 transition-transform"
             aria-label="SGRCR Home"
           >
@@ -70,31 +81,31 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-1" aria-label="Main Navigation">
-            <a href="#about" className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
+            <a href="#about" onClick={(e) => handleNavClick(e, 'about')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
               <Info className="w-3.5 h-3.5 text-[#781f1d]" />
               About
             </a>
-            <a href="#journal-metadata" className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
+            <a href="#journal-metadata" onClick={(e) => handleNavClick(e, 'journal-metadata')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
               <BookOpen className="w-3.5 h-3.5 text-[#781f1d]" />
               Scope
             </a>
-            <a href="#submit-manuscript" className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
+            <a href="#submit-manuscript" onClick={(e) => handleNavClick(e, 'submit-manuscript')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
               <PenTool className="w-3.5 h-3.5 text-[#781f1d]" />
               Submit
             </a>
-            <a href="#editorial-board" className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
+            <a href="#editorial-board" onClick={(e) => handleNavClick(e, 'editorial-board')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 text-[#781f1d]" />
               Editorial Board
             </a>
-            <a href="#policies" className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
+            <a href="#policies" onClick={(e) => handleNavClick(e, 'policies')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-[#781f1d]" />
               Policies
             </a>
-            <a href="#archives" className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
+            <a href="#archives" onClick={(e) => handleNavClick(e, 'archives')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
               <Archive className="w-3.5 h-3.5 text-[#781f1d]" />
               Archives
             </a>
-            <a href="#contact" className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
+            <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5">
               <Mail className="w-3.5 h-3.5 text-[#781f1d]" />
               Contact
             </a>
@@ -136,31 +147,31 @@ export const Navbar: React.FC<NavbarProps> = ({
           className="lg:hidden bg-[#ffffff] border-gray-200 border-t px-4 pt-3 pb-6 space-y-2 shadow-lg animate-in slide-in-from-top-2 duration-200 max-w-full overflow-hidden"
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-            <a href="#about" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
+            <a href="#about" onClick={(e) => handleNavClick(e, 'about')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
               <Info className="w-4 h-4 text-[#781f1d]" />
               About the Journal
             </a>
-            <a href="#journal-metadata" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
+            <a href="#journal-metadata" onClick={(e) => handleNavClick(e, 'journal-metadata')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
               <BookOpen className="w-4 h-4 text-[#781f1d]" />
               Scope & Domains
             </a>
-            <a href="#submit-manuscript" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
+            <a href="#submit-manuscript" onClick={(e) => handleNavClick(e, 'submit-manuscript')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
               <PenTool className="w-4 h-4 text-[#781f1d]" />
               Submit Manuscript
             </a>
-            <a href="#editorial-board" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
+            <a href="#editorial-board" onClick={(e) => handleNavClick(e, 'editorial-board')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
               <Users className="w-4 h-4 text-[#781f1d]" />
               Editorial Board
             </a>
-            <a href="#policies" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
+            <a href="#policies" onClick={(e) => handleNavClick(e, 'policies')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
               <ShieldCheck className="w-4 h-4 text-[#781f1d]" />
               Publication Policies
             </a>
-            <a href="#archives" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
+            <a href="#archives" onClick={(e) => handleNavClick(e, 'archives')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
               <Archive className="w-4 h-4 text-[#781f1d]" />
               Archives
             </a>
-            <a href="#contact" onClick={closeMobileMenu} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
+            <a href="#contact" onClick={(e) => handleNavClick(e, 'contact')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100">
               <Mail className="w-4 h-4 text-[#781f1d]" />
               Contact
             </a>

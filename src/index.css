@@ -201,3 +201,7 @@
 .theme-deep-dark .policy-table tr:nth-child(even) td {
   background: #1c0707;
 }
+
+section[id] {
+  scroll-margin-top: 4.5rem;
+}

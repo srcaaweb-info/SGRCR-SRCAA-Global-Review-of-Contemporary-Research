@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ShieldCheck,
   BookOpen,
@@ -16,6 +16,17 @@ import {
 
 export const PoliciesSection: React.FC = () => {
   const [activePolicy, setActivePolicy] = useState<string>('editorial-guidelines');
+
+  useEffect(() => {
+    const handleSelectPolicy = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      if (customEvent.detail) {
+        setActivePolicy(customEvent.detail);
+      }
+    };
+    window.addEventListener('sgrcr-select-policy', handleSelectPolicy);
+    return () => window.removeEventListener('sgrcr-select-policy', handleSelectPolicy);
+  }, []);
 
   return (
     <section id="policies" className="py-12 sm:py-16 md:py-20 lg:py-24 2xl:py-28 bg-[#ffffff] border-b border-gray-200">

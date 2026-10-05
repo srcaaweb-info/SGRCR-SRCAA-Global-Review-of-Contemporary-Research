@@ -45,6 +45,15 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({
   const [standaloneArticle, setStandaloneArticle] = useState<Article | null>(null);
 
   useEffect(() => {
+    try {
+      const url = new URL(window.location.href);
+      if (url.hash) {
+        url.hash = '';
+        window.history.replaceState({}, '', url.pathname + url.search);
+      }
+    } catch {
+      // Ignored
+    }
     const params = new URLSearchParams(window.location.search);
     const articleParam = params.get('article');
     if (articleParam) {
@@ -65,8 +74,9 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({
     setStandaloneArticle(article);
     try {
       const url = new URL(window.location.href);
+      url.hash = '';
       url.searchParams.set('article', article.id);
-      window.history.pushState({}, '', url.toString());
+      window.history.pushState({}, '', url.pathname + url.search);
     } catch {
       // Ignored
     }
@@ -81,8 +91,9 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({
           setStandaloneArticle(null);
           try {
             const url = new URL(window.location.href);
+            url.hash = '';
             url.searchParams.delete('article');
-            window.history.pushState({}, '', url.toString());
+            window.history.pushState({}, '', url.pathname + url.search);
           } catch {
             // Ignored
           }
