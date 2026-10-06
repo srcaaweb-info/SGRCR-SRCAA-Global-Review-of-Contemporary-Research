@@ -45,12 +45,9 @@ export const EditorialBoardSection: React.FC = () => {
       (selectedCategory === 'chief_reviewer' && member.groupTier === 'chief_reviewer') ||
       (selectedCategory === 'associate_editor' && member.groupTier === 'associate_editor') ||
       (selectedCategory === 'section_editor' && member.groupTier === 'section_editor') ||
-      (selectedCategory === 'advisory_international' && member.groupTier === 'advisory_international') ||
-      (selectedCategory === 'advisory_national' && member.groupTier === 'advisory_national') ||
       (selectedCategory === 'editorial_member' && member.groupTier === 'editorial_member') ||
       // Aggregate convenience filters
-      (selectedCategory === 'editors' && (member.groupTier === 'chief_editor' || member.groupTier === 'associate_editor' || member.groupTier === 'section_editor')) ||
-      (selectedCategory === 'all_advisory' && (member.groupTier === 'advisory_international' || member.groupTier === 'advisory_national'));
+      (selectedCategory === 'editors' && (member.groupTier === 'chief_editor' || member.groupTier === 'associate_editor' || member.groupTier === 'section_editor'));
 
     const matchesSearch = 
       member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -104,20 +101,6 @@ export const EditorialBoardSection: React.FC = () => {
           label: 'Section Editor',
           badgeClass: 'bg-gray-100 border-gray-200 text-[#421413]',
         };
-      case 'advisory_international':
-        return {
-          avatarIcon: <Globe2 className="w-3.5 h-3.5 text-[#781f1d]" />,
-          badgeIcon: <Globe2 className="w-3.5 h-3.5 text-[#781f1d]" />,
-          label: 'Advisory Board – International',
-          badgeClass: 'bg-emerald-50 border-emerald-200 text-emerald-900',
-        };
-      case 'advisory_national':
-        return {
-          avatarIcon: <Compass className="w-3.5 h-3.5 text-[#781f1d]" />,
-          badgeIcon: <Compass className="w-3.5 h-3.5 text-[#781f1d]" />,
-          label: 'Advisory Board Member',
-          badgeClass: 'bg-amber-50 border-amber-200 text-amber-900',
-        };
       case 'editorial_member':
       default:
         return {
@@ -136,8 +119,6 @@ export const EditorialBoardSection: React.FC = () => {
     { id: 'chief_reviewer', label: 'Chief Reviewer', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'chief_reviewer').length },
     { id: 'associate_editor', label: 'Associate Editors', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'associate_editor').length },
     { id: 'section_editor', label: 'Section Editors', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'section_editor').length },
-    { id: 'advisory_international', label: 'Advisory (International)', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'advisory_international').length },
-    { id: 'advisory_national', label: 'Advisory Board', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'advisory_national').length },
     { id: 'editorial_member', label: 'Editorial Board Members', count: EDITORIAL_MEMBERS.filter((m) => m.groupTier === 'editorial_member').length },
   ];
 

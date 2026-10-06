@@ -179,31 +179,31 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     additionalRoles: ['Section Editor – SGRCR'],
   },
 
-  // ADVISORY BOARD – INTERNATIONAL MEMBERS
+  // EDITORIAL BOARD MEMBERS
   {
     id: 'dr-santosh-chikkamari',
     serialNumber: 8,
     name: 'Dr. Santosh Nelamakanahalli Chikkamari',
     role: 'Casual Tutor',
-    editorialRole: 'Advisory Board Member (International)',
-    category: 'advisory',
-    groupTier: 'advisory_international',
+    editorialRole: 'Editorial Board Member',
+    category: 'member',
+    groupTier: 'editorial_member',
     affiliation: 'The University of Sydney',
     location: 'NSW, Australia',
     initials: 'SC',
     avatarBg: '#8c3432',
     email: 'santosh.nelamakanahallichikkamari@sydney.edu.au',
     orcid: '0009-0005-1689-1500',
-    additionalRoles: ['Advisory Board Member – International'],
+    additionalRoles: ['Editorial Board Member'],
   },
   {
     id: 'dr-kavikumar-jacob',
     serialNumber: 9,
     name: 'Dr. Kavikumar Jacob',
     role: 'Associate Professor of Mathematics',
-    editorialRole: 'Advisory Board Member (International)',
-    category: 'advisory',
-    groupTier: 'advisory_international',
+    editorialRole: 'Editorial Board Member',
+    category: 'member',
+    groupTier: 'editorial_member',
     department: 'Department of Mathematics and Statistics, Faculty of Applied Sciences and Technology',
     affiliation: 'Universiti Tun Hussein Onn Malaysia',
     location: 'Johor, Malaysia',
@@ -212,7 +212,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     email: 'kavi@uthm.edu.my',
     institutionalProfile: 'https://community.uthm.edu.my/kavi',
     additionalRoles: [
-      'Advisory Board Member – International',
+      'Editorial Board Member',
       'Universiti Tun Hussein Onn Malaysia'
     ],
   },
@@ -221,9 +221,9 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     serialNumber: 10,
     name: 'Dr. Monica Bhutani',
     role: 'Associate Professor',
-    editorialRole: 'Advisory Board Member (International)',
-    category: 'advisory',
-    groupTier: 'advisory_international',
+    editorialRole: 'Editorial Board Member',
+    category: 'member',
+    groupTier: 'editorial_member',
     department: 'Department of Electronics and Communications',
     affiliation: 'Bharati Vidyapeeth’s College of Engineering',
     subAffiliation: 'Adjunct Research Faculty, Lincoln University College, Malaysia',
@@ -233,7 +233,7 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     email: 'monica.bhutani@bharatividyapeeth.edu',
     institutionalProfile: 'https://bvcoend.ac.in/index.php/monica-bhutani/',
     additionalRoles: [
-      'Advisory Board Member – International',
+      'Editorial Board Member',
       'Adjunct Research Faculty, Lincoln University College, Malaysia'
     ],
   },
@@ -242,9 +242,9 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     serialNumber: 11,
     name: 'Dr. Md. Ruhul Amin',
     role: 'Professor',
-    editorialRole: 'Advisory Board Member (International)',
-    category: 'advisory',
-    groupTier: 'advisory_international',
+    editorialRole: 'Editorial Board Member',
+    category: 'member',
+    groupTier: 'editorial_member',
     department: 'Department of Public Administration',
     affiliation: 'Comilla University',
     subAffiliation: 'Kotbari, Cumilla, Bangladesh',
@@ -254,20 +254,18 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     email: 'rubel@cou.ac.bd',
     institutionalProfile: 'https://cou.ac.bd/dppad/129/department-member-details',
     additionalRoles: [
-      'Advisory Board Member – International',
+      'Editorial Board Member',
       'Comilla University, Bangladesh'
     ],
   },
-
-  // ADVISORY BOARD
   {
     id: 'prof-dr-b-paramesh',
     serialNumber: 12,
     name: 'Prof. Dr. B. Paramesh',
     role: 'Principal',
-    editorialRole: 'Advisory Board Member',
-    category: 'advisory',
-    groupTier: 'advisory_national',
+    editorialRole: 'Editorial Board Member',
+    category: 'member',
+    groupTier: 'editorial_member',
     affiliation: 'A. P. S. College of Commerce',
     subAffiliation: 'Affiliated to Dr. M. S. Bangalore City University',
     location: 'Karnataka, India',
@@ -275,10 +273,8 @@ export const EDITORIAL_MEMBERS: EditorialMember[] = [
     avatarBg: '#451a19',
     email: 'bparamesha@rediffmail.com',
     institutionalProfile: 'https://apscommerce.in/principals-message/',
-    additionalRoles: ['Advisory Board Member'],
+    additionalRoles: ['Editorial Board Member'],
   },
-
-  // EDITORIAL BOARD MEMBERS
   {
     id: 'dr-girisha-m-c',
     serialNumber: 13,

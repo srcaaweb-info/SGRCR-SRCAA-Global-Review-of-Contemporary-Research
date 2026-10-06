@@ -3,8 +3,8 @@ export interface EditorialMember {
   name: string;
   role: string; // Academic designation / institutional title
   editorialRole: string; // SGRCR role e.g. "Chairperson – SGRCR", "Chief Editor", "Chief Reviewer – SGRCR"
-  category: 'leadership' | 'chief_editor' | 'chief_reviewer' | 'associate_editor' | 'section_editor' | 'advisory' | 'member' | 'specialist';
-  groupTier: 'chairperson' | 'chief_editor' | 'chief_reviewer' | 'associate_editor' | 'section_editor' | 'advisory_international' | 'advisory_national' | 'editorial_member';
+  category: 'leadership' | 'chief_editor' | 'chief_reviewer' | 'associate_editor' | 'section_editor' | 'member' | 'specialist';
+  groupTier: 'chairperson' | 'chief_editor' | 'chief_reviewer' | 'associate_editor' | 'section_editor' | 'editorial_member';
   serialNumber?: number;
   degrees?: string;
   department?: string;
