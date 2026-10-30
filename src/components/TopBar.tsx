@@ -13,10 +13,10 @@ export const TopBar: React.FC<TopBarProps> = ({ onOpenSubmissionsLog }) => {
         <div className="flex items-center justify-between h-9">
           {/* Left: ISSN & Compliance Badges */}
           <div className="flex items-center gap-3 sm:gap-5">
-            <span className="inline-flex items-center gap-1.5 font-semibold">
-              <BadgeCheck className="w-3.5 h-3.5 text-[#a13533]" />
-              <span className="hidden sm:inline">ISSN: Applied For (ISSN National Centre, India)</span>
-              <span className="sm:hidden">ISSN: Applied For</span>
+            <span className="inline-flex items-center gap-1.5 font-semibold text-[#f0dedb]">
+              <BadgeCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="font-mono text-emerald-300 font-bold">ISSN: 2839-6081</span>
+              <span className="hidden sm:inline text-xs text-[#cfb6b3]">(Online)</span>
             </span>
             <span className="hidden md:inline-flex items-center gap-1.5 font-semibold">
               <BadgeCheck className="w-3.5 h-3.5 text-[#a13533]" />

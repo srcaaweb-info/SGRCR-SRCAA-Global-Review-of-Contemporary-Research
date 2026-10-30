@@ -42,12 +42,13 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
   const prevArticle = currentIndex > 0 ? ARTICLES[currentIndex - 1] : null;
   const nextArticle = currentIndex < ARTICLES.length - 1 ? ARTICLES[currentIndex + 1] : null;
 
-  const apaCitation = `${article.authors.join(', ')} (${article.year}). ${article.title}. SRCAA Global Review of Contemporary Research (SGRCR), Volume ${article.volume}, Issue ${article.issue} (${article.publishedDate}), pp. ${article.pages}. https://doi.org/${article.doi}`;
+  const apaCitation = `${article.authors.join(', ')} (${article.year}). ${article.title}. SRCAA Global Review of Contemporary Research (SGRCR), ISSN: 2839-6081, Volume ${article.volume}, Issue ${article.issue} (${article.publishedDate}), pp. ${article.pages}. https://doi.org/${article.doi}`;
 
   const bibtexCitation = `@article{sgrcr_${article.year}_${article.articleNumber},
   title={${article.title}},
   author={${article.authors.join(' and ')}},
   journal={SRCAA Global Review of Contemporary Research (SGRCR)},
+  issn={2839-6081},
   volume={${article.volume}},
   number={${article.issue}},
   month={July},
@@ -111,10 +112,18 @@ export const ArticleDetailView: React.FC<ArticleDetailViewProps> = ({
           <div className="bg-gray-50 border-2 border-[#781f1d]/30 rounded-2xl p-6 sm:p-8 shadow-xs space-y-4">
             <div className="pb-4 border-b border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <p className="font-serif font-bold text-base sm:text-lg text-[#781f1d]">
-                  SRCAA Global Review of Contemporary Research (SGRCR)
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="font-serif font-bold text-base sm:text-lg text-[#781f1d]">
+                    SRCAA Global Review of Contemporary Research (SGRCR)
+                  </p>
+                  <span className="hidden sm:inline-block px-2 py-0.5 bg-emerald-50 text-emerald-800 text-[11px] font-mono font-bold rounded-sm border border-emerald-300">
+                    ISSN: 2839-6081
+                  </span>
+                </div>
                 <p className="text-xs sm:text-sm font-bold text-[#1f0707] mt-0.5 flex flex-wrap items-center gap-2">
+                  <span className="sm:hidden font-mono text-emerald-800 font-bold">
+                    ISSN: 2839-6081 ·
+                  </span>
                   <span className="inline-flex items-center gap-1">
                     <Calendar className="w-3.5 h-3.5 text-[#781f1d]" />
                     Volume {article.volume}, Issue {article.issue}, {article.publishedDate}

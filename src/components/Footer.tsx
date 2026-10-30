@@ -54,7 +54,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenArticleArchive }) => {
               <strong>{OFFICIAL_CONTACT_ADDRESS.publisher}</strong>. Digital academic and research institution established in 2024, accredited under the International Trade Council (ITC) Framework.
             </p>
             <p className="text-xs text-[#c97775] font-semibold">
-              Publication Frequency: {PUBLICATION_FREQUENCY}
+              ISSN: 2839-6081 (Online) · Publication Frequency: {PUBLICATION_FREQUENCY}
             </p>
           </div>
 
@@ -141,7 +141,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenArticleArchive }) => {
               </li>
               <li>
                 <button type="button" onClick={() => navigateToSection('issn-compliance')} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
-                  ISSN India Particulars & Frequency
+                  ISSN Compliance (ISSN: 2839-6081)
                 </button>
               </li>
             </ul>

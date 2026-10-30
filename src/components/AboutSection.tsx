@@ -27,7 +27,7 @@ export const AboutSection: React.FC = () => {
         {/* Main Panel with Consistent White Theme Styling */}
         <div className="bg-gray-50/70 border border-gray-200 rounded-2xl p-6 sm:p-8 md:p-10 2xl:p-12 shadow-xs space-y-6 text-[#421413] text-sm sm:text-base 2xl:text-lg leading-relaxed">
           <p>
-            The <strong>SRCAA Global Review of Contemporary Research (SGRCR)</strong> is an open-access, double-blind peer-reviewed, multidisciplinary academic journal published on a <strong>{PUBLICATION_FREQUENCY}</strong> schedule under the aegis of <strong>{OFFICIAL_CONTACT_ADDRESS.publisher}</strong>, a digital academic and research institution established in 2024 and accredited under the <em>International Trade Council (ITC) Conformity Assessment and Recognition Framework</em>. The journal is committed to disseminating high-quality, original research across Commerce, Management, Economics, Social Sciences, Technology, and allied interdisciplinary fields.
+            The <strong>SRCAA Global Review of Contemporary Research (SGRCR, ISSN: 2839-6081)</strong> is an open-access, double-blind peer-reviewed, multidisciplinary academic journal published on a <strong>{PUBLICATION_FREQUENCY}</strong> schedule under the aegis of <strong>{OFFICIAL_CONTACT_ADDRESS.publisher}</strong>, a digital academic and research institution established in 2024 and accredited under the <em>International Trade Council (ITC) Conformity Assessment and Recognition Framework</em>. The journal is committed to disseminating high-quality, original research across Commerce, Management, Economics, Social Sciences, Technology, and allied interdisciplinary fields.
           </p>
 
           <p>
@@ -122,8 +122,8 @@ export const AboutSection: React.FC = () => {
               <span>{CURRENT_ISSUE_LABEL}</span>
             </div>
             <div>
-              <span className="text-[#581e1d] block font-normal">Print / Online ISSN</span>
-              <span>Applied for (ISSN India)</span>
+              <span className="text-[#581e1d] block font-normal">Registered ISSN</span>
+              <span className="font-mono font-bold text-emerald-800">2839-6081 (Online)</span>
             </div>
             <div>
               <span className="text-[#581e1d] block font-normal">DOI Prefix</span>

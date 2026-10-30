@@ -2,6 +2,7 @@ import { EditorialMember, Article, ResearchDomain, PolicyItem } from '../types';
 
 export const PUBLICATION_FREQUENCY = 'Quarterly';
 export const CURRENT_ISSUE_LABEL = 'Volume 1, Issue 1 (July 2026)';
+export const JOURNAL_ISSN = '2839-6081';
 
 export const OFFICIAL_CONTACT_ADDRESS = {
   heading: 'Contact Address',
@@ -967,8 +968,9 @@ export const POLICIES: PolicyItem[] = [
 
 export const JOURNAL_PARTICULARS = [
   { label: 'Title of the Journal', value: 'SRCAA Global Review of Contemporary Research (SGRCR)' },
-  { label: 'Print ISSN', value: 'Applied for (ISSN National Centre, India)' },
-  { label: 'Online e-ISSN', value: 'Applied for (ISSN National Centre, India)' },
+  { label: 'International Standard Serial Number (ISSN)', value: 'ISSN: 2839-6081' },
+  { label: 'Online e-ISSN', value: '2839-6081 (Registered)' },
+  { label: 'ISSN Status', value: 'Assigned & Active (ISSN: 2839-6081)' },
   { label: 'DOI Prefix', value: 'To be assigned (Crossref)' },
   { label: 'Language of Publication', value: 'English (UK / US consistent)' },
   { label: 'Subject / Scope', value: 'Commerce, Management, Economics, Social Sciences, and Allied Fields' },

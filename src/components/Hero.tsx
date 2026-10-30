@@ -33,7 +33,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
       <div className="relative journal-container py-16 sm:py-20 md:py-24 lg:py-28 2xl:py-32">
         <div className="max-w-4xl 2xl:max-w-5xl mx-auto text-center">
 
-          {/* ESTD Badge */}
+          {/* ESTD & ISSN Badge */}
           <div className="inline-flex flex-col items-center mb-6">
             <div className="w-16 h-16 sm:w-20 sm:h-20 2xl:w-24 2xl:h-24 rounded-full p-1.5 bg-[#ffffff] ring-4 ring-[#a13533]/80 shadow-2xl transition-transform hover:scale-105 duration-300">
               <img
@@ -42,9 +42,15 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
                 className="w-full h-full object-contain"
               />
             </div>
-            <span className="mt-3 text-[#c97775] text-xs sm:text-sm 2xl:text-base font-bold tracking-widest uppercase">
-              ESTD Year: 2024 · Frequency: {PUBLICATION_FREQUENCY}
-            </span>
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-xs sm:text-sm font-bold tracking-widest uppercase">
+              <span className="text-[#ffffff] bg-[#a13533] px-3 py-1 rounded-full border border-[#c97775] font-mono tracking-wider shadow-sm">
+                ISSN: 2839-6081
+              </span>
+              <span className="text-[#c97775]">·</span>
+              <span className="text-[#c97775]">
+                ESTD: 2024 · Frequency: {PUBLICATION_FREQUENCY}
+              </span>
+            </div>
           </div>
 
           {/* Title */}
@@ -52,7 +58,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
             SRCAA Global Review of Contemporary Research
           </h1>
           <p className="mt-3 text-sm sm:text-base md:text-lg 2xl:text-xl font-semibold tracking-widest uppercase text-[#c97775]">
-            (SGRCR) — A Peer-Reviewed International Research Journal
+            (SGRCR) — ISSN: 2839-6081 — A Peer-Reviewed International Research Journal
           </p>
 
           {/* Description */}

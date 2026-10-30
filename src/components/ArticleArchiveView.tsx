@@ -177,7 +177,7 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({
                   Archives & Publications ({CURRENT_ISSUE_LABEL})
                 </h1>
                 <p className="text-[10px] text-[#781f1d] uppercase tracking-wider font-semibold">
-                  SRCAA Global Review of Contemporary Research · Frequency: {PUBLICATION_FREQUENCY}
+                  SRCAA Global Review of Contemporary Research · <span className="font-mono font-bold text-emerald-800">ISSN: 2839-6081</span> · Frequency: {PUBLICATION_FREQUENCY}
                 </p>
               </div>
             </div>
@@ -197,6 +197,9 @@ export const ArticleArchiveView: React.FC<ArticleArchiveViewProps> = ({
         <div className="bg-gradient-to-r from-[#1f0707] to-[#421413] text-[#ffffff] rounded-2xl p-6 sm:p-10 2xl:p-12 shadow-md mb-8">
           <div className="max-w-3xl 2xl:max-w-4xl">
             <div className="flex flex-wrap items-center gap-2 mb-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 text-xs font-mono font-bold uppercase tracking-wider">
+                ISSN: 2839-6081
+              </span>
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#a13533]/30 border border-[#a13533]/50 text-[#c97775] text-xs font-bold uppercase tracking-widest">
                 <Archive className="w-3.5 h-3.5" />
                 {CURRENT_ISSUE_LABEL} · {PUBLICATION_FREQUENCY}

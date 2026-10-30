@@ -13,24 +13,49 @@ export const IssnSection: React.FC = () => {
       <div className="journal-container">
         {/* Section Header */}
         <div className="mb-8 sm:mb-12">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-[#781f1d] text-xs font-bold uppercase tracking-widest border border-gray-200">
-            <BadgeCheck className="w-3.5 h-3.5" />
-            National & International Registry
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold uppercase tracking-widest border border-emerald-300">
+            <BadgeCheck className="w-3.5 h-3.5 text-emerald-600" />
+            ISSN: 2839-6081 Registered
           </span>
           <h2 className="font-serif font-bold text-2xl sm:text-3xl md:text-4xl 2xl:text-5xl text-[#1f0707] mt-3">
-            ISSN India Compliance & Journal Particulars
+            ISSN Compliance & Journal Particulars
           </h2>
           <p className="mt-2 text-sm sm:text-base 2xl:text-lg text-[#581e1d] max-w-2xl 2xl:max-w-4xl">
-            Official registration credentials, statutory particulars, Contact Address, and fixed <strong>{PUBLICATION_FREQUENCY}</strong> publication schedule aligned with the ISSN National Centre of India and ISO 3297 international standards.
+            Official registration credentials (<strong>ISSN: 2839-6081</strong>), statutory particulars, Contact Address, and fixed <strong>{PUBLICATION_FREQUENCY}</strong> publication schedule aligned with the ISSN International Centre and ISO 3297 international standards.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 2xl:gap-10">
           {/* Particulars Table (2 Cols on Large) */}
           <div className="lg:col-span-2 bg-[#ffffff] border border-gray-200 rounded-2xl p-6 sm:p-8 shadow-xs">
+            {/* Prominent ISSN Registration Certificate Banner */}
+            <div className="mb-6 p-4 sm:p-5 bg-gradient-to-r from-emerald-50 via-[#ffffff] to-emerald-50/50 border border-emerald-300 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-xl bg-emerald-700 text-white flex items-center justify-center font-bold text-lg shadow-sm shrink-0">
+                  <BadgeCheck className="w-7 h-7" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800">
+                      International Standard Serial Number
+                    </span>
+                    <span className="px-2 py-0.5 bg-emerald-100 text-emerald-900 text-[10px] font-bold rounded-sm border border-emerald-300">
+                      Verified & Active
+                    </span>
+                  </div>
+                  <p className="font-mono font-bold text-2xl sm:text-3xl text-emerald-950 mt-0.5 tracking-tight">
+                    ISSN: 2839-6081
+                  </p>
+                  <p className="text-xs text-emerald-800 mt-0.5">
+                    Assigned for online open-access publication under ISO 3297 international standard
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <h3 className="font-serif font-bold text-xl text-[#1f0707] mb-4 flex items-center gap-2">
               <Building2 className="w-5 h-5 text-[#781f1d]" />
-              Official Journal Particulars (ISSN Application)
+              Official Journal Particulars (ISSN Registry Record)
             </h3>
 
             <div className="overflow-x-auto rounded-xl border border-gray-200">
@@ -51,7 +76,7 @@ export const IssnSection: React.FC = () => {
             </div>
 
             <p className="mt-4 text-xs italic text-[#581e1d]">
-              * Print ISSN, Online e-ISSN, and Crossref DOI prefix numbers are assigned and published in accordance with statutory guidelines from the National Institute of Science Communication and Policy Research (NIScPR / CSIR), New Delhi.
+              * Registered Online ISSN: 2839-6081 is formally assigned and catalogued for the continuous digital dissemination of SGRCR peer-reviewed research outputs.
             </p>
           </div>
 
