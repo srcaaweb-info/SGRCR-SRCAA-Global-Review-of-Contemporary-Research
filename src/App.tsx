@@ -4,6 +4,7 @@ import { TopBar } from './components/TopBar';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { IndexingPartners } from './components/IndexingPartners';
+import { NotificationsSection } from './components/NotificationsSection';
 import { AboutSection } from './components/AboutSection';
 import { JournalMetadataSection } from './components/JournalMetadataSection';
 import { AuthorGuidelinesSection } from './components/AuthorGuidelinesSection';
@@ -194,6 +195,7 @@ export default function App() {
           />
           <main className="flex-1 w-full max-w-full overflow-x-hidden">
             <Hero onOpenArticleArchive={handleOpenArticleArchive} />
+            <NotificationsSection />
             <IndexingPartners />
             <AboutSection />
             <JournalMetadataSection />

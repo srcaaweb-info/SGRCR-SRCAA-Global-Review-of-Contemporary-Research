@@ -10,6 +10,7 @@ import {
   X,
   ExternalLink,
   PenTool,
+  Bell,
 } from 'lucide-react';
 import { navigateToSection } from '../utils/navigation';
 
@@ -77,6 +78,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               <PenTool className="w-3.5 h-3.5 text-[#781f1d]" />
               Submit
             </button>
+            <button type="button" onClick={() => handleNavClick('notifications')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer">
+              <Bell className="w-3.5 h-3.5 text-[#781f1d]" />
+              Notifications
+            </button>
             <button type="button" onClick={() => handleNavClick('editorial-board')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer">
               <Users className="w-3.5 h-3.5 text-[#781f1d]" />
               Editorial Board
@@ -142,6 +147,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button type="button" onClick={() => handleNavClick('submit-manuscript')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100 text-left cursor-pointer">
               <PenTool className="w-4 h-4 text-[#781f1d]" />
               Submit Manuscript
+            </button>
+            <button type="button" onClick={() => handleNavClick('notifications')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100 text-left cursor-pointer">
+              <Bell className="w-4 h-4 text-[#781f1d]" />
+              Notifications
             </button>
             <button type="button" onClick={() => handleNavClick('editorial-board')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100 text-left cursor-pointer">
               <Users className="w-4 h-4 text-[#781f1d]" />
