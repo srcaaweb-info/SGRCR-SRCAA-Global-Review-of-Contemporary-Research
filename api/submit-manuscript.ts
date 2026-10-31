@@ -35,12 +35,7 @@ function runMiddleware(req: any, res: any, fn: any) {
   });
 }
 
-const DEFAULT_EDITORIAL_EMAILS = [
-  'srcaacontact@gmail.com',
-  'srcaaweb@gmail.com',
-  'srcaaadministrator@gmail.com',
-  'admin@srcaa.co.in',
-];
+const DEFAULT_EDITORIAL_EMAILS = ['srcaacontact@gmail.com'];
 
 function getEditorialRecipients(): string[] {
   const envRecipients = process.env.EDITORIAL_RECIPIENT_EMAILS;
@@ -78,9 +73,6 @@ function createGmailTransporter() {
     port,
     secure,
     auth: { user, pass },
-    tls: {
-      rejectUnauthorized: false,
-    },
   });
 }
 
@@ -126,6 +118,14 @@ export default async function handler(req: any, res: any) {
       return res.status(400).json({
         success: false,
         error: 'Please upload a manuscript file (.docx / .pdf).',
+      });
+    }
+
+    const { user: fromAddress, isConfigured } = getGmailCredentials();
+    if (!isConfigured) {
+      return res.status(503).json({
+        success: false,
+        error: 'Email delivery is not configured yet. Please try again later or contact the editorial office directly.',
       });
     }
 
@@ -193,93 +193,42 @@ Keywords: ${keywords || 'N/A'}
 Attached File: ${file ? `${file.originalname} (${(file.size / (1024 * 1024)).toFixed(2)} MB)` : 'None'}
 Cover Letter / Remarks: ${message || 'None'}`;
 
-    const { user: fromAddress, isConfigured } = getGmailCredentials();
-    let smtpDeliveryStatus: 'sent' | 'relayed_formsubmit' | 'simulated_dev' | 'fallback_recorded' = 'simulated_dev';
-    let deliveryMessage = '';
+    const transporter = createGmailTransporter();
+    try {
+      await transporter.sendMail({
+        from: `"SGRCR Editorial Secretariat" <${fromAddress}>`,
+        to: editorialRecipients.join(', '),
+        replyTo: `"${authorName}" <${email}>`,
+        subject: emailSubject,
+        text: emailText,
+        html: emailHtml,
+        attachments: file
+          ? [{ filename: file.originalname, content: file.buffer, contentType: file.mimetype }]
+          : [],
+      });
+    } catch (smtpErr: any) {
+      console.error('[Gmail SMTP Error]:', smtpErr);
+      return res.status(502).json({
+        success: false,
+        error: 'Your submission could not be delivered by email right now. Please try again shortly.',
+      });
+    }
 
-    if (isConfigured) {
-      try {
-        const transporter = createGmailTransporter();
-        const mailAttachments = file
-          ? [
-              {
-                filename: file.originalname,
-                content: file.buffer,
-                contentType: file.mimetype,
-              },
-            ]
-          : [];
-
-        await transporter.sendMail({
-          from: `"SGRCR Editorial Secretariat" <${fromAddress}>`,
-          to: editorialRecipients.join(', '),
-          replyTo: `"${authorName}" <${email}>`,
-          subject: emailSubject,
-          text: emailText,
-          html: emailHtml,
-          attachments: mailAttachments,
-        });
-
-        smtpDeliveryStatus = 'sent';
-        deliveryMessage = `Manuscript submission Ref: ${referenceId} has been pushed directly to Gmail (${editorialRecipients.join(', ')}) via Gmail SMTP.`;
-
-        try {
-          await transporter.sendMail({
-            from: `"SGRCR Editorial Office" <${fromAddress}>`,
-            to: email,
-            subject: `[Receipt Confirmation: ${referenceId}] Manuscript Received — SGRCR`,
-            html: `<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1f0707;">
-              <h2 style="color: #781f1d;">Manuscript Submission Received</h2>
-              <p>Dear ${authorName},</p>
-              <p>Thank you for submitting your manuscript to <strong>SRCAA Global Review of Contemporary Research (SGRCR)</strong>.</p>
-              <p><strong>Reference ID:</strong> ${referenceId}<br/><strong>Title:</strong> ${title}<br/><strong>Category:</strong> ${articleType}</p>
-              <p>Warm regards,<br/><strong>Editorial Secretariat — SGRCR</strong><br/>Shakti Research Centre and Academia (SRCAA), Bengaluru – 560076, Karnataka, India</p>
-            </div>`,
-          });
-        } catch {
-          // Ignore ack error
-        }
-      } catch (smtpErr: any) {
-        console.error('[Vercel Gmail SMTP Error]:', smtpErr);
-        smtpDeliveryStatus = 'fallback_recorded';
-        deliveryMessage = `Manuscript Ref: ${referenceId} logged. Note: Gmail SMTP returned: ${smtpErr?.message || 'Auth error'}.`;
-      }
-    } else {
-      // Attempt FormSubmit relay if GMAIL_SMTP_PASS is not configured in Vercel env vars
-      try {
-        const relayResp = await fetch('https://formsubmit.co/ajax/srcaacontact@gmail.com', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-          },
-          body: JSON.stringify({
-            _subject: emailSubject,
-            _cc: 'srcaaweb@gmail.com,srcaaadministrator@gmail.com,admin@srcaa.co.in',
-            _template: 'table',
-            Reference_ID: referenceId,
-            Submission_Timestamp: timestamp,
-            Corresponding_Author: authorName,
-            Author_Email: email,
-            Affiliation: affiliation,
-            Co_Authors: coAuthors || 'None',
-            Article_Category: articleType,
-            Manuscript_Title: title,
-            Abstract: abstract || 'Attached in Manuscript File',
-            Keywords: keywords || 'See Manuscript',
-            Attached_File_Name: file ? `${file.originalname} (${(file.size / 1024).toFixed(1)} KB)` : 'None',
-            Cover_Letter_Remarks: message || 'None',
-          }),
-        });
-        if (relayResp.ok) {
-          smtpDeliveryStatus = 'relayed_formsubmit';
-          deliveryMessage = `Manuscript Ref: ${referenceId} relayed to srcaacontact@gmail.com (Set GMAIL_SMTP_USER & GMAIL_SMTP_PASS in Vercel Environment Variables for direct attachment SMTP).`;
-        } else {
-          deliveryMessage = `Manuscript Ref: ${referenceId} registered. Set GMAIL_SMTP_USER and GMAIL_SMTP_PASS in Vercel Environment Variables to enable direct Gmail SMTP delivery.`;
-        }
-      } catch {
-        deliveryMessage = `Manuscript Ref: ${referenceId} registered. Set GMAIL_SMTP_USER and GMAIL_SMTP_PASS in Vercel Environment Variables to enable direct Gmail SMTP delivery.`;
-      }
+    try {
+      await transporter.sendMail({
+        from: `"SGRCR Editorial Office" <${fromAddress}>`,
+        to: email,
+        subject: `[Receipt Confirmation: ${referenceId}] Manuscript Received — SGRCR`,
+        html: `<div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #1f0707;">
+          <h2 style="color: #781f1d;">Manuscript Submission Received</h2>
+          <p>Dear ${authorName},</p>
+          <p>Thank you for submitting your manuscript to <strong>SRCAA Global Review of Contemporary Research (SGRCR)</strong>.</p>
+          <p><strong>Reference ID:</strong> ${referenceId}<br/><strong>Title:</strong> ${title}<br/><strong>Category:</strong> ${articleType}</p>
+          <p>Warm regards,<br/><strong>Editorial Secretariat — SGRCR</strong><br/>Shakti Research Centre and Academia (SRCAA), Bengaluru – 560076, Karnataka, India</p>
+        </div>`,
+      });
+    } catch {
+      // Receipt to the author is best-effort; the editorial copy has already been delivered
     }
 
     return res.status(200).json({
@@ -287,9 +236,9 @@ Cover Letter / Remarks: ${message || 'None'}`;
       referenceId,
       timestamp,
       provider: 'gmail',
-      smtpStatus: smtpDeliveryStatus,
-      gmailConfigured: isConfigured,
-      message: deliveryMessage,
+      smtpStatus: 'sent',
+      gmailConfigured: true,
+      message: `Manuscript submission Ref: ${referenceId} has been delivered to ${editorialRecipients.join(', ')} via Gmail SMTP.`,
       editorialInboxes: editorialRecipients,
     });
   } catch (error: any) {

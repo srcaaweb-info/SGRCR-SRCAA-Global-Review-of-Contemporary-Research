@@ -82,6 +82,3 @@ export const NotificationsSection: React.FC = () => {
     </section>
   );
 };
-
-
-export { NotificationsSection }

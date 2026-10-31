@@ -1,26 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  PenTool, 
-  FileText, 
-  Upload, 
-  CheckCircle2, 
-  Clock, 
-  DollarSign, 
-  Send, 
-  AlertCircle,
-  Link as LinkIcon,
-  Copy,
-  Check,
-  ExternalLink,
-  Mail,
-  Download,
-  X,
-  Server,
-  ShieldCheck,
-  RefreshCw,
-  Sparkles,
-  Inbox
-} from 'lucide-react';
+import { PenTool, FileText, Upload, CircleCheck as CheckCircle2, Clock, DollarSign, Send, CircleAlert as AlertCircle, Link as LinkIcon, Copy, Check, ExternalLink, Mail, Download, X, Server, ShieldCheck, RefreshCw, Sparkles, Inbox } from 'lucide-react';
 import { 
   saveManuscriptSubmission, 
   formatFileSize, 
@@ -143,7 +122,7 @@ ${receipt.coAuthors ? `- Co-Authors: ${receipt.coAuthors}\n` : ''}
 
 3. EDITORIAL TRANSMISSION DESTINATIONS & CONTACT ADDRESS:
 --------------------------------------------------------------------------------
-- Editorial Secretariat: SGRCR Editorial Office (srcaacontact@gmail.com, srcaaweb@gmail.com, admin@srcaa.co.in)
+- Editorial Secretariat: SGRCR Editorial Office (srcaacontact@gmail.com)
 - Institutional Publisher: Shakti Research Centre and Academia (SRCAA)
 - Publication Frequency: Quarterly
 - Contact Address: Address Line 1: Bommanahalli Town, City: Bengaluru, Pin Code: 560076, State: Karnataka, Country: India (M: 9148484079)
@@ -195,75 +174,13 @@ of Conduct, and complies with DORA scientific evaluation criteria.
         payload.append('attachment', selectedFile, selectedFile.name);
       }
 
-      let result: any = null;
-      try {
-        const response = await fetch('/api/submit-manuscript', {
-          method: 'POST',
-          body: payload,
-        });
-
-        const contentType = response.headers.get('content-type') || '';
-        if (contentType.includes('application/json')) {
-          result = await response.json();
-          if (!response.ok || !result.success) {
-            throw new Error(result.error || `Server returned error (${response.status})`);
-          }
-        } else {
-          // If the proxy or cloud host returned an HTML error (e.g. 502/404), catch it cleanly
-          const rawText = await response.text();
-          console.warn('[Server returned non-JSON response]:', rawText.slice(0, 100));
-          throw new Error('API server returned non-JSON response');
-        }
-      } catch (apiErr: any) {
-        console.warn('[Direct Submission Gateway Note]:', apiErr?.message);
-        // Fallback: If network / proxy was unreachable or returned HTML in live preview,
-        // create a guaranteed official dossier and log locally without failing
-        const fallbackRefId = `SGRCR-2026-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
-        const fallbackTimestamp = new Date().toLocaleString('en-US', {
-          dateStyle: 'full',
-          timeStyle: 'medium',
-        });
-        result = {
-          success: true,
-          referenceId: fallbackRefId,
-          timestamp: fallbackTimestamp,
-          provider: 'editorial-desk',
-          smtpStatus: 'registered',
-          message: `Manuscript Ref: ${fallbackRefId} registered in the SGRCR editorial queue.`,
-          editorialInboxes: ['srcaaweb@gmail.com', 'srcaacontact@gmail.com', 'admin@srcaa.co.in'],
-        };
-      }
-
-      // If backend Gmail SMTP was not yet configured with GMAIL_SMTP_PASS, also relay directly from client to Gmail via FormSubmit
-      if (result.smtpStatus !== 'sent') {
-        try {
-          const relayPayload = new FormData();
-          relayPayload.append('_subject', `[SGRCR Submission Ref: ${result.referenceId}] ${formData.title.trim()} — ${formData.authorName.trim()}`);
-          relayPayload.append('_cc', 'srcaaweb@gmail.com,srcaaadministrator@gmail.com,admin@srcaa.co.in');
-          relayPayload.append('_template', 'table');
-          relayPayload.append('_captcha', 'false');
-          relayPayload.append('Reference_ID', result.referenceId);
-          relayPayload.append('Corresponding_Author', formData.authorName.trim());
-          relayPayload.append('Institutional_Email', formData.email.trim());
-          relayPayload.append('Affiliation', formData.affiliation.trim());
-          if (formData.coAuthors.trim()) relayPayload.append('Co_Authors', formData.coAuthors.trim());
-          relayPayload.append('Category', formData.articleType);
-          relayPayload.append('Manuscript_Title', formData.title.trim());
-          if (formData.abstract.trim()) relayPayload.append('Abstract', formData.abstract.trim());
-          if (formData.keywords.trim()) relayPayload.append('Keywords', formData.keywords.trim());
-          if (formData.message.trim()) relayPayload.append('Cover_Letter_Remarks', formData.message.trim());
-          if (selectedFile) {
-            relayPayload.append('File_Attached', `${selectedFile.name} (${formatFileSize(selectedFile.size)})`);
-          }
-
-          await fetch('https://formsubmit.co/ajax/srcaacontact@gmail.com', {
-            method: 'POST',
-            headers: { Accept: 'application/json' },
-            body: relayPayload,
-          });
-        } catch {
-          // Non-blocking fallback
-        }
+      const response = await fetch('/api/submit-manuscript', {
+        method: 'POST',
+        body: payload,
+      });
+      const result: any = await response.json().catch(() => null);
+      if (!response.ok || !result?.success) {
+        throw new Error(result?.error || `Submission could not be completed (status ${response.status}).`);
       }
 
       // Also persist to local cache for instant in-app editorial log review
@@ -296,7 +213,7 @@ of Conduct, and complies with DORA scientific evaluation criteria.
         provider: result.provider,
         smtpStatus: result.smtpStatus,
         message: result.message,
-        editorialInboxes: ['srcaaweb@gmail.com', 'srcaacontact@gmail.com', 'admin@srcaa.co.in'],
+        editorialInboxes: result.editorialInboxes,
         authorName: formData.authorName,
         email: formData.email,
         affiliation: formData.affiliation,
@@ -611,7 +528,7 @@ of Conduct, and complies with DORA scientific evaluation criteria.
 
                   <a
                     href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(
-                      'srcaacontact@gmail.com,srcaaweb@gmail.com,admin@srcaa.co.in'
+                      'srcaacontact@gmail.com'
                     )}&su=${encodeURIComponent(
                       `[SGRCR Submission Ref: ${submissionReceipt.referenceId}] ${submissionReceipt.title}`
                     )}&body=${encodeURIComponent(generateReceiptText(submissionReceipt))}`}
