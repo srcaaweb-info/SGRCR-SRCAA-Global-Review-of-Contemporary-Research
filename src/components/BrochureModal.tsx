@@ -23,7 +23,7 @@ export const BrochureModal: React.FC<BrochureModalProps> = ({
   onSubmitManuscript,
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const pdfUrl = '/assets/aistudio/Brocedure__80ae9a16.pdf';
+  const pdfUrl = '/assets/aistudio/SGRCR_Call_for_Papers_December_2026_Detailed_Brochure_Revised_2e36f39f.pdf';
   const fallbackPdfUrl = '/call-for-papers-vol7-iss2.pdf';
 
   if (!isOpen) return null;
@@ -77,9 +77,9 @@ export const BrochureModal: React.FC<BrochureModalProps> = ({
 
             <a
               href={pdfUrl}
-              download="SGRCR-Call-for-Papers-Vol7-Iss2-Brochure.pdf"
+              download="SGRCR-Call-for-Papers-December-2026-Detailed-Brochure.pdf"
               className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#ffffff] hover:bg-gray-100 text-[#1f0707] text-xs font-bold rounded-lg transition-colors shadow-xs"
-              title="Download Brochure PDF"
+              title="Download Revised Brochure PDF"
             >
               <Download className="w-3.5 h-3.5 text-[#781f1d]" />
               <span className="hidden sm:inline">Download</span>
@@ -125,7 +125,7 @@ export const BrochureModal: React.FC<BrochureModalProps> = ({
             <span className="text-gray-300">|</span>
             <span>Submission Deadline: <strong>03 December 2026</strong></span>
             <span className="text-gray-300">|</span>
-            <span>Publication Date: <strong>23 December 2026</strong></span>
+            <span>Publication Date: <strong>25 December 2026</strong></span>
           </div>
 
           <div className="text-[11px] text-[#781f1d] font-semibold">
@@ -137,18 +137,18 @@ export const BrochureModal: React.FC<BrochureModalProps> = ({
         <div className="flex-1 bg-gray-100 relative overflow-hidden flex flex-col">
           <iframe
             src={`${pdfUrl}#toolbar=1&navpanes=0&scrollbar=1`}
-            title="SGRCR Call for Papers Brochure PDF"
+            title="SGRCR Call for Papers Detailed Brochure PDF"
             className="w-full h-full border-0 flex-1 bg-white"
           />
 
           <div className="bg-[#ffffff] p-2 text-center text-xs text-[#581e1d] border-t border-gray-200 flex flex-wrap items-center justify-between px-4 gap-2">
             <span className="text-gray-500 text-[11px]">
-              Document: <code className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-800 font-mono">Brocedure__80ae9a16.pdf</code>
+              Document: <code className="bg-gray-100 px-1.5 py-0.5 rounded text-gray-800 font-mono">SGRCR_Call_for_Papers_December_2026_Detailed_Brochure_Revised_2e36f39f.pdf</code> (3 Pages)
             </span>
             <div className="flex items-center gap-3">
               <a
                 href={fallbackPdfUrl}
-                download="SGRCR-Vol7-Iss2-CFP.pdf"
+                download="SGRCR-Call-for-Papers-December-2026-Detailed-Brochure.pdf"
                 className="text-[#781f1d] font-semibold hover:underline inline-flex items-center gap-1 text-xs"
               >
                 <Download className="w-3 h-3" /> Direct Download Link

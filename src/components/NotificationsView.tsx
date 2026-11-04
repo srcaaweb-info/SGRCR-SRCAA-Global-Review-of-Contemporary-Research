@@ -41,44 +41,46 @@ export const NotificationsView: React.FC<NotificationsViewProps> = ({
   const [activeFilter, setActiveFilter] = useState<'all' | 'cfp' | 'editorial' | 'indexing'>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const brochurePdfPath = '/assets/aistudio/Brocedure__80ae9a16.pdf';
-  const friendlyBrochureDownload = '/call-for-papers-vol7-iss2.pdf';
+  const brochurePdfPath = '/assets/aistudio/SGRCR_Call_for_Papers_December_2026_Detailed_Brochure_Revised_2e36f39f.pdf';
+  const friendlyBrochureDownload = '/SGRCR-Call-for-Papers-December-2026-Detailed-Brochure.pdf';
 
   const handleCopyCFPText = () => {
     const text = `================================================================================
 SRCAA GLOBAL REVIEW OF CONTEMPORARY RESEARCH (SGRCR)
-ISSN: 2839-6081 (Online) · A Multidisciplinary International Journal
+ISSN: 2839-6081 (Online) · A Multidisciplinary, Peer-Reviewed International Journal
 CALL FOR PAPERS — VOLUME 7, ISSUE 2 (DECEMBER 2026)
 ★ SPECIAL PRIVILEGE: NO APC FOR THIS ISSUE (100% WAIVED) ★
 ================================================================================
 
-SRCAA Global Review of Contemporary Research (SGRCR) invites original and high-quality research papers, review articles, case studies and short communications from researchers, academicians, professionals and research scholars across the globe.
+No Article Processing Charges (APC) will be collected for papers accepted for publication in Volume 7, Issue 2 (December 2026). All manuscripts remain subject to editorial screening, peer review and acceptance.
+
+SGRCR invites original and unpublished research papers, review articles, case studies and scholarly short communications from researchers, academicians, faculty members, research scholars, professionals and independent scholars in India and abroad.
 
 IMPORTANT DATES:
-• Submission Open: 01 October 2026
-• Last Date for Submission: 03 December 2026
-• Review Process: 04–20 December 2026
-• Publication Date: 23 December 2026
+• Submission opens: 01 October 2026
+• Last date for submission: 03 December 2026
+• Review period: 04–20 December 2026
+• Publication date: 25 December 2026
 
-SCOPE AND THEMES (Including but not limited to):
-1. Commerce and Management
-2. Economics and Finance
-3. Education
-4. Social Sciences
-5. Humanities
-6. Science and Technology
-7. Business and Industry Studies
-8. Sustainable Development
-9. Digital Transformation
-10. Innovation and Entrepreneurship
-11. Public Policy and Governance
-12. Interdisciplinary Research
+SCOPE AND THEMES:
+• Commerce, Accounting and Taxation
+• Business and Management
+• Economics, Banking and Finance
+• Education and Educational Technology
+• Social Sciences and Humanities
+• Science and Technology
+• Business, Industry and Entrepreneurship
+• Sustainable Development and Green Practices
+• Digital Transformation, AI and FinTech
+• Public Policy, Governance and Development
+• Marketing, HRM and Organisational Studies
+• Interdisciplinary and Emerging Research
 
 KEY FEATURES:
-✔ Peer-Reviewed International Journal
-✔ Open Access (CC BY 4.0)
-✔ Multidisciplinary Coverage & Global Perspective
-✔ DOI Provided for All Published Articles
+✔ Peer-reviewed scholarly publication
+✔ Multidisciplinary coverage & Open-access approach
+✔ DOI assigned/provided to published articles in accordance with journal DOI metadata procedures
+✔ Editorial and publication practices emphasise research integrity, transparency and responsible scholarly communication
 ✔ Indexed in IIFS, Zenodo, Google Scholar, CiteFactor, Zotero, Scilit
 
 SUBMISSION & CONTACT:
@@ -93,18 +95,18 @@ Publisher: Shakti Research Centre and Academia (SRCAA), Bengaluru, Karnataka, In
   };
 
   const themes = [
-    'Commerce and Management',
-    'Economics and Finance',
-    'Education',
-    'Social Sciences',
-    'Humanities',
+    'Commerce, Accounting and Taxation',
+    'Business and Management',
+    'Economics, Banking and Finance',
+    'Education and Educational Technology',
+    'Social Sciences and Humanities',
     'Science and Technology',
-    'Business and Industry Studies',
-    'Sustainable Development',
-    'Digital Transformation',
-    'Innovation and Entrepreneurship',
-    'Public Policy and Governance',
-    'Interdisciplinary Research',
+    'Business, Industry and Entrepreneurship',
+    'Sustainable Development and Green Practices',
+    'Digital Transformation, AI and FinTech',
+    'Public Policy, Governance and Development',
+    'Marketing, HRM and Organisational Studies',
+    'Interdisciplinary and Emerging Research',
   ];
 
   const secondaryNotifications = [
@@ -350,11 +352,11 @@ Publisher: Shakti Research Centre and Academia (SRCAA), Bengaluru, Karnataka, In
                       <h3 className="font-serif font-bold text-lg text-[#1f0707] flex items-center gap-2">
                         Official Call for Papers Brochure Document
                         <span className="text-[11px] font-sans font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
-                          Verified PDF
+                          Verified 3-Page PDF
                         </span>
                       </h3>
                       <p className="text-xs text-[#581e1d]">
-                        Filename: <code className="font-mono font-semibold">Brocedure__80ae9a16.pdf</code> · High-resolution official circular containing full dates, themes, and editorial governance.
+                        Filename: <code className="font-mono font-semibold">SGRCR_Call_for_Papers_December_2026_Detailed_Brochure_Revised_2e36f39f.pdf</code> · High-resolution official circular containing full dates, 12 themes, 8 author guidelines, and 16 editorial members.
                       </p>
                     </div>
                   </div>
@@ -372,7 +374,7 @@ Publisher: Shakti Research Centre and Academia (SRCAA), Bengaluru, Karnataka, In
 
                     <a
                       href={brochurePdfPath}
-                      download="SGRCR-Call-for-Papers-Vol7-Iss2-Brochure.pdf"
+                      download={friendlyBrochureDownload}
                       className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#a13533] hover:bg-[#781f1d] text-[#ffffff] text-xs font-bold rounded-lg shadow-xs transition-colors"
                     >
                       <Download className="w-3.5 h-3.5" />
@@ -413,7 +415,7 @@ Publisher: Shakti Research Centre and Academia (SRCAA), Bengaluru, Karnataka, In
                 {isInlineViewerExpanded && (
                   <div className="pt-4 border-t border-[#cfb6b3] space-y-2 animate-in fade-in duration-300">
                     <div className="flex items-center justify-between text-xs text-[#581e1d] font-semibold">
-                      <span>Live Embedded Document Preview:</span>
+                      <span>Live Embedded Document Preview (3 Pages):</span>
                       <a
                         href={brochurePdfPath}
                         target="_blank"
@@ -480,7 +482,7 @@ Publisher: Shakti Research Centre and Academia (SRCAA), Bengaluru, Karnataka, In
                       <Award className="w-3 h-3 text-purple-600" /> Step 4 · Release
                     </div>
                     <div className="mt-1 font-bold text-sm text-[#1f0707]">Publication Date</div>
-                    <div className="mt-2 text-xl font-serif font-bold text-[#781f1d]">23 December 2026</div>
+                    <div className="mt-2 text-xl font-serif font-bold text-[#781f1d]">25 December 2026</div>
                     <div className="mt-1 text-xs text-purple-700 font-semibold">Online Open Access & DOIs</div>
                   </div>
                 </div>
@@ -532,11 +534,11 @@ Publisher: Shakti Research Centre and Academia (SRCAA), Bengaluru, Karnataka, In
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                        <span><strong>Multidisciplinary:</strong> Global cross-field coverage</span>
+                        <span><strong>Multidisciplinary:</strong> 12 core academic domains covered</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                        <span><strong>Global Reach:</strong> International advisor & author pool</span>
+                        <span><strong>Global Reach:</strong> International advisor & contributor pool</span>
                       </li>
                       <li className="flex items-start gap-2">
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
@@ -545,64 +547,84 @@ Publisher: Shakti Research Centre and Academia (SRCAA), Bengaluru, Karnataka, In
                     </ul>
                   </div>
 
-                  {/* Submission Checklist */}
+                  {/* Submission Checklist & Manuscript Preparation (from Page 2) */}
                   <div className="bg-[#faf6f3] border border-[#cfb6b3] rounded-xl p-5 space-y-3">
                     <h4 className="font-serif font-bold text-base text-[#1f0707] flex items-center gap-2">
                       <ShieldCheck className="w-4 h-4 text-[#781f1d]" />
-                      Submission Checklist
+                      Manuscript Preparation (Page 2)
                     </h4>
                     <ul className="space-y-2 text-xs text-[#421413]">
                       <li className="flex items-start gap-2">
-                        <span className="text-[#a13533] font-bold">✓</span>
-                        <span>Original and unpublished work</span>
+                        <span className="text-[#a13533] font-bold">1.</span>
+                        <span>Submit original work not previously published or under consideration elsewhere.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#a13533] font-bold">✓</span>
-                        <span>Follow standard journal manuscript format (.docx / .pdf)</span>
+                        <span className="text-[#a13533] font-bold">2.</span>
+                        <span>Follow the journal’s manuscript format and author guidelines.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#a13533] font-bold">✓</span>
-                        <span>APA 7th edition referencing style</span>
+                        <span className="text-[#a13533] font-bold">3.</span>
+                        <span>Use APA 7th edition referencing style.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#a13533] font-bold">✓</span>
-                        <span>Submit through online system</span>
+                        <span className="text-[#a13533] font-bold">4.</span>
+                        <span>Cite all sources, quotations, tables, and figures accurately.</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#a13533] font-bold">✓</span>
-                        <span>Mandatory plagiarism screening conducted</span>
+                        <span className="text-[#a13533] font-bold">5.</span>
+                        <span>Include title, authors, affiliations, email, abstract & keywords.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-[#a13533] font-bold">6.</span>
+                        <span>Disclose funding, acknowledgements and conflict of interest statements.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-[#a13533] font-bold">7.</span>
+                        <span>Obtain applicable ethical approvals and permissions prior to submission.</span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-[#a13533] font-bold">8.</span>
+                        <span>Submit online and respond promptly to editorial/reviewer queries.</span>
                       </li>
                     </ul>
                   </div>
                 </div>
               </div>
 
-              {/* EDITORIAL TEAM FOR THIS ISSUE */}
+              {/* EDITORIAL TEAM FOR THIS ISSUE (FULL 16 MEMBERS FROM PAGE 3) */}
               <div className="pt-6 border-t border-gray-200">
-                <div className="flex items-center gap-2 mb-4">
-                  <Users className="w-4 h-4 text-[#781f1d]" />
-                  <h3 className="font-serif font-bold text-lg text-[#1f0707] uppercase tracking-wide">
-                    Editorial Leadership & Advisory Team
-                  </h3>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-[#781f1d]" />
+                    <h3 className="font-serif font-bold text-lg text-[#1f0707] uppercase tracking-wide">
+                      Editorial Leadership & Editorial Board (Page 3 Roster)
+                    </h3>
+                  </div>
+                  <span className="text-xs font-semibold text-[#781f1d] bg-[#fbeeed] px-2.5 py-1 rounded border border-[#e8c8c5]">
+                    16 Members Recorded in Official Brochure
+                  </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* 1. Chairperson */}
                   <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
                     <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Chairperson</span>
-                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Sudhakaran T</h5>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Sudhakaran T.</h5>
                     <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
-                      Chief Administrator, SRCAA · Official Reviewer Pool Member - Taylor & Francis Group · Member - CMAOI Association · Annual Member - Research Council of India (RCI)
+                      Chief Administrator, Shakti Research Centre and Academia (SRCAA) · Chairperson, SGRCR · In-charge, SRF & SJSS Activities · Peer Reviewer, Taylor & Francis Journals
                     </p>
                   </div>
 
+                  {/* 2. Chief Editor */}
                   <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
                     <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Chief Editor</span>
                     <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. Anjana Radhakrishnan</h5>
                     <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
-                      Associate Professor, Seshadripuram First Grade College, Karnataka, India
+                      Associate Professor, Seshadripuram First Grade College, Yelahanka New Town, Bengaluru, Karnataka, India
                     </p>
                   </div>
 
+                  {/* 3. Chief Reviewer */}
                   <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
                     <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Chief Reviewer</span>
                     <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. S. M. Anas Iqbal</h5>
@@ -611,21 +633,128 @@ Publisher: Shakti Research Centre and Academia (SRCAA), Bengaluru, Karnataka, In
                     </p>
                   </div>
 
+                  {/* 4. Associate Editor */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
+                    <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Associate Editor</span>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Prof. Vivekananda D.</h5>
+                    <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
+                      Guest Faculty, Department of MCA & MBA, Seshadripuram First Grade College, Yelahanka New Town, Bengaluru, Karnataka, India
+                    </p>
+                  </div>
+
+                  {/* 5. Associate Editor */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
+                    <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Associate Editor</span>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. S. N. Venkatesh</h5>
+                    <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
+                      Principal, Seshadripuram First Grade College; Director, Seshadripuram Research Foundation (SRF), Bengaluru, Karnataka, India
+                    </p>
+                  </div>
+
+                  {/* 6. Section Editor */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
+                    <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Section Editor</span>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. Raji Pillai</h5>
+                    <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
+                      Professor & Head, Department of MBA, KOSHYS Institute of Management Studies (Autonomous), Bengaluru, Karnataka, India
+                    </p>
+                  </div>
+
+                  {/* 7. Section Editor */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
+                    <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Section Editor</span>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. Sowmya D. N.</h5>
+                    <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
+                      Director, Post Graduate Department of Commerce, Dr. Manmohan Singh Bengaluru City University, Bengaluru, Karnataka, India
+                    </p>
+                  </div>
+
+                  {/* 8. International Advisor & Section Chief Reviewer */}
                   <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
                     <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">International Advisor & Section Chief Reviewer</span>
                     <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. Kavikumar Jacob</h5>
                     <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
-                      Associate Professor of Mathematics, Department of Mathematics and Statistics, Universiti Tun Hussein Onn Malaysia, Johor, Malaysia
+                      Associate Professor of Mathematics; Department of Mathematics and Statistics, Faculty of Applied Sciences and Technology, Universiti Tun Hussein Onn Malaysia, Johor, Malaysia
                     </p>
                   </div>
 
-                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200 md:col-span-2 lg:col-span-2">
+                  {/* 9. Editorial Board Member */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
+                    <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Editorial Board Member</span>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. Santosh Nelamakanahalli Chikkamari</h5>
+                    <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
+                      Casual Tutor, The University of Sydney, New South Wales, Australia
+                    </p>
+                  </div>
+
+                  {/* 10. Editorial Board Member */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
+                    <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Editorial Board Member</span>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. Monica Bhutani</h5>
+                    <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
+                      Associate Professor, Department of Electronics and Communications; Adjunct Research Faculty, Lincoln University College, Malaysia; Bharati Vidyapeeth’s College of Engineering, New Delhi, India
+                    </p>
+                  </div>
+
+                  {/* 11. Editorial Board Member */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
+                    <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Editorial Board Member</span>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Prof. Dr. B. Paramesh</h5>
+                    <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
+                      Principal, A. P. S. College of Commerce, Bengaluru, Karnataka, India; affiliated to Dr. M. S. Bangalore City University
+                    </p>
+                  </div>
+
+                  {/* 12. Editorial Board Member */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
                     <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Editorial Board Member</span>
                     <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. Girisha M. C.</h5>
                     <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
-                      Associate Professor & Chairman, Department of Commerce, Mandya University, Karnataka, India
+                      Associate Professor & Chairman, Department of Commerce, Mandya University, Mandya, Karnataka, India
                     </p>
                   </div>
+
+                  {/* 13. Editorial Board Member */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
+                    <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Editorial Board Member</span>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. Shashikala C. S.</h5>
+                    <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
+                      Faculty & Associate Researcher, SSMRV Degree College, Bengaluru, Karnataka, India; affiliated to Bengaluru City University (BCU)
+                    </p>
+                  </div>
+
+                  {/* 14. Editorial Board Member */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
+                    <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Editorial Board Member</span>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Mr. Sachin Gowda K. S.</h5>
+                    <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
+                      Assistant Professor, Department of Commerce and Management, Seshadripuram First Grade College, Yelahanka, Bengaluru, Karnataka, India
+                    </p>
+                  </div>
+
+                  {/* 15. Editorial Board Member */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
+                    <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Editorial Board Member</span>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. Lakshman Singh</h5>
+                    <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
+                      Deputy General Manager (Planning–Projects), Hindustan Aeronautics Limited (HAL), Transport Aircraft Division, Kanpur, Uttar Pradesh, India
+                    </p>
+                  </div>
+
+                  {/* 16. Editorial Board Member */}
+                  <div className="p-4 bg-[#faf6f3] rounded-xl border border-gray-200">
+                    <span className="text-[10px] font-bold text-[#781f1d] uppercase tracking-wider block">Editorial Board Member</span>
+                    <h5 className="font-serif font-bold text-base text-[#1f0707] mt-1">Dr. Dinesh Kumar S.</h5>
+                    <p className="text-xs text-[#581e1d] mt-1 leading-relaxed">
+                      Associate Professor, Department of Management Studies, Sri Sairam Engineering College, Chennai, Tamil Nadu, India
+                    </p>
+                  </div>
+                </div>
+
+                {/* Editorial Board Listing Note from Page 3 */}
+                <div className="mt-4 p-3.5 bg-[#f6ece9] border border-[#d6b0ad] rounded-xl text-xs text-[#581e1d] leading-relaxed">
+                  <span className="font-bold text-[#781f1d]">Editorial Board Listing Note: </span>
+                  The brochure reflects the names and role assignments visible in the supplied website screenshots, with institutional affiliations included where available in the screenshots or the supplied official editorial record. Dr. Pruthvi N. and Dr. Md. Ruhul Amin are not listed in this call-for-papers brochure in accordance with the earlier instruction.
                 </div>
               </div>
 

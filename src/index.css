@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@theme {
+  --font-serif: 'Newsreader', 'EB Garamond', Garamond, 'Georgia', 'Times New Roman', serif;
+  --font-sans: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-display: 'Cinzel', 'Newsreader', 'EB Garamond', Georgia, serif;
+}
+
 @layer base {
   :root {
     --espresso: #1f0707;
@@ -42,8 +49,9 @@
   body {
     background-color: var(--cream);
     color: var(--ink);
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.65;
+    letter-spacing: -0.011em;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -51,6 +59,12 @@
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
   }
 }
 
@@ -111,16 +125,30 @@
 }
 
 .font-serif {
-  font-family: 'Cormorant Garamond', 'EB Garamond', Garamond, 'Times New Roman', Georgia, serif;
-  letter-spacing: -0.01em;
+  font-family: 'Newsreader', 'EB Garamond', Garamond, 'Georgia', 'Times New Roman', serif;
+  letter-spacing: -0.015em;
+  font-feature-settings: 'liga' 1, 'clig' 1, 'kern' 1;
 }
 
 .font-sans {
-  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Public Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  letter-spacing: -0.011em;
 }
 
 .font-mono {
   font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.font-display {
+  font-family: 'Cinzel', 'Newsreader', 'EB Garamond', Georgia, serif;
+  letter-spacing: 0.025em;
+}
+
+.font-academic {
+  font-family: 'Newsreader', 'EB Garamond', Georgia, serif;
+  line-height: 1.75;
 }
 
 /* Academic subtle grid pattern */

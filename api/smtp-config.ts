@@ -29,15 +29,25 @@ export default function handler(_req: any, res: any) {
   const pass = rawPass.replace(/\s+/g, '').trim();
   const gmailReady = Boolean(user && pass);
 
+  let host = (process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com').trim();
+  if (/^\d+$/.test(host)) host = 'smtp.gmail.com';
+  let port = Number(process.env.GMAIL_SMTP_PORT || 465);
+  if (isNaN(port) || port <= 0) port = 465;
+
+  let fromEmail = (process.env.GMAIL_FROM_EMAIL || user || 'srcaacontact@gmail.com').trim();
+  if (!fromEmail.includes('@')) {
+    fromEmail = user;
+  }
+
   res.status(200).json({
     status: 'ok',
     activeProvider: 'gmail',
     providers: {
       gmail: {
         name: 'Google Gmail SMTP',
-        host: process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com',
-        port: Number(process.env.GMAIL_SMTP_PORT || 465),
-        fromEmail: process.env.GMAIL_FROM_EMAIL || user || 'srcaacontact@gmail.com',
+        host,
+        port,
+        fromEmail,
         isConfigured: gmailReady,
       },
     },

@@ -64,12 +64,18 @@ function getGmailCredentials() {
     process.env.EMAIL_PASS ||
     '';
   const pass = rawPass.replace(/\s+/g, '').trim();
-  return { user, pass, isConfigured: Boolean(user && pass) };
+  let fromEmail = (process.env.GMAIL_FROM_EMAIL || user || 'srcaacontact@gmail.com').trim();
+  if (!fromEmail.includes('@')) {
+    fromEmail = user;
+  }
+  return { user, pass, fromEmail, isConfigured: Boolean(user && pass) };
 }
 
 function createGmailTransporter() {
-  const host = process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com';
-  const port = Number(process.env.GMAIL_SMTP_PORT || 465);
+  let host = (process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com').trim();
+  if (/^\d+$/.test(host)) host = 'smtp.gmail.com';
+  let port = Number(process.env.GMAIL_SMTP_PORT || 465);
+  if (isNaN(port) || port <= 0) port = 465;
   const secure = process.env.GMAIL_SMTP_SECURE !== 'false' && port === 465;
   const { user, pass } = getGmailCredentials();
 

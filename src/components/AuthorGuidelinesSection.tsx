@@ -25,7 +25,10 @@ import {
 import { 
   saveManuscriptSubmission, 
   formatFileSize, 
-  downloadTextFile 
+  downloadTextFile,
+  pushToGoogleEndpoint,
+  getGoogleFormEndpoint,
+  fileToBase64,
 } from '../utils/submissionStorage';
 
 interface Props {
@@ -235,8 +238,34 @@ of Conduct, and complies with DORA scientific evaluation criteria.
         };
       }
 
-      // If backend Gmail SMTP was not yet configured with GMAIL_SMTP_PASS, also relay directly from client to Gmail via FormSubmit
+      // On static deployments (such as GitHub Pages where server.ts is not running),
+      // relay directly from client via Google Apps Script Web App and/or form relay:
       if (result.smtpStatus !== 'sent') {
+        // 1. If Google Apps Script Web App is configured in env or settings
+        const googleEndpoint = (import.meta as any).env?.VITE_GOOGLE_SCRIPT_URL || getGoogleFormEndpoint();
+        if (googleEndpoint) {
+          try {
+            let fileData = null;
+            if (selectedFile) {
+              fileData = await fileToBase64(selectedFile);
+            }
+            await pushToGoogleEndpoint(googleEndpoint, {
+              submissionId: result.referenceId,
+              authorName: formData.authorName.trim(),
+              email: formData.email.trim(),
+              affiliation: formData.affiliation.trim(),
+              articleType: formData.articleType,
+              title: formData.title.trim(),
+              message: formData.message.trim(),
+              timestamp: result.timestamp,
+              fileData,
+            });
+          } catch (gErr) {
+            console.warn('[Google Apps Script Relay Note]:', gErr);
+          }
+        }
+
+        // 2. Direct form relay to editorial Gmail
         try {
           const relayPayload = new FormData();
           relayPayload.append('_subject', `[SGRCR Submission Ref: ${result.referenceId}] ${formData.title.trim()} — ${formData.authorName.trim()}`);
@@ -403,12 +432,12 @@ of Conduct, and complies with DORA scientific evaluation criteria.
               <span>View CFP & Notifications Tab</span>
             </button>
             <a
-              href="/assets/aistudio/Brocedure__80ae9a16.pdf"
-              download="SGRCR-Call-for-Papers-Vol7-Iss2-Brochure.pdf"
+              href="/assets/aistudio/SGRCR_Call_for_Papers_December_2026_Detailed_Brochure_Revised_2e36f39f.pdf"
+              download="SGRCR-Call-for-Papers-December-2026-Detailed-Brochure.pdf"
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#a13533] hover:bg-[#a13533]/90 text-white text-xs sm:text-sm font-bold rounded-xl transition-all shadow-md"
             >
               <Download className="w-4 h-4" />
-              <span>Download Brochure (PDF)</span>
+              <span>Download Detailed Brochure (PDF)</span>
             </a>
           </div>
         </div>

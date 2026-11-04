@@ -34,9 +34,16 @@ export default async function handler(req: any, res: any) {
       });
     }
 
-    const host = process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com';
-    const port = Number(process.env.GMAIL_SMTP_PORT || 465);
+    let host = (process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com').trim();
+    if (/^\d+$/.test(host)) host = 'smtp.gmail.com';
+    let port = Number(process.env.GMAIL_SMTP_PORT || 465);
+    if (isNaN(port) || port <= 0) port = 465;
     const secure = process.env.GMAIL_SMTP_SECURE !== 'false' && port === 465;
+
+    let fromEmail = (process.env.GMAIL_FROM_EMAIL || user || 'srcaacontact@gmail.com').trim();
+    if (!fromEmail.includes('@')) {
+      fromEmail = user;
+    }
 
     const transporter = nodemailer.createTransport({
       host,
@@ -49,7 +56,7 @@ export default async function handler(req: any, res: any) {
     await transporter.verify();
 
     await transporter.sendMail({
-      from: `"SGRCR Gateway Test" <${process.env.GMAIL_FROM_EMAIL || user}>`,
+      from: `"SGRCR Gateway Test" <${fromEmail}>`,
       to: recipient,
       subject: `[SGRCR Live Diagnostic] GMAIL SMTP Ping Verified`,
       text: `This is an automated test email from the SGRCR Editorial Server verifying live GMAIL SMTP connectivity.\nTimestamp: ${new Date().toISOString()}\nTarget: ${recipient}`,

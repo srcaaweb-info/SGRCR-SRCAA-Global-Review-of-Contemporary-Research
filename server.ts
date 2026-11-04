@@ -78,14 +78,28 @@ interface CachedSubmission {
 
 const recentSubmissions: CachedSubmission[] = [];
 
-// Helper: Check if Gmail SMTP is configured
-function isGmailConfigured(): boolean {
+// Helper: Get sanitized SMTP configuration with self-healing defaults
+function getSanitizedSmtpConfig() {
+  let host = (process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com').trim();
+  // Self-heal: If host is numeric (e.g. user set GMAIL_SMTP_HOST=465), fix to smtp.gmail.com
+  if (/^\d+$/.test(host)) {
+    host = 'smtp.gmail.com';
+  }
+
+  let port = Number(process.env.GMAIL_SMTP_PORT || 465);
+  if (isNaN(port) || port <= 0) {
+    port = 465;
+  }
+
+  const secure = process.env.GMAIL_SMTP_SECURE !== 'false' && port === 465;
+
   const user = (
     process.env.GMAIL_SMTP_USER ||
     process.env.SMTP_USER ||
     process.env.EMAIL_USER ||
     'srcaacontact@gmail.com'
   ).trim();
+
   const rawPass =
     process.env.GMAIL_SMTP_PASS ||
     process.env.GMAIL_APP_PASSWORD ||
@@ -93,33 +107,29 @@ function isGmailConfigured(): boolean {
     process.env.EMAIL_PASS ||
     '';
   const pass = rawPass.replace(/\s+/g, '').trim();
-  return Boolean(user && pass);
+
+  let fromEmail = (process.env.GMAIL_FROM_EMAIL || user || 'srcaacontact@gmail.com').trim();
+  // Self-heal: If fromEmail was accidentally set to a hostname (e.g. smtp.gmail.com), fix to user email
+  if (!fromEmail.includes('@')) {
+    fromEmail = user;
+  }
+
+  return { host, port, secure, user, pass, fromEmail, isConfigured: Boolean(user && pass) };
+}
+
+function isGmailConfigured(): boolean {
+  return getSanitizedSmtpConfig().isConfigured;
 }
 
 // Build Gmail Transporter
 function createGmailTransporter() {
-  const host = process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com';
-  const port = Number(process.env.GMAIL_SMTP_PORT || 465);
-  const secure = process.env.GMAIL_SMTP_SECURE !== 'false' && port === 465;
-  const user = (
-    process.env.GMAIL_SMTP_USER ||
-    process.env.SMTP_USER ||
-    process.env.EMAIL_USER ||
-    'srcaacontact@gmail.com'
-  ).trim();
-  const rawPass =
-    process.env.GMAIL_SMTP_PASS ||
-    process.env.GMAIL_APP_PASSWORD ||
-    process.env.SMTP_PASS ||
-    process.env.EMAIL_PASS ||
-    '';
-  const pass = rawPass.replace(/\s+/g, '').trim();
+  const config = getSanitizedSmtpConfig();
 
   return nodemailer.createTransport({
-    host,
-    port,
-    secure,
-    auth: { user, pass },
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
+    auth: { user: config.user, pass: config.pass },
     tls: {
       rejectUnauthorized: false,
     },
@@ -132,7 +142,7 @@ function createGmailTransporter() {
 
 // 1. SMTP Provider Status & Health Check (Gmail SMTP Only)
 app.get('/api/smtp-config', (_req, res) => {
-  const gmailReady = isGmailConfigured();
+  const config = getSanitizedSmtpConfig();
 
   res.json({
     status: 'ok',
@@ -140,10 +150,10 @@ app.get('/api/smtp-config', (_req, res) => {
     providers: {
       gmail: {
         name: 'Google Gmail SMTP',
-        host: process.env.GMAIL_SMTP_HOST || 'smtp.gmail.com',
-        port: Number(process.env.GMAIL_SMTP_PORT || 465),
-        fromEmail: process.env.GMAIL_FROM_EMAIL || 'srcaacontact@gmail.com',
-        isConfigured: gmailReady,
+        host: config.host,
+        port: config.port,
+        fromEmail: config.fromEmail,
+        isConfigured: config.isConfigured,
       },
     },
     recipients: getEditorialRecipients(),
@@ -366,7 +376,7 @@ Editorial Inboxes: ${editorialRecipients.join(', ')}
     let smtpDeliveryStatus: CachedSubmission['smtpDeliveryStatus'] = 'simulated_dev';
     let deliveryMessage = '';
 
-    const fromAddress = process.env.GMAIL_FROM_EMAIL || 'srcaacontact@gmail.com';
+    const fromAddress = getSanitizedSmtpConfig().fromEmail;
     const isReady = isGmailConfigured();
 
     if (isReady) {
@@ -503,7 +513,7 @@ app.post('/api/test-smtp', async (req, res) => {
     }
 
     const transporter = createGmailTransporter();
-    const fromAddress = process.env.GMAIL_FROM_EMAIL || 'srcaacontact@gmail.com';
+    const fromAddress = getSanitizedSmtpConfig().fromEmail;
 
     await transporter.verify();
 
