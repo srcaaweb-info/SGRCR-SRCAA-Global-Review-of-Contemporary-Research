@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { CookieBanner } from './components/CookieBanner';
 import { TopBar } from './components/TopBar';
 import { Navbar } from './components/Navbar';
@@ -213,7 +214,9 @@ export default function App() {
   };
 
   return (
-    <div className="w-full bg-[#ffffff] text-[#1f0707] min-h-screen transition-colors duration-200 overflow-x-hidden">
+    <>
+      <Analytics />
+      <div className="w-full bg-[#ffffff] text-[#1f0707] min-h-screen transition-colors duration-200 overflow-x-hidden">
       {currentView === 'article' && selectedArticle ? (
         <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden">
           <TopBar
@@ -303,6 +306,7 @@ export default function App() {
           />
         </div>
       )}
-    </div>
+      </div>
+    </>
   );
 }
