@@ -4,7 +4,6 @@ import { TopBar } from './components/TopBar';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { IndexingPartners } from './components/IndexingPartners';
-import { NotificationsSection } from './components/NotificationsSection';
 import { AboutSection } from './components/AboutSection';
 import { JournalMetadataSection } from './components/JournalMetadataSection';
 import { AuthorGuidelinesSection } from './components/AuthorGuidelinesSection';
@@ -16,6 +15,7 @@ import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { ArticleArchiveView } from './components/ArticleArchiveView';
 import { ArticleDetailView } from './components/ArticleDetailView';
+import { NotificationsView } from './components/NotificationsView';
 import { EditorialSubmissionsModal } from './components/EditorialSubmissionsModal';
 import { ARTICLES } from './data/journalData';
 import { Article } from './types';
@@ -31,7 +31,7 @@ const POLICY_SLUGS = new Set([
 ]);
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'main' | 'archive' | 'article'>('main');
+  const [currentView, setCurrentView] = useState<'main' | 'archive' | 'article' | 'notifications'>('main');
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [isSubmissionsModalOpen, setIsSubmissionsModalOpen] = useState(false);
   const [pendingScrollTarget, setPendingScrollTarget] = useState<string | null>(null);
@@ -81,6 +81,17 @@ export default function App() {
       setCurrentView('archive');
       return () => window.removeEventListener('hashchange', handleHashChange);
     }
+    if (
+      params.get('view') === 'notifications' ||
+      params.get('tab') === 'notifications' ||
+      params.get('tab') === 'cfp' ||
+      params.get('view') === 'cfp' ||
+      initialHash === 'notifications' ||
+      initialHash === 'call-for-papers'
+    ) {
+      setCurrentView('notifications');
+      return () => window.removeEventListener('hashchange', handleHashChange);
+    }
     if (params.get('modal') === 'submissions' || params.get('view') === 'submissions') {
       setIsSubmissionsModalOpen(true);
     }
@@ -88,6 +99,9 @@ export default function App() {
     if (initialHash) {
       setTimeout(() => {
         if (initialHash === 'top') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (initialHash === 'notifications' || initialHash === 'call-for-papers') {
+          setCurrentView('notifications');
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else if (POLICY_SLUGS.has(initialHash)) {
           window.dispatchEvent(new CustomEvent('sgrcr-select-policy', { detail: initialHash }));
@@ -102,9 +116,27 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const handleOpenNotif = () => {
+      setSelectedArticle(null);
+      setCurrentView('notifications');
+      cleanAddressBarUrl(['article']);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.addEventListener('sgrcr-open-notifications', handleOpenNotif);
+    return () => window.removeEventListener('sgrcr-open-notifications', handleOpenNotif);
+  }, []);
+
+  useEffect(() => {
     const handleSectionNav = (e: Event) => {
       const sectionId = (e as CustomEvent<string>).detail;
       cleanAddressBarUrl(['article', 'view', 'tab']);
+      if (sectionId === 'notifications' || sectionId === 'call-for-papers') {
+        setSelectedArticle(null);
+        setCurrentView('notifications');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
       if (currentView !== 'main') {
         setSelectedArticle(null);
         setCurrentView('main');
@@ -158,6 +190,21 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleOpenNotifications = () => {
+    setSelectedArticle(null);
+    setCurrentView('notifications');
+    cleanAddressBarUrl(['article']);
+    try {
+      const url = new URL(window.location.href);
+      url.hash = '';
+      url.searchParams.set('tab', 'notifications');
+      window.history.pushState({}, '', url.pathname + url.search);
+    } catch {
+      // Ignored
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleBackToMain = () => {
     setSelectedArticle(null);
     setCurrentView('main');
@@ -169,7 +216,10 @@ export default function App() {
     <div className="w-full bg-[#ffffff] text-[#1f0707] min-h-screen transition-colors duration-200 overflow-x-hidden">
       {currentView === 'article' && selectedArticle ? (
         <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden">
-          <TopBar onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)} />
+          <TopBar
+            onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)}
+            onOpenNotifications={handleOpenNotifications}
+          />
           <ArticleDetailView
             article={selectedArticle}
             onBack={handleBackFromArticle}
@@ -178,6 +228,7 @@ export default function App() {
           <Footer
             onOpenArticleArchive={handleOpenArticleArchive}
             onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)}
+            onOpenNotifications={handleOpenNotifications}
           />
         </div>
       ) : currentView === 'archive' ? (
@@ -185,17 +236,48 @@ export default function App() {
           onBackToMain={handleBackToMain}
           onOpenArticlePage={handleOpenArticlePage}
         />
-      ) : (
+      ) : currentView === 'notifications' ? (
         <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden">
-          <CookieBanner />
-          <TopBar onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)} />
+          <TopBar
+            onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)}
+            onOpenNotifications={handleOpenNotifications}
+          />
           <Navbar
             onOpenArticleArchive={handleOpenArticleArchive}
             onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)}
+            onOpenNotifications={handleOpenNotifications}
+          />
+          <NotificationsView
+            onBackToMain={handleBackToMain}
+            onOpenSubmissionsModal={() => setIsSubmissionsModalOpen(true)}
+          />
+          <Footer
+            onOpenArticleArchive={handleOpenArticleArchive}
+            onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)}
+            onOpenNotifications={handleOpenNotifications}
+          />
+          <EditorialSubmissionsModal
+            isOpen={isSubmissionsModalOpen}
+            onClose={() => setIsSubmissionsModalOpen(false)}
+          />
+        </div>
+      ) : (
+        <div className="flex flex-col min-h-screen w-full max-w-full overflow-x-hidden">
+          <CookieBanner />
+          <TopBar
+            onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)}
+            onOpenNotifications={handleOpenNotifications}
+          />
+          <Navbar
+            onOpenArticleArchive={handleOpenArticleArchive}
+            onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)}
+            onOpenNotifications={handleOpenNotifications}
           />
           <main className="flex-1 w-full max-w-full overflow-x-hidden">
-            <Hero onOpenArticleArchive={handleOpenArticleArchive} />
-            <NotificationsSection />
+            <Hero
+              onOpenArticleArchive={handleOpenArticleArchive}
+              onOpenNotifications={handleOpenNotifications}
+            />
             <IndexingPartners />
             <AboutSection />
             <JournalMetadataSection />
@@ -212,6 +294,7 @@ export default function App() {
           <Footer
             onOpenArticleArchive={handleOpenArticleArchive}
             onOpenSubmissionsLog={() => setIsSubmissionsModalOpen(true)}
+            onOpenNotifications={handleOpenNotifications}
           />
 
           <EditorialSubmissionsModal

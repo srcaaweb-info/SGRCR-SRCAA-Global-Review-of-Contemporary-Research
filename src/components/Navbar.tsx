@@ -18,12 +18,14 @@ interface NavbarProps {
   onOpenArchives?: () => void;
   onOpenArticleArchive?: () => void;
   onOpenSubmissionsLog?: () => void;
+  onOpenNotifications?: () => void;
   theme?: 'warm' | 'dark';
   onToggleTheme?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   onOpenSubmissionsLog,
+  onOpenNotifications,
 }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -78,10 +80,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <PenTool className="w-3.5 h-3.5 text-[#781f1d]" />
               Submit
             </button>
-            <button type="button" onClick={() => handleNavClick('notifications')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer">
-              <Bell className="w-3.5 h-3.5 text-[#781f1d]" />
-              Notifications
-            </button>
             <button type="button" onClick={() => handleNavClick('editorial-board')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer">
               <Users className="w-3.5 h-3.5 text-[#781f1d]" />
               Editorial Board
@@ -93,6 +91,24 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button type="button" onClick={() => handleNavClick('archives')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer">
               <Archive className="w-3.5 h-3.5 text-[#781f1d]" />
               Archives
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (onOpenNotifications) {
+                  onOpenNotifications();
+                } else {
+                  handleNavClick('notifications');
+                }
+              }}
+              className="px-3 py-1.5 text-sm font-semibold text-[#781f1d] hover:bg-red-50 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer relative"
+              title="View Journal Notifications & Call for Papers"
+            >
+              <Bell className="w-3.5 h-3.5 text-[#a13533]" />
+              <span>Notifications</span>
+              <span className="px-1.5 py-0.5 rounded-full bg-[#a13533] text-white text-[10px] font-bold tracking-wider uppercase animate-pulse">
+                CFP
+              </span>
             </button>
             <button type="button" onClick={() => handleNavClick('contact')} className="px-3 py-1.5 text-sm font-semibold text-[#1f0707] hover:text-[#781f1d] hover:bg-gray-100 rounded-md transition-colors flex items-center gap-1.5 cursor-pointer">
               <Mail className="w-3.5 h-3.5 text-[#781f1d]" />
@@ -148,10 +164,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <PenTool className="w-4 h-4 text-[#781f1d]" />
               Submit Manuscript
             </button>
-            <button type="button" onClick={() => handleNavClick('notifications')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100 text-left cursor-pointer">
-              <Bell className="w-4 h-4 text-[#781f1d]" />
-              Notifications
-            </button>
             <button type="button" onClick={() => handleNavClick('editorial-board')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100 text-left cursor-pointer">
               <Users className="w-4 h-4 text-[#781f1d]" />
               Editorial Board
@@ -163,6 +175,26 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button type="button" onClick={() => handleNavClick('archives')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100 text-left cursor-pointer">
               <Archive className="w-4 h-4 text-[#781f1d]" />
               Archives
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                closeMobileMenu();
+                if (onOpenNotifications) {
+                  onOpenNotifications();
+                } else {
+                  handleNavClick('notifications');
+                }
+              }}
+              className="flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-semibold bg-red-50 text-[#781f1d] hover:bg-red-100 text-left cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <Bell className="w-4 h-4 text-[#a13533]" />
+                <span>Notifications & CFP</span>
+              </div>
+              <span className="px-1.5 py-0.5 rounded-full bg-[#a13533] text-white text-[10px] font-bold uppercase">
+                Vol 7 Iss 2
+              </span>
             </button>
             <button type="button" onClick={() => handleNavClick('contact')} className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-semibold text-[#1f0707] hover:bg-gray-100 text-left cursor-pointer">
               <Mail className="w-4 h-4 text-[#781f1d]" />

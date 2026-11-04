@@ -10,9 +10,10 @@ import { navigateToSection } from '../utils/navigation';
 interface FooterProps {
   onOpenSubmissionsLog?: () => void;
   onOpenArticleArchive?: () => void;
+  onOpenNotifications?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenArticleArchive }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenArticleArchive, onOpenNotifications }) => {
   const scrollToTop = () => {
     navigateToSection('top');
   };
@@ -22,6 +23,14 @@ export const Footer: React.FC<FooterProps> = ({ onOpenArticleArchive }) => {
       onOpenArticleArchive();
     } else {
       navigateToSection('archives');
+    }
+  };
+
+  const handleOpenNotifications = () => {
+    if (onOpenNotifications) {
+      onOpenNotifications();
+    } else {
+      navigateToSection('notifications');
     }
   };
 
@@ -87,6 +96,16 @@ export const Footer: React.FC<FooterProps> = ({ onOpenArticleArchive }) => {
               <li>
                 <button type="button" onClick={handleOpenArticleArchive} className="hover:text-[#ffffff] transition-colors text-left cursor-pointer">
                   Archives ({CURRENT_ISSUE_LABEL})
+                </button>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={handleOpenNotifications}
+                  className="hover:text-[#ffffff] text-[#c97775] font-semibold transition-colors text-left cursor-pointer flex items-center gap-1.5"
+                >
+                  <span>Notifications & Call for Papers</span>
+                  <span className="px-1.5 py-0.2 rounded bg-[#a13533] text-white text-[9px] uppercase font-bold">Vol 7</span>
                 </button>
               </li>
               <li>

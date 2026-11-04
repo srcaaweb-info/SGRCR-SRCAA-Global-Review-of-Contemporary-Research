@@ -29,6 +29,12 @@ export function navigateToSection(sectionId: string) {
     return;
   }
 
+  if (sectionId === 'notifications' || sectionId === 'call-for-papers') {
+    window.dispatchEvent(new CustomEvent('sgrcr-open-notifications'));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
   if (POLICY_SLUGS.has(sectionId)) {
     window.dispatchEvent(new CustomEvent('sgrcr-select-policy', { detail: sectionId }));
     const policiesEl = document.getElementById('policies');

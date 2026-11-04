@@ -1,18 +1,27 @@
 import React from 'react';
-import { Archive, PenTool, ExternalLink, Award, Search, FileText } from 'lucide-react';
+import { Archive, PenTool, ExternalLink, Award, Search, FileText, Bell, Sparkles } from 'lucide-react';
 import { PUBLICATION_FREQUENCY } from '../data/journalData';
 import { navigateToSection } from '../utils/navigation';
 
 interface HeroProps {
   onOpenArticleArchive?: () => void;
+  onOpenNotifications?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
+export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive, onOpenNotifications }) => {
   const handleOpenSeparateArchive = () => {
     if (onOpenArticleArchive) {
       onOpenArticleArchive();
     } else {
       navigateToSection('archives');
+    }
+  };
+
+  const handleOpenNotifications = () => {
+    if (onOpenNotifications) {
+      onOpenNotifications();
+    } else {
+      navigateToSection('notifications');
     }
   };
 
@@ -66,8 +75,40 @@ export const Hero: React.FC<HeroProps> = ({ onOpenArticleArchive }) => {
             An International Open Access, Double-Blind Peer-Reviewed Journal published {PUBLICATION_FREQUENCY} by Shakti Research Centre and Academia (SRCAA). Publishing original research across Commerce, Management, Economics, Social Sciences, Technology, and Interdisciplinary Fields.
           </p>
 
+          {/* Active Call for Papers Alert Banner */}
+          <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-2 px-4 py-2 bg-[#1f0707]/80 hover:bg-[#1f0707] border border-[#c97775]/50 rounded-full backdrop-blur-md transition-all shadow-md">
+            <span className="flex h-2.5 w-2.5 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+            </span>
+            <span className="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+              <span>Call for Papers: Volume 7, Issue 2 (Dec 2026)</span>
+              <span className="px-1.5 py-0.5 rounded-sm bg-emerald-500/90 text-white text-[10px] uppercase font-bold tracking-wider">
+                No APC
+              </span>
+            </span>
+            <span className="text-white/40 hidden sm:inline">·</span>
+            <button
+              type="button"
+              onClick={handleOpenNotifications}
+              className="text-xs font-bold text-amber-300 hover:text-white underline cursor-pointer inline-flex items-center gap-1"
+            >
+              <span>View Brochure & Deadlines</span>
+              <Sparkles className="w-3 h-3 text-amber-300" />
+            </button>
+          </div>
+
           {/* Action Buttons */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-2xl 2xl:max-w-3xl mx-auto">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 max-w-3xl 2xl:max-w-4xl mx-auto">
+            <button
+              type="button"
+              onClick={handleOpenNotifications}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 2xl:px-8 2xl:py-4 bg-[#781f1d] hover:bg-[#581e1d] text-[#ffffff] font-bold text-sm sm:text-base 2xl:text-lg rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 border border-[#c97775] cursor-pointer"
+            >
+              <Bell className="w-4 h-4 2xl:w-5 2xl:h-5 text-amber-300" />
+              <span>Call for Papers (Vol 7 Iss 2)</span>
+            </button>
+
             <button
               type="button"
               onClick={() => navigateToSection('submit-manuscript')}

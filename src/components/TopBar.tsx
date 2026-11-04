@@ -1,27 +1,45 @@
 import React from 'react';
-import { BadgeCheck, ExternalLink, Mail, Phone } from 'lucide-react';
+import { BadgeCheck, ExternalLink, Mail, Phone, Bell, Sparkles } from 'lucide-react';
 import { navigateToSection } from '../utils/navigation';
 
 interface TopBarProps {
   onOpenSubmissionsLog?: () => void;
+  onOpenNotifications?: () => void;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({ onOpenSubmissionsLog }) => {
+export const TopBar: React.FC<TopBarProps> = ({ onOpenSubmissionsLog, onOpenNotifications }) => {
+  const handleOpenNotifications = () => {
+    if (onOpenNotifications) {
+      onOpenNotifications();
+    } else {
+      navigateToSection('notifications');
+    }
+  };
+
   return (
     <div className="bg-[#1f0707] text-[#ede0de] text-xs border-b border-[#451514]">
       <div className="journal-container">
         <div className="flex items-center justify-between h-9">
           {/* Left: ISSN & Compliance Badges */}
-          <div className="flex items-center gap-3 sm:gap-5">
+          <div className="flex items-center gap-3 sm:gap-4">
             <span className="inline-flex items-center gap-1.5 font-semibold text-[#f0dedb]">
               <BadgeCheck className="w-3.5 h-3.5 text-emerald-400" />
               <span className="font-mono text-emerald-300 font-bold">ISSN: 2839-6081</span>
               <span className="hidden sm:inline text-xs text-[#cfb6b3]">(Online)</span>
             </span>
-            <span className="hidden md:inline-flex items-center gap-1.5 font-semibold">
-              <BadgeCheck className="w-3.5 h-3.5 text-[#a13533]" />
-              A Peer-Reviewed International Research Journal
-            </span>
+
+            {/* CFP Active Alert */}
+            <button
+              type="button"
+              onClick={handleOpenNotifications}
+              className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-[#a13533]/80 hover:bg-[#a13533] text-white text-[11px] font-bold transition-colors cursor-pointer border border-[#c97775]/40"
+              title="Click to view Call for Papers and download brochure"
+            >
+              <Bell className="w-3 h-3 text-amber-300 animate-bounce" />
+              <span className="hidden md:inline">Call for Papers: Vol 7 Iss 2 (Dec 2026) · No APC</span>
+              <span className="md:hidden">CFP: Vol 7 Iss 2 · No APC</span>
+              <Sparkles className="w-2.5 h-2.5 text-amber-300" />
+            </button>
           </div>
 
           {/* Right: Phone, Portal & Contact Links */}
