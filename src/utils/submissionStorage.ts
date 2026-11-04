@@ -222,11 +222,18 @@ export interface GoogleFormFieldMap {
   message?: string;
 }
 
+export const DEFAULT_GOOGLE_SCRIPT_WEBAPP_URL =
+  'https://script.google.com/macros/s/AKfycbyXqc46zS-4OnkBTpvAQyeVd1UHvesP1E2k2aihc4CFG2NkV-_2nHvikS8QBhEfJJAlrA/exec';
+
 export function getGoogleFormEndpoint(): string {
   try {
-    return localStorage.getItem(GOOGLE_FORM_ENDPOINT_KEY) || '';
+    const custom = localStorage.getItem(GOOGLE_FORM_ENDPOINT_KEY);
+    if (custom && custom.trim()) return custom.trim();
+    const envUrl = (import.meta as any).env?.VITE_GOOGLE_SCRIPT_URL;
+    if (envUrl && envUrl.trim()) return envUrl.trim();
+    return DEFAULT_GOOGLE_SCRIPT_WEBAPP_URL;
   } catch {
-    return '';
+    return DEFAULT_GOOGLE_SCRIPT_WEBAPP_URL;
   }
 }
 
